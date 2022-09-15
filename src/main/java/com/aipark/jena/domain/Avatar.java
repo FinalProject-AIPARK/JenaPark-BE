@@ -5,10 +5,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -21,7 +21,7 @@ public class Avatar {
 
     @Id
     @GeneratedValue
-    @Column(name = "video_id")
+    @Column(name = "avatar_id")
     private Long id;
 
     @Column
@@ -30,12 +30,4 @@ public class Avatar {
     @Column
     private String thumbNail;
 
-    @Column
-    private int attitude;
-
-    @Column
-    private int clothes;
-
-    @Column
-    private int Accessories;
 }
