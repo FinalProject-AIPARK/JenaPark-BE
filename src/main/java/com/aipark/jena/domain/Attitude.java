@@ -7,27 +7,23 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "AVATAR")
-public class Avatar {
-
+@Table(name = "ATTITUDE")
+public class Attitude {
     @Id
     @GeneratedValue
-    @Column(name = "avatar_id")
+    @Column(name = "attitude_id")
     private Long id;
 
     @Column
-    private String name;
+    private String attitudeUrl;
 
-    @Column
-    private String thumbNail;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "avatar_id")
+    private Avatar avatarId;
 }

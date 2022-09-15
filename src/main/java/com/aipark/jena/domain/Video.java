@@ -19,7 +19,8 @@ import static lombok.AccessLevel.PROTECTED;
 public class Video {
 
     @Id
-    private Long videoId;
+    @Column(name = "video_id")
+    private Long id;
     @Column
     private String title;
 
