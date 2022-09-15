@@ -4,7 +4,7 @@ import com.aipark.jena.config.jwt.JwtTokenProvider;
 import com.aipark.jena.domain.Member;
 import com.aipark.jena.domain.MemberRepository;
 import com.aipark.jena.dto.RequestMember;
-import com.aipark.jena.dto.ResponseMember;
+import com.aipark.jena.dto.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
@@ -25,24 +25,24 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManagerBuilder managerBuilder;
-    private final ResponseMember responseMember;
+    private final Response response;
     private final PasswordEncoder passwordEncoder;
     private final RedisTemplate redisTemplate;
 
     @Transactional
-    public ResponseEntity<?> signUp(RequestMember.SignUp signUpDto) {
+    public ResponseEntity<Response.Body> signUp(RequestMember.SignUp signUpDto) {
         if (memberRepository.existsByEmail(signUpDto.getEmail())) {
-            return responseMember.fail("이미 회원가입된 이메일입니다.", HttpStatus.BAD_REQUEST);
+            return response.fail("이미 회원가입된 이메일입니다.", HttpStatus.BAD_REQUEST);
         }
         Member member = signUpDto.toMember(passwordEncoder);
         memberRepository.save(member);
-        return responseMember.success("회원가입에 성공했습니다.");
+        return response.success("회원가입에 성공했습니다.");
     }
 
     @Transactional
-    public ResponseEntity<?> login(RequestMember.Login loginDto) {
+    public ResponseEntity<Response.Body> login(RequestMember.Login loginDto) {
         if (memberRepository.findByEmail(loginDto.getEmail()).orElse(null) == null) {
-            return responseMember.fail("해당유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+            return response.fail("해당유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
         // LoginDto email, password 를 기반으로 Authentication 객체 생성
         UsernamePasswordAuthenticationToken authenticationToken = loginDto.toAuthentication();
@@ -52,7 +52,7 @@ public class MemberService {
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
         // 인증 정보를 기반으로 JWT 토큰 생성
-        ResponseMember.TokenRes tokenRes = jwtTokenProvider.generateToken(authentication);
+        Response.TokenRes tokenRes = jwtTokenProvider.generateToken(authentication);
 
         // RefreshToken Redis 저장 (expirationTime 으로 자동 삭제 처리)
         redisTemplate.opsForValue()
@@ -61,13 +61,13 @@ public class MemberService {
                         tokenRes.getRefreshTokenExpirationTime(),
                         TimeUnit.MILLISECONDS);
 
-        return responseMember.success(tokenRes, "로그인에 성공했습니다.", HttpStatus.OK);
+        return response.success(tokenRes, "로그인에 성공했습니다.", HttpStatus.OK);
     }
 
-    public ResponseEntity<?> reissue(RequestMember.Reissue reissue) {
+    public ResponseEntity<Response.Body> reissue(RequestMember.Reissue reissue) {
         // Refresh Token 검증
         if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())) {
-            return responseMember.fail("Refresh Token 정보가 유효하지 않습니다.", HttpStatus.BAD_REQUEST);
+            return response.fail("Refresh Token 정보가 유효하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
 
         // Access Token 에서 Member email 가져옴.
@@ -78,27 +78,27 @@ public class MemberService {
 
         // 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
         if(ObjectUtils.isEmpty(refreshToken)) {
-            return responseMember.fail("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
+            return response.fail("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
         }
         if(!refreshToken.equals(reissue.getRefreshToken())) {
-            return responseMember.fail("Refresh Token 정보가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
+            return response.fail("Refresh Token 정보가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
 
         // 새로운 토큰 생성
-        ResponseMember.TokenRes tokenInfo = jwtTokenProvider.generateToken(authentication);
+        Response.TokenRes tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         // RefreshToken Redis 업데이트
         redisTemplate.opsForValue()
                 .set("RT:" + authentication.getName(), tokenInfo.getRefreshToken(), tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS);
 
-        return responseMember.success(tokenInfo, "Token 정보가 갱신되었습니다.", HttpStatus.OK);
+        return response.success(tokenInfo, "Token 정보가 갱신되었습니다.", HttpStatus.OK);
     }
 
     @Transactional
-    public ResponseEntity<?> logout(RequestMember.Logout logoutDto) {
+    public ResponseEntity<Response.Body> logout(RequestMember.Logout logoutDto) {
         // Access Token 검증
         if (!jwtTokenProvider.validateToken(logoutDto.getAccessToken())) {
-            return responseMember.fail("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
+            return response.fail("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
         }
 
         // Access Token 에서 Member email 을 가져옵니다.
@@ -115,6 +115,6 @@ public class MemberService {
         redisTemplate.opsForValue()
                 .set(logoutDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 
-        return responseMember.success("로그아웃 되었습니다.");
+        return response.success("로그아웃 되었습니다.");
     }
 }

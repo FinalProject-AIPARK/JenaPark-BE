@@ -1,6 +1,7 @@
 package com.aipark.jena.controller;
 
 import com.aipark.jena.dto.RequestMember;
+import com.aipark.jena.dto.Response;
 import com.aipark.jena.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,22 +17,22 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody RequestMember.SignUp memberDto) {
+    public ResponseEntity<Response.Body> signUp(@RequestBody RequestMember.SignUp memberDto) {
         return memberService.signUp(memberDto);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody RequestMember.Login loginDto) {
+    public ResponseEntity<Response.Body> login(@RequestBody RequestMember.Login loginDto) {
         return memberService.login(loginDto);
     }
 
     @PostMapping("/reissue")
-    public ResponseEntity<?> reissue(@RequestBody RequestMember.Reissue reissueDto) {
+    public ResponseEntity<Response.Body> reissue(@RequestBody RequestMember.Reissue reissueDto) {
         return memberService.reissue(reissueDto);
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody RequestMember.Logout logoutDto) {
+    public ResponseEntity<Response.Body> logout(@RequestBody RequestMember.Logout logoutDto) {
         return memberService.logout(logoutDto);
     }
 }

@@ -1,6 +1,6 @@
 package com.aipark.jena.config.jwt;
 
-import com.aipark.jena.dto.ResponseMember;
+import com.aipark.jena.dto.Response;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -35,7 +35,7 @@ public class JwtTokenProvider {
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public ResponseMember.TokenRes generateToken(Authentication authentication) {
+    public Response.TokenRes generateToken(Authentication authentication) {
         // 권한 가져오기
         String authorities = authentication.getAuthorities()
                 .stream()
@@ -62,7 +62,7 @@ public class JwtTokenProvider {
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
 
-        return ResponseMember.TokenRes.builder()
+        return Response.TokenRes.builder()
                 .grantType(BEARER_TYPE)
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
