@@ -5,9 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import javax.websocket.Encoder;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -15,19 +14,20 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "VOICE")
-public class Voice {
+@Table(name = "AUDIO_INFO")
+public class AudioInfo {
 
     @Id
-    private Long voiceId;
-    @Column
-    private String voiceModel;
-    @Column
-    private Long speed;
-    @Column
-    private Long pitch;
-    @Column
-    private Long volume;
+    @GeneratedValue
+    @Column(name = "audio_id")
+    private Long id;
+
+    @Column(name = "split_text")
+    private String splitText;
+
     @Column
     private Long durationSilence;
+
+    @Column
+    private Encoder.Binary audioFile;
 }
