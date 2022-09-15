@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -19,18 +20,22 @@ import static lombok.AccessLevel.PROTECTED;
 public class Avatar {
 
     @Id
-    private Long avatarId;
+    @GeneratedValue
+    @Column(name = "video_id")
+    private Long id;
 
     @Column
     private String name;
+
     @Column
     private String thumbNail;
-    @Column
-    private String background;
+
     @Column
     private int attitude;
+
     @Column
     private int clothes;
+
     @Column
     private int Accessories;
 }

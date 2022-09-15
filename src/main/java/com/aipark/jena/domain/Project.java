@@ -5,12 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import java.util.Date;
+import javax.persistence.*;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -23,19 +18,28 @@ import static lombok.AccessLevel.PROTECTED;
 public class Project {
 
     @Id
-    private Long projectId;
+    @GeneratedValue
+    @Column(name = "project_id")
+    private Long id;
+
     @Column
     private String title;
+
     @Column
     private String text;
+
     @Column
     private Long speed;
+
     @Column
     private Long pitch;
+
     @Column
     private String voiceModel;
+
     @Column
     private Long volume;
+
     @Column
     private Long durationSilence;
 

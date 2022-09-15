@@ -1,10 +1,8 @@
 package com.aipark.jena.dto;
 
-import com.aipark.jena.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -14,28 +12,10 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 @Component
-public class ResponseMember {
-    @Getter
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Builder
-    public static class MemberRes {
-        private String email;
-        private String username;
-        private String profileImg;
-
-        public static MemberRes of(Member member) {
-            return MemberRes.builder()
-                    .email(member.getEmail())
-                    .username(member.getUsername())
-                    .profileImg(member.getProfileImg())
-                    .build();
-        }
-    }
-
+public class Response {
     @Getter
     @Builder
-    private static class Body {
+    public static class Body {
         private int state;
         private String result;
         private String message;
@@ -84,7 +64,7 @@ public class ResponseMember {
      * @param msg 응답 바디 message 필드에 포함될 정보
      * @return 응답 객체
      */
-    public ResponseEntity<?> success(String msg) {
+    public ResponseEntity<Body> success(String msg) {
         return success(Collections.emptyList(), msg, HttpStatus.OK);
     }
 
@@ -103,7 +83,7 @@ public class ResponseMember {
      * @param data 응답 바디 data 필드에 포함될 정보
      * @return 응답 객체
      */
-    public ResponseEntity<?> success(Object data) {
+    public ResponseEntity<Body> success(Object data) {
         return success(data, null, HttpStatus.OK);
     }
 
@@ -121,12 +101,12 @@ public class ResponseMember {
      *
      * @return 응답 객체
      */
-    public ResponseEntity<?> success() {
+    public ResponseEntity<Body> success() {
         return success(Collections.emptyList(), null, HttpStatus.OK);
     }
 
 
-    public ResponseEntity<?> fail(Object data, String msg, HttpStatus status) {
+    public ResponseEntity<Body> fail(Object data, String msg, HttpStatus status) {
         Body body = Body.builder()
                 .state(status.value())
                 .data(data)
@@ -153,11 +133,11 @@ public class ResponseMember {
      * @param status 응답 바디 status 필드에 포함될 응답 상태 코드
      * @return 응답 객체
      */
-    public ResponseEntity<?> fail(String msg, HttpStatus status) {
+    public ResponseEntity<Body> fail(String msg, HttpStatus status) {
         return fail(Collections.emptyList(), msg, status);
     }
 
-    public ResponseEntity<?> invalidFields(LinkedList<LinkedHashMap<String, String>> errors) {
+    public ResponseEntity<Body> invalidFields(LinkedList<LinkedHashMap<String, String>> errors) {
         Body body = Body.builder()
                 .state(HttpStatus.BAD_REQUEST.value())
                 .data(Collections.emptyList())
