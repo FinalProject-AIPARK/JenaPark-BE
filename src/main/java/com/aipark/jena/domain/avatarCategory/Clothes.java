@@ -1,5 +1,6 @@
-package com.aipark.jena.domain;
+package com.aipark.jena.domain.avatarCategory;
 
+import com.aipark.jena.domain.Avatar;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
