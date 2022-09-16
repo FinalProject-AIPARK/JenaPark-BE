@@ -14,6 +14,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "ACESSORIES")
+@Entity
 public class Accessories {
     @Id
     @GeneratedValue

@@ -15,6 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "AUDIO_INFO")
+@Entity
 public class AudioInfo {
 
     @Id

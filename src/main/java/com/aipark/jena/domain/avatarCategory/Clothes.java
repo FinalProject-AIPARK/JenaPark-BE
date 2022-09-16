@@ -13,15 +13,16 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "ATTITUDE")
-public class Attitude {
+@Table(name = "CLOTHES")
+@Entity
+public class Clothes {
     @Id
     @GeneratedValue
-    @Column(name = "attitude_id")
+    @Column(name = "clothes_id")
     private Long id;
 
     @Column
-    private String attitudeUrl;
+    private String clothesUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id")
