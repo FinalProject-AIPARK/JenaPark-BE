@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.websocket.Encoder;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -26,9 +25,10 @@ public class AudioInfo {
     @Column(name = "split_text")
     private String splitText;
 
-    @Column
+    @Column(name = "duration_silence")
     private Long durationSilence;
 
-    @Column
-    private Encoder.Binary audioFile;
+    @Lob
+    @Column(name = "audio_file")
+    private byte[] audioFile;
 }
