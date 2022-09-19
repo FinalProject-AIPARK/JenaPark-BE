@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 public class Attitude {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "attitude_id")
     private Long id;
 
@@ -27,5 +27,5 @@ public class Attitude {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id")
-    private Avatar avatarId;
+    private Avatar avatar;
 }
