@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -34,6 +36,16 @@ public class Member{
     @Column
     private String profileImg;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    private List<Project> projects = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    public void addProject(Project project) {
+        projects.add(project);
+        if(project.getMember() != this) {
+            project.setMember(this);
+        }
+    }
 }

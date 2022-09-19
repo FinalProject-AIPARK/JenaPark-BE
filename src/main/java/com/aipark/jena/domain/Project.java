@@ -35,12 +35,16 @@ public class Project {
     private Long pitch;
 
     @Column
-    private String voiceModel;
-
-    @Column
     private Long volume;
 
     @Column
     private Long durationSilence;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }
