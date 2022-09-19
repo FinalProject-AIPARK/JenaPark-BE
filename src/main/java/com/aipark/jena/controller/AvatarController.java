@@ -5,10 +5,7 @@ import com.aipark.jena.service.AvatarService;
 import com.aipark.jena.service.AvatarServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,8 +19,8 @@ public class AvatarController {
         return avatarService.avatarList();
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Response.Body> createAvatar(Long avatarId){
+    @GetMapping("/{avatarId}")
+    public ResponseEntity<Response.Body> createAvatar(@PathVariable Long avatarId){
         return avatarService.createAvatar(avatarId);
     }
 }
