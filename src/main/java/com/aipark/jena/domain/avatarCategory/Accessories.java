@@ -26,5 +26,5 @@ public class Accessories {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id")
-    private Avatar avatarId;
+    private Avatar avatar;
 }

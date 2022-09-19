@@ -27,5 +27,5 @@ public class Attitude {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id")
-    private Avatar avatarId;
+    private Avatar avatar;
 }
