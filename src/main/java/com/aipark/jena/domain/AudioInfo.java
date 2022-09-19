@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class AudioInfo {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "audio_id")
     private Long id;
 

@@ -18,8 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 public class Accessories {
     @Id
-    @GeneratedValue
-    @Column(name = "accessory_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
