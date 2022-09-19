@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 @Entity
 public class Attitude {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "attitude_id")
     private Long id;
 

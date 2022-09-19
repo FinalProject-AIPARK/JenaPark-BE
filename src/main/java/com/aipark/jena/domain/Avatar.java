@@ -7,9 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
@@ -21,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class Avatar {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "avatar_id")
     private Long id;
 
