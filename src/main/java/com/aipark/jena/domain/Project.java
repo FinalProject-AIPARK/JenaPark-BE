@@ -15,7 +15,7 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "PROJECT")
 @Entity
-public class Project {
+public class Project extends BaseTimeEntity {
 
     @Id
     @GeneratedValue
