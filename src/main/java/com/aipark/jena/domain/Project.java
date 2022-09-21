@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     @Column(name = "project_id")
     private Long id;
 
