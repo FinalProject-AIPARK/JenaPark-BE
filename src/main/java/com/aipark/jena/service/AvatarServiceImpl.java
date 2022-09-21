@@ -89,4 +89,10 @@ public class AvatarServiceImpl implements AvatarService{
         return response.success(responseAvatar,"아바타 선택 완료 ",HttpStatus.OK);
     }
 
+    @Override
+    public ResponseEntity<Response.Body> createAvatar(Long avatarId, Long accessoryId, Long attitudeId, Long clothesId) {
+        // 1-3-4-3
+        return response.success("","",HttpStatus.OK);
+    }
+
 }
