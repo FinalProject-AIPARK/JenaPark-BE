@@ -36,7 +36,7 @@ public class AvatarServiceImpl implements AvatarService{
 
     @Transactional(readOnly = true)
     //아바타
-    public ResponseEntity<Response.Body> createAvatar(Long avatarId){
+    public ResponseEntity<Response.Body> selectAvatar(Long avatarId){
 
         Avatar avatar = avatarRepository.findById(avatarId).orElseThrow();
 

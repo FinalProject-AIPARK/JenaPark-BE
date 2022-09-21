@@ -21,6 +21,6 @@ public class AvatarController {
 
     @GetMapping("/{avatarId}")
     public ResponseEntity<Response.Body> createAvatar(@PathVariable Long avatarId){
-        return avatarService.createAvatar(avatarId);
+        return avatarService.selectAvatar(avatarId);
     }
 }

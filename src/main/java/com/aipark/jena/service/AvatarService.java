@@ -5,5 +5,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface AvatarService {
     ResponseEntity<Response.Body> avatarList();
-    ResponseEntity<Response.Body> createAvatar(Long avatarId);
+    ResponseEntity<Response.Body> selectAvatar(Long avatarId);
+    ResponseEntity<Response.Body> createAvatar(Long avatarId,Long acessoryId,Long attitudeId,Long clothesId);
 }
