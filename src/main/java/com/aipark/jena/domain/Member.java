@@ -48,15 +48,4 @@ public class Member extends BaseTimeEntity{
             project.setMember(this);
         }
     }
-
-    private Member(String email, String username, String password) {
-        this.email = email;
-        this.username = username;
-        this.password = password;
-        authority = Authority.valueOf("ROLE_USER");
-    }
-
-    public static Member of(String email, String username, String password) {
-        return new Member(email, username, password);
-    }
 }
