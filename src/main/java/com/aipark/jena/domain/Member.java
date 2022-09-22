@@ -24,13 +24,13 @@ public class Member extends BaseTimeEntity{
     @Column(name = "member_id")
     private Long id;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column
+    @Column(nullable = false)
     private String username;
 
-    @Column
+    @Column(nullable = false)
     private String password;
 
     @Column
@@ -47,5 +47,16 @@ public class Member extends BaseTimeEntity{
         if(project.getMember() != this) {
             project.setMember(this);
         }
+    }
+
+    private Member(String email, String username, String password) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        authority = Authority.valueOf("ROLE_USER");
+    }
+
+    public static Member of(String email, String username, String password) {
+        return new Member(email, username, password);
     }
 }
