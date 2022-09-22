@@ -42,8 +42,4 @@ public class AudioInfo {
 
     @Column
     private String audioFileUrl;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "job_id")
-    private Job job;
 }
