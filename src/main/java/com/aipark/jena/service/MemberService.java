@@ -27,7 +27,7 @@ public class MemberService {
     private final AuthenticationManagerBuilder managerBuilder;
     private final Response response;
     private final PasswordEncoder passwordEncoder;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public ResponseEntity<Response.Body> signUp(RequestMember.SignUp signUpDto) {
@@ -74,7 +74,7 @@ public class MemberService {
         Authentication authentication = jwtTokenProvider.getAuthentication(reissue.getAccessToken());
 
         // Redis 에서 Member email 을 기반으로 저장된 Refresh Token 을 가져옴.
-        String refreshToken = (String)redisTemplate.opsForValue().get("RT:" + authentication.getName());
+        String refreshToken = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
         // 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
         if(ObjectUtils.isEmpty(refreshToken)) {

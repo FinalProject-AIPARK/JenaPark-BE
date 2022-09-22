@@ -1,6 +1,5 @@
-package com.aipark.jena.domain.avatarCategory;
+package com.aipark.jena.domain;
 
-import com.aipark.jena.domain.Avatar;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,18 +13,23 @@ import static lombok.AccessLevel.PROTECTED;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
-@Table(name = "CLOTHES")
+@Table(name = "AUDIO_SAMPLE")
 @Entity
-public class Clothes {
+public class AudioSample {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "clothes_id")
+    @Column(name = "audio_sample_id")
     private Long id;
 
     @Column
-    private String clothesUrl;
+    private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "avatar_id")
-    private Avatar avatar;
+    @Column
+    private String sex;
+
+    @Column
+    private String lang;
+
+    @Column
+    private String audioFileUrl;  // s3에 저장된 객체 url
 }

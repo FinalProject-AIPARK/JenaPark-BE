@@ -19,7 +19,6 @@ import static lombok.AccessLevel.PROTECTED;
 public class Accessories {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "accessory_id")
     private Long id;
 
     @Column
@@ -27,5 +26,5 @@ public class Accessories {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "avatar_id")
-    private Avatar avatarId;
+    private Avatar avatar;
 }
