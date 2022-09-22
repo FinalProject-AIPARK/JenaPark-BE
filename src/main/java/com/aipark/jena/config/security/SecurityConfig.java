@@ -27,12 +27,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
 //                .httpBasic().disable()
-                .csrf().disable()
+                .cors().and().csrf().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/members/signup", "/api/v1/members/login", "/api/v1/**").permitAll()
+                .antMatchers("/api/v1/members/signup", "/api/v1/members/login").permitAll()
+                .anyRequest().authenticated()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and()
                 .cors().configurationSource(corsConfigurationSource())
