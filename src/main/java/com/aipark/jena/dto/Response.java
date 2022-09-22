@@ -46,7 +46,7 @@ public class Response {
                 .data(data)
                 .error(Collections.emptyList())
                 .build();
-        return ResponseEntity.ok(body);
+        return new ResponseEntity<>(body, status);
     }
 
     /**
@@ -114,7 +114,7 @@ public class Response {
                 .message(msg)
                 .error(Collections.emptyList())
                 .build();
-        return ResponseEntity.ok(body);
+        return new ResponseEntity<>(body, status);
     }
 
     /**
