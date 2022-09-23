@@ -103,10 +103,12 @@ public class AvatarServiceImpl implements AvatarService{
         return response.success(responseAvatar,"아바타 선택 완료 ",HttpStatus.OK);
     }
 
+    @Transactional
     @Override
-    public ResponseEntity<Response.Body> createAvatar(Long avatarId, Long accessoryId, Long attitudeId, Long clothesId) {
-        // 1-3-4-3
-        return response.success("","",HttpStatus.OK);
+    public ResponseEntity<Response.Body> createAvatar(ResponseAvatar.ResponseCreateAvatar responseCreateAvatar) {
+
+        String resultUrl = responseCreateAvatar.getAvatarId()+"-"+responseCreateAvatar.getAccessoryId()+"-"+ responseCreateAvatar.getAttitudeId()+"-"+ responseCreateAvatar.getClothesId();
+        return response.success(resultUrl,"아바타 생성 완료",HttpStatus.OK);
     }
 
 }
