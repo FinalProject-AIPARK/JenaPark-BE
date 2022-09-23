@@ -19,6 +19,8 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.concurrent.TimeUnit;
 
+import static com.aipark.jena.dto.Response.*;
+
 @RequiredArgsConstructor
 @Service
 public class MemberService {
@@ -30,7 +32,7 @@ public class MemberService {
     private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
-    public ResponseEntity<Response.Body> signUp(RequestMember.SignUp signUpDto) {
+    public ResponseEntity<Body> signUp(RequestMember.SignUp signUpDto) {
         if (memberRepository.existsByEmail(signUpDto.getEmail())) {
             return response.fail("이미 회원가입된 이메일입니다.", HttpStatus.BAD_REQUEST);
         }
@@ -40,7 +42,7 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseEntity<Response.Body> login(RequestMember.Login loginDto) {
+    public ResponseEntity<Body> login(RequestMember.Login loginDto) {
         if (memberRepository.findByEmail(loginDto.getEmail()).orElse(null) == null) {
             return response.fail("해당유저가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
@@ -52,7 +54,7 @@ public class MemberService {
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
         // 인증 정보를 기반으로 JWT 토큰 생성
-        Response.TokenRes tokenRes = jwtTokenProvider.generateToken(authentication);
+        TokenRes tokenRes = jwtTokenProvider.generateToken(authentication);
 
         // RefreshToken Redis 저장 (expirationTime 으로 자동 삭제 처리)
         redisTemplate.opsForValue()
@@ -64,7 +66,7 @@ public class MemberService {
         return response.success(tokenRes, "로그인에 성공했습니다.", HttpStatus.OK);
     }
 
-    public ResponseEntity<Response.Body> reissue(RequestMember.Reissue reissue) {
+    public ResponseEntity<Body> reissue(RequestMember.Reissue reissue) {
         // Refresh Token 검증
         if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())) {
             return response.fail("Refresh Token 정보가 유효하지 않습니다.", HttpStatus.BAD_REQUEST);
@@ -85,7 +87,7 @@ public class MemberService {
         }
 
         // 새로운 토큰 생성
-        Response.TokenRes tokenInfo = jwtTokenProvider.generateToken(authentication);
+        TokenRes tokenInfo = jwtTokenProvider.generateToken(authentication);
 
         // RefreshToken Redis 업데이트
         redisTemplate.opsForValue()
@@ -95,7 +97,7 @@ public class MemberService {
     }
 
     @Transactional
-    public ResponseEntity<Response.Body> logout(RequestMember.Logout logoutDto) {
+    public ResponseEntity<Body> logout(RequestMember.Logout logoutDto) {
         // Access Token 검증
         if (!jwtTokenProvider.validateToken(logoutDto.getAccessToken())) {
             return response.fail("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
