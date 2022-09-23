@@ -30,8 +30,22 @@ public class AvatarServiceImpl implements AvatarService{
 
     // 아바타 리스트
     public ResponseEntity<Response.Body> avatarList(){
-         List<Avatar> avatarList = avatarRepository.findAll();
-         return response.success(avatarList,"아바타리스트 입니다 ", HttpStatus.OK);
+
+        List<Avatar> avatarList = avatarRepository.findAll();
+
+        List<ResponseAvatar.ResponseAvatarList> responseAvatarList = new ArrayList<ResponseAvatar.ResponseAvatarList>();
+
+        //entity -> dto
+        for (int i = 0; i<avatarList.size() ; i++) {
+            ResponseAvatar.ResponseAvatarList responseAvatar = new ResponseAvatar.ResponseAvatarList(
+            avatarList.get(i).getId(),
+            avatarList.get(i).getName(),
+            avatarList.get(i).getThumbNail()
+            );
+            responseAvatarList.add(responseAvatar);
+        }
+
+        return response.success(responseAvatarList,"아바타리스트 입니다 ", HttpStatus.OK);
     }
 
     @Transactional(readOnly = true)
@@ -77,7 +91,6 @@ public class AvatarServiceImpl implements AvatarService{
             responseAttitudeList.add(responseAttitude);
         }
 
-
         // responseAvatar 에 값 주입
         ResponseAvatar responseAvatar = new ResponseAvatar(
                 avatar.getName(),
@@ -86,13 +99,15 @@ public class AvatarServiceImpl implements AvatarService{
                 responseClothesList,
                 responseAttitudeList);
 
-        return response.success(responseAvatar,"아바타 선택 완료 ",HttpStatus.OK);
+        return response.success(responseAvatar,"해당 아바타에서 선택 가능한 옵션입니다. ",HttpStatus.OK);
     }
 
+    @Transactional
     @Override
-    public ResponseEntity<Response.Body> createAvatar(Long avatarId, Long accessoryId, Long attitudeId, Long clothesId) {
-        // 1-3-4-3
-        return response.success("","",HttpStatus.OK);
+    public ResponseEntity<Response.Body> createAvatar(ResponseAvatar.ResponseCreateAvatar responseCreateAvatar) {
+
+        String resultUrl = responseCreateAvatar.getAvatarId()+"-"+responseCreateAvatar.getAccessoryId()+"-"+ responseCreateAvatar.getAttitudeId()+"-"+ responseCreateAvatar.getClothesId();
+        return response.success(resultUrl,"아바타 생성 완료",HttpStatus.OK);
     }
 
 }
