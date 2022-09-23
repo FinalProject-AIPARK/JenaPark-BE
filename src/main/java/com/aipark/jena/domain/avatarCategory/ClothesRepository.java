@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface ClothesRepository extends JpaRepository<Clothes,Long> {
     List<Clothes> findAllByAvatar(Avatar avatar);
+    boolean existsByIdAndAvatar(Long id,Avatar avatar);
 }
