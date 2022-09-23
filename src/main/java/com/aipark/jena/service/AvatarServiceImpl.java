@@ -30,8 +30,22 @@ public class AvatarServiceImpl implements AvatarService{
 
     // 아바타 리스트
     public ResponseEntity<Response.Body> avatarList(){
-         List<Avatar> avatarList = avatarRepository.findAll();
-         return response.success(avatarList,"아바타리스트 입니다 ", HttpStatus.OK);
+
+        List<Avatar> avatarList = avatarRepository.findAll();
+
+        List<ResponseAvatar.ResponseAvatarList> responseAvatarList = new ArrayList<ResponseAvatar.ResponseAvatarList>();
+
+        //entity -> dto
+        for (int i = 0; i<avatarList.size() ; i++) {
+            ResponseAvatar.ResponseAvatarList responseAvatar = new ResponseAvatar.ResponseAvatarList(
+            avatarList.get(i).getId(),
+            avatarList.get(i).getName(),
+            avatarList.get(i).getThumbNail()
+            );
+            responseAvatarList.add(responseAvatar);
+        }
+
+        return response.success(responseAvatarList,"아바타리스트 입니다 ", HttpStatus.OK);
     }
 
     @Transactional(readOnly = true)
