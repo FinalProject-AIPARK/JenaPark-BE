@@ -20,7 +20,7 @@ public class AvatarController {
     }
 
     @GetMapping("/{avatarId}")
-    public ResponseEntity<Response.Body> createAvatar(@PathVariable Long avatarId){
+    public ResponseEntity<Response.Body> selectAvatar(@PathVariable Long avatarId){
         return avatarService.selectAvatar(avatarId);
     }
 }
