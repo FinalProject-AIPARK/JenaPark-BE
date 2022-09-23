@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface AccessoriesRepository extends JpaRepository<Accessories,Long> {
     List<Accessories> findAllByAvatar(Avatar avatar);
 
+    boolean existsByIdAndAvatar(Long id,Avatar avatar);
+
 }
