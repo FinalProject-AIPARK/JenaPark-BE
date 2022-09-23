@@ -48,8 +48,8 @@ public class AvatarServiceImpl implements AvatarService{
         return response.success(responseAvatarList,"아바타리스트 입니다 ", HttpStatus.OK);
     }
 
+    //아바타 선택시 해당 아바타가 가지고있는 아이템 리턴
     @Transactional(readOnly = true)
-    //아바타
     public ResponseEntity<Response.Body> selectAvatar(Long avatarId){
 
         Avatar avatar = avatarRepository.findById(avatarId).orElseThrow();
@@ -102,9 +102,24 @@ public class AvatarServiceImpl implements AvatarService{
         return response.success(responseAvatar,"해당 아바타에서 선택 가능한 옵션입니다. ",HttpStatus.OK);
     }
 
-    @Transactional
+    // 아바타 생성
+    @Transactional(readOnly = true)
     @Override
     public ResponseEntity<Response.Body> createAvatar(ResponseAvatar.ResponseCreateAvatar responseCreateAvatar) {
+
+        Avatar avatar = avatarRepository.findById(responseCreateAvatar.getAvatarId()).orElseThrow();
+
+        if(!accessoriesRepository.existsByIdAndAvatar(responseCreateAvatar.getAccessoryId(),avatar)){
+            return response.fail("해당 악세서리는 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
+        }
+
+        if(!attitudeRepository.existsByIdAndAvatar(responseCreateAvatar.getAttitudeId(),avatar)){
+            return response.fail("해당 태도는 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
+        }
+
+        if(!clothesRepository.existsByIdAndAvatar(responseCreateAvatar.getClothesId(),avatar)){
+            return response.fail("해당 옷은 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
+        }
 
         String resultUrl = responseCreateAvatar.getAvatarId()+"-"+responseCreateAvatar.getAccessoryId()+"-"+ responseCreateAvatar.getAttitudeId()+"-"+ responseCreateAvatar.getClothesId();
         return response.success(resultUrl,"아바타 생성 완료",HttpStatus.OK);
