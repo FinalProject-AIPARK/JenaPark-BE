@@ -38,5 +38,6 @@ public class ResponseAvatar {
         private Long accessoryId;
         private Long attitudeId;
         private Long clothesId;
+
     }
 }
