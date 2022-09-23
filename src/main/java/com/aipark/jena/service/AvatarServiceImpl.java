@@ -91,7 +91,6 @@ public class AvatarServiceImpl implements AvatarService{
             responseAttitudeList.add(responseAttitude);
         }
 
-
         // responseAvatar 에 값 주입
         ResponseAvatar responseAvatar = new ResponseAvatar(
                 avatar.getName(),
@@ -100,7 +99,7 @@ public class AvatarServiceImpl implements AvatarService{
                 responseClothesList,
                 responseAttitudeList);
 
-        return response.success(responseAvatar,"아바타 선택 완료 ",HttpStatus.OK);
+        return response.success(responseAvatar,"해당 아바타에서 선택 가능한 옵션입니다. ",HttpStatus.OK);
     }
 
     @Transactional
