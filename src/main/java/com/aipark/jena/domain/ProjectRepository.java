@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Override
     boolean existsById(Long projectId);
+
+    boolean existsByIdAndMember(Long projectId, Member member);
 }
