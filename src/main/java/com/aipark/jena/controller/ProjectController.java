@@ -26,7 +26,7 @@ public class ProjectController {
         return projectService.createProject();
     }
 
-    @PostMapping
+    @PostMapping("/title")
     public ResponseEntity<Body> changeTitle(@RequestBody ChangeTitle titleInputDto) {
         return projectService.changeTitle(titleInputDto);
     }
