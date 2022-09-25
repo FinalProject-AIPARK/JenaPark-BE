@@ -172,7 +172,7 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(audioUploadDto.getProjectID()).orElse(null);
         assert project != null;
         project.updateAudioUpload(true);
-        return response.success();
+        return response.success("음성 업로드를 성공했습니다.");
     }
 
     // 토큰에 해당하는 유저가 있는 지 체크
