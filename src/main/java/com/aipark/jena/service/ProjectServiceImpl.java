@@ -147,4 +147,36 @@ public class ProjectServiceImpl implements ProjectService {
         updateProject(project, ttsInputDto, allText.toString());
         return response.success(new AudioStage1(audioInfoDtos, allText.toString()), "음성 합성을 성공적으로 마쳤습니다.", HttpStatus.OK);
     }
+
+    @Transactional
+    protected void updateProject(Project project, CreateTTS ttsInputDto, String allText) {
+        project.updateStep1(allText, ttsInputDto.getSex(), ttsInputDto.getLang(), ttsInputDto.getDurationSilence(),
+                ttsInputDto.getVolume(), ttsInputDto.getPitch(), ttsInputDto.getSpeed());
+    }
+
+    /**
+     * 오디오 업로드
+     *
+     * @param audioUploadDto 오디오 업로드 요청
+     * @return 응답 객체
+     */
+    @Transactional
+    public ResponseEntity<Body> uploadAudio(AudioUploadDto audioUploadDto) {
+        Member member = checkToken();
+        if (checkToken() == null) {
+            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }
+        if (!projectRepository.existsById(audioUploadDto.getProjectID())) {
+            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+        Project project = projectRepository.findById(audioUploadDto.getProjectID()).orElse(null);
+        assert project != null;
+        project.updateAudioUpload(true);
+        return response.success();
+    }
+
+    // 토큰에 해당하는 유저가 있는 지 체크
+    private Member checkToken() {
+        return memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail()).orElse(null);
+    }
 }
