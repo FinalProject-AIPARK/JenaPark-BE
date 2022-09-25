@@ -29,16 +29,16 @@ public class AudioInfo {
     private String splitText;
 
     @Column(name = "pitch")
-    private Long pitch;
+    private Double pitch;
 
     @Column(name = "speed")
-    private Long speed;
+    private Double speed;
 
     @Column(name = "volume")
     private Long volume;
 
     @Column(name = "duration_silence")
-    private Long durationSilence;
+    private Double durationSilence;
 
     @Column
     private String audioFileUrl;

@@ -40,9 +40,9 @@ public class ResponseAudio {
         private int lineNumber;
         private String splitText;
         private String audioFileUrl;
-        private Long durationSilence;
-        private Long pitch;
-        private Long speed;
+        private Double durationSilence;
+        private Double pitch;
+        private Double speed;
         private Long volume;
 
         public static ResponseAudio.AudioInfoDto of(AudioInfo audioInfo) {
@@ -62,7 +62,6 @@ public class ResponseAudio {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    @Builder
     public static class AudioStage1 {
         private List<AudioInfoDto> audioInfoDtos;
         private String text;
