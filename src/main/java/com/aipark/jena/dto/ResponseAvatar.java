@@ -17,4 +17,27 @@ public class ResponseAvatar {
     private List accUrl;
     private List clothesUrl;
     private List attitudeUrl;
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class ResponseAvatarList{
+
+        private Long id;
+        private String name;
+        private String thumbNail;
+
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class ResponseCreateAvatar{
+
+        private Long avatarId;
+        private Long accessoryId;
+        private Long attitudeId;
+        private Long clothesId;
+
+    }
 }
