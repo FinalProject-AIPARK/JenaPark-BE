@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.aipark.jena.dto.RequestAudio.AudioUploadDto;
+import static com.aipark.jena.dto.RequestProject.ChangeTitle;
 import static com.aipark.jena.dto.RequestProject.CreateTTS;
 import static com.aipark.jena.dto.Response.Body;
 

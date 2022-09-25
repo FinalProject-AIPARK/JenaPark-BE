@@ -3,6 +3,7 @@ package com.aipark.jena.service;
 import com.aipark.jena.config.security.SecurityUtil;
 import com.aipark.jena.domain.*;
 import com.aipark.jena.dto.Response;
+import com.aipark.jena.dto.Response.Body;
 import com.aipark.jena.dto.ResponseAudio.AudioStage1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.aipark.jena.config.ProjectDefault.*;
+import static com.aipark.jena.dto.RequestAudio.AudioUploadDto;
+import static com.aipark.jena.dto.RequestProject.ChangeTitle;
 import static com.aipark.jena.dto.RequestProject.CreateTTS;
 import static com.aipark.jena.dto.ResponseAudio.AudioInfoDto;
 import static com.aipark.jena.dto.ResponseProject.InitialProject;
@@ -37,7 +41,7 @@ public class ProjectServiceImpl implements ProjectService {
      * @return 응답 객체
      */
     @Transactional
-    public ResponseEntity<Response.Body> createProject() {
+    public ResponseEntity<Body> createProject() {
         Optional<Member> res = memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail());
         if (res.isEmpty()) {
             return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
@@ -46,6 +50,15 @@ public class ProjectServiceImpl implements ProjectService {
         //프로젝트 생성
         Project project = Project.builder()
                 .member(member)
+                .title(TITLE_DEFAULT)
+                .sex(SEX_DEFAULT)
+                .lang(LANGUAGE_DEFAULT)
+                .speed(SPEED_DEFAULT)
+                .pitch(PITCH_DEFAULT)
+                .volume(VOLUME_DEFAULT)
+                .durationSilence(DURATION_SILENCE_DEFAULT)
+                .backgroundUrl(BACKGROUND_DEFAULT)
+                .audioUpload(AUDIO_UPLOAD_DEFAULT)
                 .build();
         //양방향 연결 member <-> project
         member.addProject(project);
@@ -81,16 +94,19 @@ public class ProjectServiceImpl implements ProjectService {
      * @return 응답 객체
      */
     @Transactional
-    public ResponseEntity<Response.Body> createTTS(CreateTTS ttsInputDto) {
-        if (memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail()).isEmpty()) {
+    public ResponseEntity<Body> createTTS(CreateTTS ttsInputDto) {
+        Optional<Member> optMember = memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail());
+        if (optMember.isEmpty()) {
             return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
         }
+        Member member = optMember.get();
         if (!projectRepository.existsById(ttsInputDto.getProjectID())) {
             return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
-
-        //오디오 객체 생성
-        List<AudioInfo> audioInfos = new ArrayList<>();
+        if (!projectRepository.existsByIdAndMember(ttsInputDto.getProjectID(), member)) {
+            return response.fail("다른 회원의 프로젝트에 접근할 수 없습니다.", HttpStatus.UNAUTHORIZED);
+        }
+        Project project = projectRepository.findById(ttsInputDto.getProjectID()).orElse(null);
         // 1. text 한문장씩 분리
         List<String> splitTexts = Arrays.stream(ttsInputDto.getText()
                         .split("\\."))
@@ -98,12 +114,14 @@ public class ProjectServiceImpl implements ProjectService {
                 .filter(splitText -> !splitText.isEmpty())  // 빈 문자열 제거
                 .collect(Collectors.toList());
 
+        //오디오 객체 생성
+        List<AudioInfo> audioInfos = new ArrayList<>();
         // 2. 문장마다 오디오파일 생성
         for (int i = 0; i < splitTexts.size(); i++) {
             //python script
             //audioFileUrl 을 하나씩 만들어야함
             //보류
-            AudioInfo audioInfo = AudioInfo.builder()
+            audioInfos.add(AudioInfo.builder()
                     .lineNumber(i + 1)
                     .splitText(splitTexts.get(i) + ".")
                     .durationSilence(ttsInputDto.getDurationSilence())
@@ -111,25 +129,22 @@ public class ProjectServiceImpl implements ProjectService {
                     .speed(ttsInputDto.getSpeed())
                     .volume(ttsInputDto.getVolume())
                     .audioFileUrl(null)
-                    .build();
-            audioInfos.add(audioInfo);
+                    .build());
         }
         audioInfoRepository.saveAll(audioInfos);
         List<AudioInfoDto> audioInfoDtos = audioInfos.stream()
                 .map(AudioInfoDto::of)
                 .collect(Collectors.toList());
 
-        //전체 텍스트 생성
+        // 3. 전체 텍스트 생성
         StringBuilder allText = new StringBuilder();
         for (AudioInfoDto audioInfoDto : audioInfoDtos) {
             allText.append(audioInfoDto.getSplitText()).append(" ");
         }
 
-        AudioStage1 audioStage1 = AudioStage1.builder()
-                .audioInfoDtos(audioInfoDtos)
-                .text(allText.toString())
-                .build();
-
-        return response.success(audioStage1, "음성 합성을 성공적으로 마쳤습니다.", HttpStatus.OK);
+        // 4 .프로젝트 업데이트
+        assert project != null;
+        updateProject(project, ttsInputDto, allText.toString());
+        return response.success(new AudioStage1(audioInfoDtos, allText.toString()), "음성 합성을 성공적으로 마쳤습니다.", HttpStatus.OK);
     }
 }
