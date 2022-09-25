@@ -54,6 +54,25 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     /**
+     * 프로젝트 제목 변경
+     *
+     * @param titleInputDto 프로젝트 제목 변경 요청
+     * @return 응답객체
+     */
+    @Transactional
+    public ResponseEntity<Body> changeTitle(ChangeTitle titleInputDto) {
+        if (memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail()).isEmpty()) {
+            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }
+        if (!projectRepository.existsById(titleInputDto.getProjectID())) {
+            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+        projectRepository.findById(titleInputDto.getProjectID())
+                .ifPresent(project -> project.updateTitle(titleInputDto.getTitle()));
+        return response.success("해당 프로젝트의 제목이 변경되었습니다.");
+    }
+
+    /**
      * <p>음성 합성 실행 - 텍스트 입력 페이지 </p> <br>
      * <p>
      * 전체 텍스트를 한 문장씩 분리해서 오디오파일을 생성한다.

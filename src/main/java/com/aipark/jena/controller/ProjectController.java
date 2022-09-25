@@ -25,6 +25,11 @@ public class ProjectController {
         return projectService.createProject();
     }
 
+    @PostMapping
+    public ResponseEntity<Body> changeTitle(@RequestBody ChangeTitle titleInputDto) {
+        return projectService.changeTitle(titleInputDto);
+    }
+
     @PostMapping("/create-tts")
     public ResponseEntity<Body> createTTS(@RequestBody CreateTTS ttsInputDto) {
         return projectService.createTTS(ttsInputDto);
