@@ -1,7 +1,5 @@
 package com.aipark.jena.controller;
 
-import com.aipark.jena.dto.RequestProject;
-import com.aipark.jena.dto.Response;
 import com.aipark.jena.service.ProjectServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.aipark.jena.dto.RequestAudio.AudioUploadDto;
+import static com.aipark.jena.dto.RequestProject.CreateTTS;
+import static com.aipark.jena.dto.Response.Body;
+
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/projects")
@@ -19,12 +21,17 @@ public class ProjectController {
     private final ProjectServiceImpl projectService;
 
     @PostMapping
-    public ResponseEntity<Response.Body> createProject() {
+    public ResponseEntity<Body> createProject() {
         return projectService.createProject();
     }
 
     @PostMapping("/create-tts")
-    public ResponseEntity<Response.Body> createTTS(@RequestBody RequestProject.CreateTTS ttsInputDto) {
+    public ResponseEntity<Body> createTTS(@RequestBody CreateTTS ttsInputDto) {
         return projectService.createTTS(ttsInputDto);
+    }
+
+    @PostMapping("/audio/upload")
+    public ResponseEntity<Body> uploadAudio(@RequestBody AudioUploadDto audioUploadDto) {
+        return projectService.uploadAudio(audioUploadDto);
     }
 }
