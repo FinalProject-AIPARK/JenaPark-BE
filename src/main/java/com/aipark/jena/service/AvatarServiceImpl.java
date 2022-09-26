@@ -3,6 +3,7 @@ package com.aipark.jena.service;
 import com.aipark.jena.domain.Avatar;
 import com.aipark.jena.domain.AvatarRepository;
 import com.aipark.jena.domain.avatarCategory.*;
+import com.aipark.jena.dto.RequestAvatar;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.dto.ResponseAvatar;
 import com.aipark.jena.dto.ResponseAvatarCategory.ResponseAccessories;
@@ -105,23 +106,23 @@ public class AvatarServiceImpl implements AvatarService{
     // 아바타 생성
     @Transactional(readOnly = true)
     @Override
-    public ResponseEntity<Response.Body> createAvatar(ResponseAvatar.ResponseCreateAvatar responseCreateAvatar) {
+    public ResponseEntity<Response.Body> createAvatar(RequestAvatar.RequestCreateAvatar requestCreateAvatar) {
 
-        Avatar avatar = avatarRepository.findById(responseCreateAvatar.getAvatarId()).orElseThrow();
+        Avatar avatar = avatarRepository.findById(requestCreateAvatar.getAvatarId()).orElseThrow();
 
-        if(!accessoriesRepository.existsByIdAndAvatar(responseCreateAvatar.getAccessoryId(),avatar)){
+        if(!accessoriesRepository.existsByIdAndAvatar(requestCreateAvatar.getAccessoryId(),avatar)){
             return response.fail("해당 악세서리는 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
         }
 
-        if(!attitudeRepository.existsByIdAndAvatar(responseCreateAvatar.getAttitudeId(),avatar)){
+        if(!attitudeRepository.existsByIdAndAvatar(requestCreateAvatar.getAttitudeId(),avatar)){
             return response.fail("해당 태도는 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
         }
 
-        if(!clothesRepository.existsByIdAndAvatar(responseCreateAvatar.getClothesId(),avatar)){
+        if(!clothesRepository.existsByIdAndAvatar(requestCreateAvatar.getClothesId(),avatar)){
             return response.fail("해당 옷은 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
         }
 
-        String resultUrl = responseCreateAvatar.getAvatarId()+"-"+responseCreateAvatar.getAccessoryId()+"-"+ responseCreateAvatar.getAttitudeId()+"-"+ responseCreateAvatar.getClothesId();
+        String resultUrl = requestCreateAvatar.getAvatarId()+"-"+requestCreateAvatar.getAccessoryId()+"-"+ requestCreateAvatar.getAttitudeId()+"-"+ requestCreateAvatar.getClothesId();
         return response.success(resultUrl,"아바타 생성 완료",HttpStatus.OK);
     }
 

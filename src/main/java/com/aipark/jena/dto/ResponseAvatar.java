@@ -29,15 +29,4 @@ public class ResponseAvatar {
 
     }
 
-    @AllArgsConstructor
-    @NoArgsConstructor
-    @Getter
-    public static class ResponseCreateAvatar{
-
-        private Long avatarId;
-        private Long accessoryId;
-        private Long attitudeId;
-        private Long clothesId;
-
-    }
 }
