@@ -14,6 +14,7 @@ public class RequestMember {
     public static class SignUp {
         private String email;
         private String password;
+        private String confirmPassword;
         private String username;
 
         public Member toMember(PasswordEncoder passwordEncoder) {
