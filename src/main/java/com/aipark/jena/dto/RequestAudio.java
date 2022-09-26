@@ -10,4 +10,11 @@ public class RequestAudio {
         private String lang;
         private String sex;
     }
+
+    @Getter
+    @Setter
+    public static class AudioUploadDto {
+        private Long projectID;
+        private String audioFile;
+    }
 }
