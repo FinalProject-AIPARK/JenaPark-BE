@@ -1,5 +1,6 @@
 package com.aipark.jena.controller;
 
+import com.aipark.jena.dto.RequestAvatar;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.dto.ResponseAvatar;
 import com.aipark.jena.service.AvatarService;
@@ -10,12 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/avatar")
+@RequestMapping("/api/v1/projects/avatar")
 public class AvatarController {
 
     private final AvatarService avatarService;
 
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<Response.Body> avatarList(){
         return avatarService.avatarList();
     }
@@ -26,7 +27,7 @@ public class AvatarController {
     }
 
     @PostMapping("/createAvatar")
-    public ResponseEntity<Response.Body> createAvatar(@RequestBody ResponseAvatar.ResponseCreateAvatar responseCreateAvatar){
-        return avatarService.createAvatar(responseCreateAvatar);
+    public ResponseEntity<Response.Body> createAvatar(@RequestBody RequestAvatar.RequestCreateAvatar requestCreateAvatar){
+        return avatarService.createAvatar(requestCreateAvatar);
     }
 }
