@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -35,22 +37,35 @@ public class Project extends BaseTimeEntity {
     private String text;
 
     @Column
-    private String speed;
+    private Double speed;
 
     @Column
-    private String pitch;
+    private Double pitch;
 
     @Column
     private Long volume;
 
     @Column
-    private String durationSilence;
+    private Double durationSilence;
 
     @Column
     private String backgroundUrl;
 
     @Column
-    private Boolean audioUpload;
+    private Boolean audioUpload;    // 오디오 업로드 여부
+
+    @Column
+    private Boolean audioMerge;     // 오디오 합성여부 미리듣기나 다운로드를 하려면 true
+
+    @Column
+    private String audioFileUrl;   // 전체 오디오 파일 url 미리듣기 등
+
+    @Column
+    private String avatarUrl;   // 아바타 썸네일 이미지
+
+    @Builder.Default
+    @OneToMany(mappedBy = "project")
+    private List<AudioInfo> audioInfos = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -68,13 +83,30 @@ public class Project extends BaseTimeEntity {
         this.audioUpload = audioUpload;
     }
 
+    public void updateAudioMerge(Boolean audioMerge) {
+        this.audioMerge = audioMerge;
+    }
+
+    public void updateAudioFileUrl(String audioFile) {
+        this.audioFileUrl = audioFile;
+    }
+
     public void updateStep1(String allText, String sex, String lang, Double durationSilence, Long volume, Double pitch, Double speed) {
         this.text = allText;
         this.sex = sex;
         this.lang = lang;
-        this.durationSilence = Double.toString(durationSilence);
+        this.durationSilence = durationSilence;
         this.volume = volume;
-        this.pitch = Double.toString(pitch);
-        this.speed = Double.toString(speed);
+        this.pitch = pitch;
+        this.speed = speed;
+        this.audioUpload = false;
+        this.audioMerge = false;
+    }
+
+    public void updateAudioInfos(List<AudioInfo> audioInfos) {
+        if (this.audioInfos.size() != 0) {
+            this.audioInfos.clear();
+        }
+        this.audioInfos.addAll(audioInfos);
     }
 }
