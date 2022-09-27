@@ -23,6 +23,8 @@ public class ResponseProject {
         private Double durationSilence;
         private String backgroundUrl;
         private Boolean audioUpload;
+        private Boolean audioMerge;
+        private String audioFileUrl;
 
         public static InitialProject of(Project project) {
             return InitialProject.builder()
@@ -30,12 +32,14 @@ public class ResponseProject {
                     .title(project.getTitle())
                     .sex(project.getSex())
                     .lang(project.getLang())
-                    .speed(Double.parseDouble(project.getSpeed()))
-                    .pitch(Double.parseDouble(project.getPitch()))
+                    .speed(project.getSpeed())
+                    .pitch(project.getPitch())
                     .volume(project.getVolume())
-                    .durationSilence(Double.parseDouble(project.getDurationSilence()))
+                    .durationSilence(project.getDurationSilence())
                     .backgroundUrl(project.getBackgroundUrl())
                     .audioUpload(project.getAudioUpload())
+                    .audioMerge(project.getAudioMerge())
+                    .audioFileUrl(project.getAudioFileUrl())
                     .build();
         }
     }

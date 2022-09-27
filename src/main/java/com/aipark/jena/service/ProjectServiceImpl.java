@@ -59,6 +59,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .durationSilence(DURATION_SILENCE_DEFAULT)
                 .backgroundUrl(BACKGROUND_DEFAULT)
                 .audioUpload(AUDIO_UPLOAD_DEFAULT)
+                .audioMerge(AUDIO_MERGE_DEFAULT)
                 .build();
         //양방향 연결 member <-> project
         member.addProject(project);
@@ -95,11 +96,10 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Transactional
     public ResponseEntity<Body> createTTS(CreateTTS ttsInputDto) {
-        Optional<Member> optMember = memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail());
-        if (optMember.isEmpty()) {
+        Member member = checkToken();
+        if (member == null) {
             return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
         }
-        Member member = optMember.get();
         if (!projectRepository.existsById(ttsInputDto.getProjectID())) {
             return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
@@ -171,7 +171,10 @@ public class ProjectServiceImpl implements ProjectService {
         }
         Project project = projectRepository.findById(audioUploadDto.getProjectID()).orElse(null);
         assert project != null;
+        // 음성이 업로드 되면 audioInfos 를 비워야 한다.
         project.updateAudioUpload(true);
+        project.updateAudioMerge(true);
+        project.updateAudioFileUrl(audioUploadDto.getAudioFile());
         return response.success("음성 업로드를 성공했습니다.");
     }
 
