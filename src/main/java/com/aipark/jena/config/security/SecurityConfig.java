@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/members/signup", "/api/v1/members/login").permitAll()
-                .anyRequest().authenticated()
+                //.anyRequest().authenticated()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and()
                 .cors().configurationSource(corsConfigurationSource())
