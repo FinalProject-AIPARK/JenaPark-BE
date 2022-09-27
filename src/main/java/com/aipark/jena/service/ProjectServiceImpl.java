@@ -12,16 +12,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.aipark.jena.config.ProjectDefault.*;
 import static com.aipark.jena.dto.RequestAudio.AudioUploadDto;
-import static com.aipark.jena.dto.RequestProject.ChangeTitle;
-import static com.aipark.jena.dto.RequestProject.CreateTTS;
+import static com.aipark.jena.dto.RequestProject.*;
 import static com.aipark.jena.dto.ResponseAudio.AudioInfoDto;
 import static com.aipark.jena.dto.ResponseProject.InitialProject;
 
@@ -107,6 +107,8 @@ public class ProjectServiceImpl implements ProjectService {
             return response.fail("다른 회원의 프로젝트에 접근할 수 없습니다.", HttpStatus.UNAUTHORIZED);
         }
         Project project = projectRepository.findById(ttsInputDto.getProjectID()).orElse(null);
+        // 0. 기존에 있던 프로젝트의 오디오파일들을 삭제
+        audioInfoRepository.deleteAllByProject(project);
         // 1. text 한문장씩 분리
         List<String> splitTexts = Arrays.stream(ttsInputDto.getText()
                         .split("\\."))
@@ -123,6 +125,7 @@ public class ProjectServiceImpl implements ProjectService {
             //보류
             audioInfos.add(AudioInfo.builder()
                     .lineNumber(i + 1)
+                    .project(project)
                     .splitText(splitTexts.get(i) + ".")
                     .durationSilence(ttsInputDto.getDurationSilence())
                     .pitch(ttsInputDto.getPitch())
@@ -131,6 +134,8 @@ public class ProjectServiceImpl implements ProjectService {
                     .audioFileUrl(null)
                     .build());
         }
+        assert project != null;
+        project.updateAudioInfos(audioInfos);
         audioInfoRepository.saveAll(audioInfos);
         List<AudioInfoDto> audioInfoDtos = audioInfos.stream()
                 .map(AudioInfoDto::of)
@@ -143,9 +148,32 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         // 4 .프로젝트 업데이트
-        assert project != null;
         updateProject(project, ttsInputDto, allText.toString());
         return response.success(new AudioStage1(audioInfoDtos, allText.toString()), "음성 합성을 성공적으로 마쳤습니다.", HttpStatus.OK);
+    }
+
+    /**
+     * 한 오디오 파일 씩 수정 후 음성 반환
+     *
+     * @param ttsInputDto 선택된 음성 수정
+     * @return 응답객체
+     */
+    @Transactional
+    public ResponseEntity<Body> updateTTS(UpdateTTS ttsInputDto) {
+        Member member = checkToken();
+        if (member == null) {
+            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }
+        if (!projectRepository.existsById(ttsInputDto.getProjectID())) {
+            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+        Project project = projectRepository.findById(ttsInputDto.getProjectID()).get();
+        if (!audioInfoRepository.existsByIdAndProject(ttsInputDto.getAudioID(), project)) {
+            return response.fail("해당 프로젝트의 오디오파일이 아닙니다.", HttpStatus.UNAUTHORIZED);
+        }
+        audioInfoRepository.findById(ttsInputDto.getAudioID());
+
+        return response.success();
     }
 
     @Transactional
@@ -171,11 +199,57 @@ public class ProjectServiceImpl implements ProjectService {
         }
         Project project = projectRepository.findById(audioUploadDto.getProjectID()).orElse(null);
         assert project != null;
+
+        String audioFileBase64 = audioUploadDto.getAudioFile();
+
+        if (audioFileBase64 == null || audioFileBase64.equals("")) {
+            return response.fail("파일이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        } else if (audioFileBase64.length() > 400000) {
+            return response.fail("파일이 너무 큽니다.", HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            String fileName = UUID.randomUUID().toString();
+            File file = new File(FileSystemView.getFileSystemView().getHomeDirectory() + "/" + fileName + ".wav");
+            Base64.Decoder decoder = Base64.getDecoder();
+            byte[] decodeBytes = decoder.decode(audioFileBase64.getBytes());
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(decodeBytes);
+            fileOutputStream.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
         // 음성이 업로드 되면 audioInfos 를 비워야 한다.
+        audioInfoRepository.deleteAllByProject(project);
         project.updateAudioUpload(true);
         project.updateAudioMerge(true);
-        project.updateAudioFileUrl(audioUploadDto.getAudioFile());
+        project.updateAudioFileUrl("test.url");
         return response.success("음성 업로드를 성공했습니다.");
+    }
+
+    /**
+     * 음성 합성 요청
+     *
+     * @param projectId 프로젝트 pk key
+     * @return 응답 객체
+     */
+    @Transactional
+    public ResponseEntity<Body> mergeAudio(Long projectId) {
+        if (checkToken() == null) {
+            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }
+        if (!projectRepository.existsById(projectId)) {
+            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+        Project project = projectRepository.findById(projectId).get();
+        //* 
+        // 음성 합성
+        // */
+        String audioFileUrl = "합성된 전체 음성.url";
+        project.updateAudioMerge(true);
+        project.updateAudioFileUrl(audioFileUrl);
+        return response.success(audioFileUrl, "음성 합성을 성공했습니다.", HttpStatus.CREATED);
     }
 
     // 토큰에 해당하는 유저가 있는 지 체크
