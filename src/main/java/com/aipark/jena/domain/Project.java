@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -61,6 +63,10 @@ public class Project extends BaseTimeEntity {
     @Column
     private String avatarUrl;   // 아바타 썸네일 이미지
 
+    @Builder.Default
+    @OneToMany(mappedBy = "project")
+    private List<AudioInfo> audioInfos = new ArrayList<>();
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -93,5 +99,14 @@ public class Project extends BaseTimeEntity {
         this.volume = volume;
         this.pitch = pitch;
         this.speed = speed;
+        this.audioUpload = false;
+        this.audioMerge = false;
+    }
+
+    public void updateAudioInfos(List<AudioInfo> audioInfos) {
+        if (this.audioInfos.size() != 0) {
+            this.audioInfos.clear();
+        }
+        this.audioInfos.addAll(audioInfos);
     }
 }
