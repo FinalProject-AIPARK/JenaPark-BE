@@ -6,6 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.aipark.jena.dto.ResponseAudio.*;
+
 public class ResponseProject {
 
     @Getter
@@ -25,8 +30,14 @@ public class ResponseProject {
         private Boolean audioUpload;
         private Boolean audioMerge;
         private String audioFileUrl;
+        private List<AudioInfoDto> audioInfos;
 
         public static InitialProject of(Project project) {
+            List<AudioInfoDto> audioInfoDtos = project.getAudioInfos()
+                        .stream()
+                        .map(AudioInfoDto::of)
+                        .collect(Collectors.toList());
+
             return InitialProject.builder()
                     .projectId(project.getId())
                     .title(project.getTitle())
@@ -40,6 +51,7 @@ public class ResponseProject {
                     .audioUpload(project.getAudioUpload())
                     .audioMerge(project.getAudioMerge())
                     .audioFileUrl(project.getAudioFileUrl())
+                    .audioInfos(audioInfoDtos)
                     .build();
         }
     }
