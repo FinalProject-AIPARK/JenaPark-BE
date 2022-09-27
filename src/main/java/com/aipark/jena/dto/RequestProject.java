@@ -28,7 +28,7 @@ public class RequestProject {
 
     @Getter
     @Setter
-    public static class ModifyTTS {
+    public static class UpdateTTS {
         private Long projectID;
         private Long audioID;
         private Double durationSilence;

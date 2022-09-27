@@ -11,22 +11,23 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-public class ResponseAvatar {
+public class RequestAvatar {
     private String avatarName;
     private String thumbNail;
     private List accUrl;
     private List clothesUrl;
     private List attitudeUrl;
 
+
     @AllArgsConstructor
     @NoArgsConstructor
     @Getter
-    public static class ResponseAvatarList{
+    public static class RequestCreateAvatar{
 
-        private Long id;
-        private String name;
-        private String thumbNail;
-
+        private Long avatarId;
+        private Long accessoryId;
+        private Long attitudeId;
+        private Long clothesId;
+        private Long projectId;
     }
-
 }

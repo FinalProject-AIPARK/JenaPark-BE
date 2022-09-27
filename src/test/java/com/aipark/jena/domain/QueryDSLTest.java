@@ -1,5 +1,6 @@
 package com.aipark.jena.domain;
 
+import com.aipark.jena.domain.avatarCategory.QAccessories;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +15,4 @@ public class QueryDSLTest {
 
     @Autowired
     JPAQueryFactory query;
-
-
-    @Test
-    public void 기본쿼리(){
-        List<Member> results = query
-                .selectFrom(QMember.member)
-                .fetch();
-
-        assertThat(results.size()).isEqualTo(2);
-
-    }
 }

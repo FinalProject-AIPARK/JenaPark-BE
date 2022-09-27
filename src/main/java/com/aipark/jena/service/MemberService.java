@@ -33,6 +33,9 @@ public class MemberService {
 
     @Transactional
     public ResponseEntity<Body> signUp(RequestMember.SignUp signUpDto) {
+        if (!signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
+            return response.fail("재확인 비밀번호를 다시 확인해주십시오.", HttpStatus.UNAUTHORIZED);
+        }
         if (memberRepository.existsByEmail(signUpDto.getEmail())) {
             return response.fail("이미 회원가입된 이메일입니다.", HttpStatus.BAD_REQUEST);
         }
