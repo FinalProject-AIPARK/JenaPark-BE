@@ -39,7 +39,7 @@ public class Member extends BaseTimeEntity{
     @Column
     private String profileImg;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "member")
     private List<Project> projects = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)

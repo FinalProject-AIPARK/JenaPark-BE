@@ -4,14 +4,12 @@ import com.aipark.jena.service.ProjectServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 import static com.aipark.jena.dto.RequestAudio.AudioUploadDto;
-import static com.aipark.jena.dto.RequestProject.ChangeTitle;
-import static com.aipark.jena.dto.RequestProject.CreateTTS;
+import static com.aipark.jena.dto.RequestProject.*;
 import static com.aipark.jena.dto.Response.Body;
 
 @Slf4j
@@ -36,8 +34,18 @@ public class ProjectController {
         return projectService.createTTS(ttsInputDto);
     }
 
-    @PostMapping("/audio/upload")
-    public ResponseEntity<Body> uploadAudio(@RequestBody AudioUploadDto audioUploadDto) {
-        return projectService.uploadAudio(audioUploadDto);
+    @PostMapping("/update-tts")
+    public ResponseEntity<Body> updateTTS(@RequestBody UpdateTTS ttsInputDto) {
+        return projectService.updateTTS(ttsInputDto);
+    }
+
+    @GetMapping("/{projectId}}/audio")
+    public ResponseEntity<Body> mergeAudio(@PathVariable Long projectId) {
+        return projectService.mergeAudio(projectId);
+    }
+
+    @PostMapping("/{projectId}/audio/upload")
+    public ResponseEntity<Body> uploadAudio(@PathVariable Long projectId, @ModelAttribute AudioUploadDto audioUploadDto) throws IOException {
+        return projectService.uploadAudio(projectId, audioUploadDto);
     }
 }
