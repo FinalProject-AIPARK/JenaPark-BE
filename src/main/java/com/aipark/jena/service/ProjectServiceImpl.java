@@ -200,9 +200,9 @@ public class ProjectServiceImpl implements ProjectService {
 //        if (checkToken() == null) {
 //            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
 //        }
-//        if (!projectRepository.existsById(audioUploadDto.getProjectID())) {
-//            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-//        }
+        if (!projectRepository.existsById(projectId)) {
+            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
         Project project = projectRepository.findById(projectId).orElse(null);
         assert project != null;
 
@@ -221,6 +221,22 @@ public class ProjectServiceImpl implements ProjectService {
         return response.success(audioFileUrl, "음성 업로드를 성공했습니다.", HttpStatus.CREATED);
     }
 
+    @Transactional
+    public ResponseEntity<Body> deleteUploadAudio(Long projectId) {
+        if (!projectRepository.existsById(projectId)) {
+            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+        Project project = projectRepository.findById(projectId).orElse(null);
+        assert project != null;
+        if (!project.getAudioUpload()) {
+            return response.fail("해당 프로젝트에 업로드된 음성파일이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+        }
+        project.updateAudioUpload(false);
+        project.updateAudioMerge(false);
+        project.updateAudioFileUrl(null);
+        return response.success("업로드된 음성파일이 삭제되었습니다.");
+    }
+
     /**
      * 음성 합성 요청
      *
@@ -236,7 +252,7 @@ public class ProjectServiceImpl implements ProjectService {
             return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
         Project project = projectRepository.findById(projectId).get();
-        //* 
+        //*
         // 음성 합성
         // */
         String audioFileUrl = "합성된 전체 음성.url";
