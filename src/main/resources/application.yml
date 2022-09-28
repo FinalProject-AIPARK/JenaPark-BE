@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    include: config
+    include: config, oauth
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
