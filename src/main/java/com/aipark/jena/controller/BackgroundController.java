@@ -1,13 +1,13 @@
 package com.aipark.jena.controller;
 
+import com.aipark.jena.dto.RequestBackground;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.service.BackgroundService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,5 +30,8 @@ public class BackgroundController {
     }
 
     // 배경 업로드
-
+    @PostMapping("/upload")
+    public ResponseEntity<Response.Body> uploadBackground(@ModelAttribute RequestBackground.BackgroundUploadDto backgroundUploadDto) throws IOException {
+        return backgroundService.backgroundUpload(backgroundUploadDto);
+    }
 }
