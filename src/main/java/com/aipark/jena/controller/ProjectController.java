@@ -44,8 +44,8 @@ public class ProjectController {
         return projectService.mergeAudio(projectId);
     }
 
-    @PostMapping("/audio/upload")
-    public ResponseEntity<Body> uploadAudio(@ModelAttribute AudioUploadDto audioUploadDto) throws IOException {
-        return projectService.uploadAudio(audioUploadDto);
+    @PostMapping("/{projectId}/audio/upload")
+    public ResponseEntity<Body> uploadAudio(@PathVariable Long projectId, @ModelAttribute AudioUploadDto audioUploadDto) throws IOException {
+        return projectService.uploadAudio(projectId, audioUploadDto);
     }
 }

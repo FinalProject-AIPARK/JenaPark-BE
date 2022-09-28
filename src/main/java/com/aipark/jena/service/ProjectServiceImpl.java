@@ -195,7 +195,7 @@ public class ProjectServiceImpl implements ProjectService {
      * @return 응답 객체
      */
     @Transactional
-    public ResponseEntity<Body> uploadAudio(AudioUploadDto audioUploadDto) throws IOException {
+    public ResponseEntity<Body> uploadAudio(Long projectId, AudioUploadDto audioUploadDto) throws IOException {
 //        Member member = checkToken();
 //        if (checkToken() == null) {
 //            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
@@ -203,21 +203,22 @@ public class ProjectServiceImpl implements ProjectService {
 //        if (!projectRepository.existsById(audioUploadDto.getProjectID())) {
 //            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
 //        }
-//        Project project = projectRepository.findById(audioUploadDto.getProjectID()).orElse(null);
-//        assert project != null;
+        Project project = projectRepository.findById(projectId).orElse(null);
+        assert project != null;
 
         InputStream inputStream = audioUploadDto.getAudioFile().getInputStream();
         ObjectMetadata objectMetadata = new ObjectMetadata();
         String fileName = "audio/" + UUID.randomUUID().toString().toLowerCase() + ".wav";
 
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata));
-
+        inputStream.close();
         // 음성이 업로드 되면 audioInfos 를 비워야 한다.
-//        audioInfoRepository.deleteAllByProject(project);
-//        project.updateAudioUpload(true);
-//        project.updateAudioMerge(true);
-//        project.updateAudioFileUrl("test.url");
-        return response.success("음성 업로드를 성공했습니다.");
+        String audioFileUrl = "https://jenapark.s3.ap-northeast-2.amazonaws.com/" + fileName;
+        audioInfoRepository.deleteAllByProject(project);
+        project.updateAudioUpload(true);
+        project.updateAudioMerge(true);
+        project.updateAudioFileUrl(audioFileUrl);
+        return response.success(audioFileUrl, "음성 업로드를 성공했습니다.", HttpStatus.CREATED);
     }
 
     /**
