@@ -16,14 +16,14 @@ import java.io.InputStreamReader;
 @RestController
 public class PythonController {
 
-    @Value("${s3.access_key}")
-    String accessKey;
+    @Value("${cloud.aws.credentials.access-key")
+    private String accessKey;
 
-    @Value("${s3.secret_key}")
-    String secretKey;
+    @Value("${cloud.aws.credentials.secret-key")
+    private String secretKey;
 
-    @Value("${s3.aws_default_region}")
-    String region;
+    @Value("${cloud.aws.region.static")
+    private String region;
 
     @GetMapping
     public String getTest() {
