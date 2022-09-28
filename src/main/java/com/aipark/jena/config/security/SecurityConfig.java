@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -36,7 +37,7 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/members/signup", "/api/v1/members/login").permitAll()
+                .antMatchers("/api/v1/members/signup", "/api/v1/members/login", "/token/**").permitAll()
                 //.anyRequest().authenticated()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and()
@@ -68,7 +69,10 @@ public class SecurityConfig {
     }
 
     protected void configure(HttpSecurity http) throws Exception {
-        http.oauth2Login()
+        http
+                .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
+                .oauth2Login().loginPage("/token/expired")
+                .successHandler(successHandler)
                 .userInfoEndpoint() // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때 설정 담당
                 .userService(oAuthService); // OAuth2 로그인 성공 시, 후작업을 진행할 UserService 인터페이스 구현체 등록
     }
