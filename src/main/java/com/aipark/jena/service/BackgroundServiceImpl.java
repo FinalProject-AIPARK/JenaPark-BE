@@ -2,6 +2,8 @@ package com.aipark.jena.service;
 
 import com.aipark.jena.domain.Background;
 import com.aipark.jena.domain.BackgroundRepository;
+import com.aipark.jena.domain.Project;
+import com.aipark.jena.domain.ProjectRepository;
 import com.aipark.jena.dto.RequestBackground;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.dto.ResponseBackground;
@@ -25,6 +27,7 @@ import java.util.UUID;
 public class BackgroundServiceImpl implements BackgroundService {
 
     private final BackgroundRepository backgroundRepository;
+    private final ProjectRepository projectRepository;
     private final Response response;
     private final AmazonS3 amazonS3;
 
@@ -33,15 +36,21 @@ public class BackgroundServiceImpl implements BackgroundService {
 
     //배경 업로드
     @Override
-    public ResponseEntity<Response.Body> backgroundUpload(RequestBackground.BackgroundUploadDto backgroundUploadDto)throws IOException {
+    public ResponseEntity<Response.Body> backgroundUpload(Long projectId,RequestBackground.BackgroundUploadDto backgroundUploadDto)throws IOException {
+
+        Project project = projectRepository.findById(projectId).orElse(null);
+        assert project != null;
 
         InputStream inputStream = backgroundUploadDto.getBackgroundFile().getInputStream();
         ObjectMetadata objectMetadata = new ObjectMetadata();
         String fileName = "background/" + UUID.randomUUID().toString().toLowerCase() + ".png";
 
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata));
+        inputStream.close();
 
-        return response.success("배경 업로드를 성공했습니다.");
+        String backgroundFileUrl = "https://jenapark.s3.ap-northeast-2.amazonaws.com/" + fileName;
+
+        return response.success(backgroundFileUrl,"배경 업로드를 성공했습니다.",HttpStatus.CREATED);
     }
 
     @Override

@@ -30,8 +30,8 @@ public class BackgroundController {
     }
 
     // 배경 업로드
-    @PostMapping("/upload")
-    public ResponseEntity<Response.Body> uploadBackground(@ModelAttribute RequestBackground.BackgroundUploadDto backgroundUploadDto) throws IOException {
-        return backgroundService.backgroundUpload(backgroundUploadDto);
+    @PostMapping("{projectId}/upload")
+    public ResponseEntity<Response.Body> uploadBackground(@PathVariable Long projectId,@ModelAttribute RequestBackground.BackgroundUploadDto backgroundUploadDto) throws IOException {
+        return backgroundService.backgroundUpload(projectId,backgroundUploadDto);
     }
 }
