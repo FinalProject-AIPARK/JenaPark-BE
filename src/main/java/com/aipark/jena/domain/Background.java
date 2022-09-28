@@ -27,4 +27,12 @@ public class Background {
 
     @Column
     private String bgUrl;
+
+    @Column
+    // false 면 기본배경 true 면 upload 배경
+    private boolean isUpload;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

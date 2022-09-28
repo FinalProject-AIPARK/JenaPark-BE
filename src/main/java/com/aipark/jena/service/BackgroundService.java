@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public interface BackgroundService {
     // 배경 업로드
-    ResponseEntity<Response.Body> backgroundUpload(RequestBackground.BackgroundUploadDto backgroundUploadDto)throws IOException;
+    ResponseEntity<Response.Body> backgroundUpload(Long projectId,RequestBackground.BackgroundUploadDto backgroundUploadDto)throws IOException;
 
     // 배경 선택
     ResponseEntity<Response.Body> backgroundSelect(Long bgId);

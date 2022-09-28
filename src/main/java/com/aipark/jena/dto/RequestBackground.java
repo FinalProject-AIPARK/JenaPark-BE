@@ -9,7 +9,6 @@ public class RequestBackground {
     @Getter
     @Setter
     public static class BackgroundUploadDto {
-        private Long projectId;
         private MultipartFile backgroundFile;
     }
 }
