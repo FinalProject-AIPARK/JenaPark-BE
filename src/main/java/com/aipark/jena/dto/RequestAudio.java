@@ -15,7 +15,6 @@ public class RequestAudio {
     @Getter
     @Setter
     public static class AudioUploadDto {
-        private Long projectID;
         private MultipartFile audioFile;
     }
 }
