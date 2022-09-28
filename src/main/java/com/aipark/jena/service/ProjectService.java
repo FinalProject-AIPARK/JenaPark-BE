@@ -20,4 +20,6 @@ public interface ProjectService {
     ResponseEntity<Body> uploadAudio(Long projectId, AudioUploadDto audioUploadDto) throws IOException;
 
     ResponseEntity<Body> mergeAudio(Long projectId);
+
+    ResponseEntity<Body> deleteUploadAudio(Long projectId);
 }
