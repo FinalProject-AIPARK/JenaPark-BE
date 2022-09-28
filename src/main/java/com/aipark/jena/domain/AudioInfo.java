@@ -42,4 +42,8 @@ public class AudioInfo {
 
     @Column
     private String audioFileUrl;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 }
