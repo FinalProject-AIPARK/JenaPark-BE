@@ -44,6 +44,10 @@ public class Member extends BaseTimeEntity{
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
+    public Member(String oauthId, String username, String email, String profileImg, Authority roleUser) {
+        super();
+    }
+
     public void addProject(Project project) {
         projects.add(project);
         if(project.getMember() != this) {
