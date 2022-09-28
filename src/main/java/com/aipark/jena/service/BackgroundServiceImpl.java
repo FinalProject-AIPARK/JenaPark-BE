@@ -1,9 +1,6 @@
 package com.aipark.jena.service;
 
-import com.aipark.jena.domain.Background;
-import com.aipark.jena.domain.BackgroundRepository;
-import com.aipark.jena.domain.Project;
-import com.aipark.jena.domain.ProjectRepository;
+import com.aipark.jena.domain.*;
 import com.aipark.jena.dto.RequestBackground;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.dto.ResponseBackground;
@@ -28,6 +25,7 @@ public class BackgroundServiceImpl implements BackgroundService {
 
     private final BackgroundRepository backgroundRepository;
     private final ProjectRepository projectRepository;
+    private final MemberRepository memberRepository;
     private final Response response;
     private final AmazonS3 amazonS3;
 
@@ -50,6 +48,21 @@ public class BackgroundServiceImpl implements BackgroundService {
 
         String backgroundFileUrl = "https://jenapark.s3.ap-northeast-2.amazonaws.com/" + fileName;
 
+        // bgName
+        String bgName = fileName;
+        //member
+        Long memberId = project.getMember().getId();
+        Member member = memberRepository.findById(memberId).orElseThrow();
+
+        Background background = Background.builder()
+                .bgName(bgName)
+                .isUpload(true)
+                .bgUrl(backgroundFileUrl)
+                .member(member)
+                .build();
+
+        backgroundRepository.save(background);
+
         return response.success(backgroundFileUrl,"배경 업로드를 성공했습니다.",HttpStatus.CREATED);
     }
 
@@ -63,7 +76,7 @@ public class BackgroundServiceImpl implements BackgroundService {
 
     @Override
     public ResponseEntity<Response.Body> backgroundList() {
-        List<Background> backgroundList = backgroundRepository.findAll();
+        List<Background> backgroundList = backgroundRepository.findAllByIsUpload(false);
         List<ResponseBackground> responseBackgroundList = new ArrayList<>();
 
 
