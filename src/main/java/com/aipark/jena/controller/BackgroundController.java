@@ -11,26 +11,26 @@ import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/projects/background")
+@RequestMapping("/api/v1/projects/")
 public class BackgroundController {
 
     private final BackgroundService backgroundService;
 
 
     // 배경 리스트
-    @GetMapping
+    @GetMapping("/background")
     public ResponseEntity<Response.Body> backgroundList(){
         return backgroundService.backgroundList();
     }
 
     // 배경 선택
-    @GetMapping("/{backgroundId}")
+    @GetMapping("/background/{backgroundId}")
     public ResponseEntity<Response.Body> backgroundSelect(@PathVariable Long backgroundId){
         return backgroundService.backgroundSelect(backgroundId);
     }
 
     // 배경 업로드
-    @PostMapping("{projectId}/upload")
+    @PostMapping("{projectId}/background/upload")
     public ResponseEntity<Response.Body> uploadBackground(@PathVariable Long projectId,@ModelAttribute RequestBackground.BackgroundUploadDto backgroundUploadDto) throws IOException {
         return backgroundService.backgroundUpload(projectId,backgroundUploadDto);
     }
