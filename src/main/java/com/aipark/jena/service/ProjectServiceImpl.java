@@ -211,13 +211,14 @@ public class ProjectServiceImpl implements ProjectService {
         String fileName = "audio/" + UUID.randomUUID().toString().toLowerCase() + ".wav";
 
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata));
-
+        inputStream.close();
         // 음성이 업로드 되면 audioInfos 를 비워야 한다.
+        String audioFileUrl = "https://jenapark.s3.ap-northeast-2.amazonaws.com/" + fileName;
         audioInfoRepository.deleteAllByProject(project);
         project.updateAudioUpload(true);
         project.updateAudioMerge(true);
-        project.updateAudioFileUrl("https://jenapark.s3.ap-northeast-2.amazonaws.com/" + fileName);
-        return response.success(InitialProject.of(project), "음성 업로드를 성공했습니다.", HttpStatus.CREATED);
+        project.updateAudioFileUrl(audioFileUrl);
+        return response.success(audioFileUrl, "음성 업로드를 성공했습니다.", HttpStatus.CREATED);
     }
 
     /**
