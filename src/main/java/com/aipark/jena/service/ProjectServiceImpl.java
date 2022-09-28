@@ -5,17 +5,19 @@ import com.aipark.jena.domain.*;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.dto.Response.Body;
 import com.aipark.jena.dto.ResponseAudio.AudioStage1;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.filechooser.FileSystemView;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,6 +35,10 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final AudioInfoRepository audioInfoRepository;
+    private final AmazonS3 amazonS3;
+
+    @Value("${cloud.aws.s3.bucket}")
+    public String bucket;
 
     /**
      * 현재 로그인한 유저를 주인으로
@@ -189,42 +195,28 @@ public class ProjectServiceImpl implements ProjectService {
      * @return 응답 객체
      */
     @Transactional
-    public ResponseEntity<Body> uploadAudio(AudioUploadDto audioUploadDto) {
-        Member member = checkToken();
-        if (checkToken() == null) {
-            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-        }
-        if (!projectRepository.existsById(audioUploadDto.getProjectID())) {
-            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-        }
-        Project project = projectRepository.findById(audioUploadDto.getProjectID()).orElse(null);
-        assert project != null;
+    public ResponseEntity<Body> uploadAudio(AudioUploadDto audioUploadDto) throws IOException {
+//        Member member = checkToken();
+//        if (checkToken() == null) {
+//            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
+//        }
+//        if (!projectRepository.existsById(audioUploadDto.getProjectID())) {
+//            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+//        }
+//        Project project = projectRepository.findById(audioUploadDto.getProjectID()).orElse(null);
+//        assert project != null;
 
-        String audioFileBase64 = audioUploadDto.getAudioFile();
+        InputStream inputStream = audioUploadDto.getAudioFile().getInputStream();
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        String fileName = "audio/" + UUID.randomUUID().toString().toLowerCase() + ".wav";
 
-        if (audioFileBase64 == null || audioFileBase64.equals("")) {
-            return response.fail("파일이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-        } else if (audioFileBase64.length() > 400000) {
-            return response.fail("파일이 너무 큽니다.", HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            String fileName = UUID.randomUUID().toString();
-            File file = new File(FileSystemView.getFileSystemView().getHomeDirectory() + "/" + fileName + ".wav");
-            Base64.Decoder decoder = Base64.getDecoder();
-            byte[] decodeBytes = decoder.decode(audioFileBase64.getBytes());
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            fileOutputStream.write(decodeBytes);
-            fileOutputStream.close();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+        amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata));
 
         // 음성이 업로드 되면 audioInfos 를 비워야 한다.
-        audioInfoRepository.deleteAllByProject(project);
-        project.updateAudioUpload(true);
-        project.updateAudioMerge(true);
-        project.updateAudioFileUrl("test.url");
+//        audioInfoRepository.deleteAllByProject(project);
+//        project.updateAudioUpload(true);
+//        project.updateAudioMerge(true);
+//        project.updateAudioFileUrl("test.url");
         return response.success("음성 업로드를 성공했습니다.");
     }
 
