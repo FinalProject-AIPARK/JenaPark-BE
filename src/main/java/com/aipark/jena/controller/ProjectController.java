@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+
 import static com.aipark.jena.dto.RequestAudio.AudioUploadDto;
 import static com.aipark.jena.dto.RequestProject.*;
 import static com.aipark.jena.dto.Response.Body;
@@ -43,7 +45,7 @@ public class ProjectController {
     }
 
     @PostMapping("/audio/upload")
-    public ResponseEntity<Body> uploadAudio(@RequestBody AudioUploadDto audioUploadDto) {
+    public ResponseEntity<Body> uploadAudio(@ModelAttribute AudioUploadDto audioUploadDto) throws IOException {
         return projectService.uploadAudio(audioUploadDto);
     }
 }
