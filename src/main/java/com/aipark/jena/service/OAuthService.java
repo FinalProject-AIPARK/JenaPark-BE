@@ -1,8 +1,9 @@
 package com.aipark.jena.service;
 
 import com.aipark.jena.domain.Member;
+import com.aipark.jena.domain.MemberRepository;
 import com.aipark.jena.dto.UserProfile;
-import com.aipark.jena.enums.OAuthAttributes;
+import com.aipark.jena.dto.OAuthAttributes;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -15,6 +16,12 @@ import java.util.Collections;
 import java.util.Map;
 
 public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+    private final MemberRepository memberRepository;
+
+    public OAuthService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2UserService delegate = new DefaultOAuth2UserService();
@@ -38,7 +45,7 @@ public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2
 
     private Member saveOrUpdate(UserProfile userProfile) {
         Member member = memberRepository.findByOauthId(userProfile.getOauthId())
-                .map(m -> m.update(userProfile.getName(), userProfile.getEmail(), userProfile.getImageUrl())) // OAuth 서비스 사이트에서 유저 정보 변경이 있을 수 있기 때문에 우리 DB에도 update
+                .map(m -> m.update(userProfile.getUsername(), userProfile.getEmail(), userProfile.getProfileImg())) // OAuth 서비스 사이트에서 유저 정보 변경이 있을 수 있기 때문에 우리 DB에도 update
                 .orElse(userProfile.toMember());
         return memberRepository.save(member);
     }

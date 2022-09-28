@@ -1,9 +1,10 @@
-package com.aipark.jena.enums;
+package com.aipark.jena.dto;
 
 import com.aipark.jena.dto.UserProfile;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
 
 public enum OAuthAttributes {
     GOOGLE("google", (attributes) -> {

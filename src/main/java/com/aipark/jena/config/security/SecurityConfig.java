@@ -3,6 +3,8 @@ package com.aipark.jena.config.security;
 import com.aipark.jena.config.jwt.JwtAuthenticationFilter;
 import com.aipark.jena.config.jwt.JwtTokenProvider;
 import com.aipark.jena.service.OAuthService;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -63,10 +65,6 @@ public class SecurityConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
-    }
-
-    public SecurityConfig(OAuthService oAuthService) {
-        this.oAuthService = oAuthService;
     }
 
     protected void configure(HttpSecurity http) throws Exception {

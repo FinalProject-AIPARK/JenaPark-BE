@@ -24,6 +24,7 @@ public class Member extends BaseTimeEntity{
     @Column(name = "member_id")
     private Long id;
 
+    @Column(name = "oauth_id")
     private String oauthId;
 
     @Column(nullable = false, unique = true)
@@ -44,14 +45,21 @@ public class Member extends BaseTimeEntity{
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-    public Member(String oauthId, String username, String email, String profileImg, Authority roleUser) {
-        super();
-    }
-
     public void addProject(Project project) {
         projects.add(project);
         if(project.getMember() != this) {
             project.setMember(this);
         }
+    }
+
+    public Member(String oauthId, String username, String email, String profileImg, Authority roleUser) {
+        super();
+    }
+
+    public Member update(String username, String email, String profileImg) {
+        this.username = username;
+        this.email = email;
+        this.profileImg = profileImg;
+        return this;
     }
 }
