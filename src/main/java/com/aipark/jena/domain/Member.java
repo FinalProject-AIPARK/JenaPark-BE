@@ -24,6 +24,8 @@ public class Member extends BaseTimeEntity{
     @Column(name = "member_id")
     private Long id;
 
+    private String oauthId;
+
     @Column(nullable = false, unique = true)
     private String email;
 
