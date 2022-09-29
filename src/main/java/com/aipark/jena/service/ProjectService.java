@@ -22,4 +22,6 @@ public interface ProjectService {
     ResponseEntity<Body> mergeAudio(Long projectId);
 
     ResponseEntity<Body> deleteUploadAudio(Long projectId);
+
+    ResponseEntity<Body> inquiryProject();
 }

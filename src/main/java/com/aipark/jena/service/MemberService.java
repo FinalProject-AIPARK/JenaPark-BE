@@ -1,6 +1,7 @@
 package com.aipark.jena.service;
 
 import com.aipark.jena.config.jwt.JwtTokenProvider;
+import com.aipark.jena.config.security.SecurityUtil;
 import com.aipark.jena.domain.Member;
 import com.aipark.jena.domain.MemberRepository;
 import com.aipark.jena.dto.RequestMember;
@@ -17,9 +18,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static com.aipark.jena.dto.Response.*;
+import static com.aipark.jena.dto.Response.Body;
+import static com.aipark.jena.dto.Response.TokenRes;
+import static com.aipark.jena.dto.ResponseMember.MemberInfo;
 
 @RequiredArgsConstructor
 @Service
@@ -82,10 +86,10 @@ public class MemberService {
         String refreshToken = redisTemplate.opsForValue().get("RT:" + authentication.getName());
 
         // 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
-        if(ObjectUtils.isEmpty(refreshToken)) {
+        if (ObjectUtils.isEmpty(refreshToken)) {
             return response.fail("잘못된 요청입니다.", HttpStatus.BAD_REQUEST);
         }
-        if(!refreshToken.equals(reissue.getRefreshToken())) {
+        if (!refreshToken.equals(reissue.getRefreshToken())) {
             return response.fail("Refresh Token 정보가 일치하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
 
@@ -121,5 +125,14 @@ public class MemberService {
                 .set(logoutDto.getAccessToken(), "logout", expiration, TimeUnit.MILLISECONDS);
 
         return response.success("로그아웃 되었습니다.");
+    }
+
+    public ResponseEntity<Body> getInfo() {
+        Optional<Member> memberRes = memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail());
+        if (memberRes.isPresent()) {
+            return response.success(MemberInfo.of(memberRes.get()),"유저 정보를 불러왔습니다.",HttpStatus.OK);
+        } else {
+            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }
     }
 }
