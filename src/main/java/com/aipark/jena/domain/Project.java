@@ -123,4 +123,8 @@ public class Project extends BaseTimeEntity {
         }
         this.audioInfos.addAll(audioInfos);
     }
+
+    public void updateAudioOriginName(String originalFilename) {
+        this.audioFileOriginName = originalFilename;
+    }
 }
