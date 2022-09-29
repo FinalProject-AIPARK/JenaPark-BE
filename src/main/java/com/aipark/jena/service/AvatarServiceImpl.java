@@ -132,8 +132,7 @@ public class AvatarServiceImpl implements AvatarService{
         if(!clothesRepository.existsByIdAndAvatar(requestCreateAvatar.getClothesId(),avatar)){
             return response.fail("해당 옷은 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
         }
-
-        String resultUrl = requestCreateAvatar.getAvatarId()+"-"+requestCreateAvatar.getAccessoryId()+"-"+ requestCreateAvatar.getAttitudeId()+"-"+ requestCreateAvatar.getClothesId();
+        String resultUrl = "https://jenapark.s3.ap-northeast-2.amazonaws.com/avatar/"+avatar.getName()+"/"+avatar.getName()+"-"+accessoriesNum+"-"+clothesNum+"-"+hatNum+".png";
         return response.success(resultUrl,"아바타 생성 완료",HttpStatus.OK);
     }
 
