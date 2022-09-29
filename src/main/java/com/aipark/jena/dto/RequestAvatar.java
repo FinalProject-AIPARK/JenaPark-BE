@@ -26,7 +26,7 @@ public class RequestAvatar {
 
         private Long avatarId;
         private Long accessoryId;
-        private Long attitudeId;
+        private Long hatId;
         private Long clothesId;
         private Long projectId;
     }
