@@ -48,4 +48,9 @@ public class ProjectController {
     public ResponseEntity<Body> uploadAudio(@PathVariable Long projectId, @ModelAttribute AudioUploadDto audioUploadDto) throws IOException {
         return projectService.uploadAudio(projectId, audioUploadDto);
     }
+
+    @DeleteMapping("/{projectId}/audio/upload")
+    public ResponseEntity<Body> deleteUploadAudio(@PathVariable Long projectId) {
+        return projectService.deleteUploadAudio(projectId);
+    }
 }
