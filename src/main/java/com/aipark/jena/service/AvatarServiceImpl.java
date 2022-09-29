@@ -110,6 +110,17 @@ public class AvatarServiceImpl implements AvatarService{
 
         Avatar avatar = avatarRepository.findById(requestCreateAvatar.getAvatarId()).orElseThrow();
 
+        // 해당 아바타의 옳은 url 을 찾기위한 로직
+        Long accessoriesNum = requestCreateAvatar.getAccessoryId();
+        Long clothesNum = requestCreateAvatar.getClothesId();
+        Long hatNum = requestCreateAvatar.getHatId();
+        final Long CHECK_NUM = 3*(avatar.getId()-1);
+        if(avatar.getId() != 1){
+            accessoriesNum -= CHECK_NUM;
+            clothesNum -= CHECK_NUM;
+            hatNum -= CHECK_NUM;
+        }
+
         if(!accessoriesRepository.existsByIdAndAvatar(requestCreateAvatar.getAccessoryId(),avatar)){
             return response.fail("해당 악세서리는 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
         }
