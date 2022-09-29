@@ -58,6 +58,12 @@ public class Project extends BaseTimeEntity {
     private Boolean audioMerge;     // 오디오 합성여부 미리듣기나 다운로드를 하려면 true
 
     @Column
+    private String audioFileS3Path;
+
+    @Column
+    private String audioFileOriginName;
+
+    @Column
     private String audioFileUrl;   // 전체 오디오 파일 url 미리듣기 등
 
     @Column
@@ -91,6 +97,14 @@ public class Project extends BaseTimeEntity {
         this.audioFileUrl = audioFile;
     }
 
+    public void updateAudioFileS3Path(String audioFileS3Path) {
+        this.audioFileS3Path = audioFileS3Path;
+    }
+
+    public void updateText(String text) {
+        this.text = text;
+    }
+
     public void updateStep1(String allText, String sex, String lang, Double durationSilence, Long volume, Double pitch, Double speed) {
         this.text = allText;
         this.sex = sex;
@@ -108,5 +122,9 @@ public class Project extends BaseTimeEntity {
             this.audioInfos.clear();
         }
         this.audioInfos.addAll(audioInfos);
+    }
+
+    public void updateAudioOriginName(String originalFilename) {
+        this.audioFileOriginName = originalFilename;
     }
 }

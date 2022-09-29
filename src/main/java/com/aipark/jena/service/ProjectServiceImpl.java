@@ -6,6 +6,7 @@ import com.aipark.jena.dto.Response;
 import com.aipark.jena.dto.Response.Body;
 import com.aipark.jena.dto.ResponseAudio.AudioStage1;
 import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
@@ -115,6 +116,11 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = projectRepository.findById(ttsInputDto.getProjectID()).orElse(null);
         // 0. 기존에 있던 프로젝트의 오디오파일들을 삭제
         audioInfoRepository.deleteAllByProject(project);
+        // 기존에 업로드된 음성을 삭제한다.
+        assert project != null;
+        if (project.getAudioUpload()) {
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, project.getAudioFileS3Path()));
+        }
         // 1. text 한문장씩 분리
         List<String> splitTexts = Arrays.stream(ttsInputDto.getText()
                         .split("\\."))
@@ -140,7 +146,6 @@ public class ProjectServiceImpl implements ProjectService {
                     .audioFileUrl(null)
                     .build());
         }
-        assert project != null;
         project.updateAudioInfos(audioInfos);
         audioInfoRepository.saveAll(audioInfos);
         List<AudioInfoDto> audioInfoDtos = audioInfos.stream()
@@ -196,10 +201,9 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Transactional
     public ResponseEntity<Body> uploadAudio(Long projectId, AudioUploadDto audioUploadDto) throws IOException {
-//        Member member = checkToken();
-//        if (checkToken() == null) {
-//            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-//        }
+        if (checkToken() == null) {
+            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
+        }
         if (!projectRepository.existsById(projectId)) {
             return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
@@ -208,16 +212,23 @@ public class ProjectServiceImpl implements ProjectService {
 
         InputStream inputStream = audioUploadDto.getAudioFile().getInputStream();
         ObjectMetadata objectMetadata = new ObjectMetadata();
-        String fileName = "audio/" + UUID.randomUUID().toString().toLowerCase() + ".wav";
+        String fileName = "audio/upload/" + UUID.randomUUID() + ".wav";
 
         amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata));
         inputStream.close();
+        // 기존에 업로드된 음성을 삭제한다.
+        if (project.getAudioUpload()) {
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, project.getAudioFileS3Path()));
+        }
         // 음성이 업로드 되면 audioInfos 를 비워야 한다.
         String audioFileUrl = "https://jenapark.s3.ap-northeast-2.amazonaws.com/" + fileName;
         audioInfoRepository.deleteAllByProject(project);
         project.updateAudioUpload(true);
         project.updateAudioMerge(true);
+        project.updateAudioOriginName(audioUploadDto.getAudioFile().getOriginalFilename());
+        project.updateAudioFileS3Path(fileName);
         project.updateAudioFileUrl(audioFileUrl);
+        project.updateText(" ");
         return response.success(audioFileUrl, "음성 업로드를 성공했습니다.", HttpStatus.CREATED);
     }
 
@@ -231,10 +242,18 @@ public class ProjectServiceImpl implements ProjectService {
         if (!project.getAudioUpload()) {
             return response.fail("해당 프로젝트에 업로드된 음성파일이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
         }
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, project.getAudioFileS3Path()));
         project.updateAudioUpload(false);
         project.updateAudioMerge(false);
         project.updateAudioFileUrl(null);
+        project.updateAudioFileS3Path(null);
         return response.success("업로드된 음성파일이 삭제되었습니다.");
+    }
+
+    @Override
+    public ResponseEntity<Body> inquiryProject() {
+
+        return null;
     }
 
     /**

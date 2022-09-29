@@ -44,4 +44,18 @@ public class PythonController {
         p.destroy();
         return "test";
     }
+
+    @PostMapping("/test")
+    public String test1() throws IOException, InterruptedException {
+        ProcessBuilder pb = new ProcessBuilder("python", "python/audio.py");
+        Process p = pb.start();
+
+        BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        String str = "";
+        while ((str = in.readLine()) != null) {
+            System.out.println(str);
+        }
+        p.destroy();
+        return "test";
+    }
 }
