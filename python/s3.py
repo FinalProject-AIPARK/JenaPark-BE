@@ -12,7 +12,7 @@ def s3_connection(region, access_key, secret_key):
     except Exception as e:
         print(e)
     else:
-        print("## s3 bucket connected! ##")
+        print("s3 bucket connected!")
         return s3
 
 
@@ -33,8 +33,8 @@ def s3_put_object(s3, bucket, filepath, access_key):
             Key=access_key,
         )
     except Exception as e:
-        print(e)
-        print("실패!!!")
         return False
-    print("upload 성공")
+
+    print(access_key)
+
     return True
