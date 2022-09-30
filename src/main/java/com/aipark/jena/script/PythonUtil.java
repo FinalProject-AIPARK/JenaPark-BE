@@ -20,7 +20,7 @@ public class PythonUtil {
 
     public String createAudioInfo() throws IOException {
         System.out.println("check");
-        ProcessBuilder pb = new ProcessBuilder("python", "python/audio.py", accessKey, secretKey, region);
+        ProcessBuilder pb = new ProcessBuilder("python3", "python/audio.py", accessKey, secretKey, region);
         System.out.println("check2");
         Process p = pb.start();
         System.out.println("check3");
