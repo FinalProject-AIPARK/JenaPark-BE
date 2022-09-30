@@ -18,9 +18,8 @@ import static lombok.AccessLevel.PROTECTED;
 public class AudioInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "audio_id")
-    private Long id;
+    private String id;
 
     @Column(name = "line_number")
     private int lineNumber;

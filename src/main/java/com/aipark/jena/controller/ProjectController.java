@@ -24,13 +24,18 @@ public class ProjectController {
         return projectService.createProject();
     }
 
+    @GetMapping("/{projectId}")
+    public ResponseEntity<Body> inquiryProject(@PathVariable Long projectId) {
+        return projectService.inquiryProject(projectId);
+    }
+
     @PostMapping("/title")
     public ResponseEntity<Body> changeTitle(@RequestBody ChangeTitle titleInputDto) {
         return projectService.changeTitle(titleInputDto);
     }
 
     @PostMapping("/create-tts")
-    public ResponseEntity<Body> createTTS(@RequestBody CreateTTS ttsInputDto) {
+    public ResponseEntity<Body> createTTS(@RequestBody CreateTTS ttsInputDto) throws IOException {
         return projectService.createTTS(ttsInputDto);
     }
 
@@ -52,5 +57,10 @@ public class ProjectController {
     @DeleteMapping("/{projectId}/audio/upload")
     public ResponseEntity<Body> deleteUploadAudio(@PathVariable Long projectId) {
         return projectService.deleteUploadAudio(projectId);
+    }
+
+    @GetMapping
+    public ResponseEntity<Body> historyProject() {
+        return projectService.historyProject();
     }
 }
