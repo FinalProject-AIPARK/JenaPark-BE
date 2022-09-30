@@ -25,8 +25,10 @@ public class PythonUtil {
         Process p = pb.start();
         System.out.println("check3");
         BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        System.out.println("check4");
 
         String s3connectionStatus = in.readLine();
+        System.out.println(s3connectionStatus);
         String fileName = "";
         if (s3connectionStatus.equals("s3 bucket connected!")) {
             fileName = in.readLine();
@@ -34,6 +36,7 @@ public class PythonUtil {
         }else{
             throw new RuntimeException("python code 오류");
         }
+        System.out.println("check4");
         p.destroy();
         return fileName;
     }
