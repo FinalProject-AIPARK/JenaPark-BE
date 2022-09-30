@@ -127,4 +127,13 @@ public class Project extends BaseTimeEntity {
     public void updateAudioOriginName(String originalFilename) {
         this.audioFileOriginName = originalFilename;
     }
+
+    public void updateAudioUploadSuccess(String originalFilename, String filePath, String audioFileUrl) {
+        updateAudioUpload(true);
+        updateAudioMerge(true);
+        updateAudioOriginName(originalFilename);
+        updateAudioFileS3Path(filePath);
+        updateAudioFileUrl(audioFileUrl);
+        updateText(" ");
+    }
 }

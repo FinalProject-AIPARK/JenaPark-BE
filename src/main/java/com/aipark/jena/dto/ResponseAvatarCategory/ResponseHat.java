@@ -9,10 +9,10 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResponseAttitude {
+public class ResponseHat{
 
     private Long id;
 
-    private String attitudeUrl;
+    private String hatUrl;
 
 }

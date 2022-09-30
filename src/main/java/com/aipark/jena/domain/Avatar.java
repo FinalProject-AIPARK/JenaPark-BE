@@ -26,6 +26,9 @@ public class Avatar {
     private String name;
 
     @Column
+    private String sex;
+
+    @Column
     private String thumbNail;
 
 }
