@@ -2,6 +2,7 @@ package com.aipark.jena.config.security;
 
 import com.aipark.jena.config.jwt.JwtAuthenticationFilter;
 import com.aipark.jena.config.jwt.JwtTokenProvider;
+import com.aipark.jena.service.CustomOAuth2UserService;
 import com.aipark.jena.service.OAuthService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -76,9 +77,8 @@ public class SecurityConfig {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
-                .oauth2Login().loginPage("/token/expired")
+                .oauth2Login().loginPage("/token/expired") // 로그인 페이지 url 직접 설정
                 .successHandler(successHandler)
-                .userInfoEndpoint() // OAuth2 로그인 성공 이후 사용자 정보를 가져올 때 설정 담당
-                .userService(oAuth2UserService); // OAuth2 로그인 성공 시, 후작업을 진행할 UserService 인터페이스 구현체 등록
-    }
+                .userInfoEndpoint() // oauth2 로그인 성공 후 (= 구글이 access token 제공) 설정 시작
+                .userService(oAuth2UserService);
 }

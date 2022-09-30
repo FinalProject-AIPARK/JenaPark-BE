@@ -5,6 +5,7 @@ import com.aipark.jena.domain.MemberRepository;
 import com.aipark.jena.dto.UserProfile;
 import com.aipark.jena.dto.OAuthAttributes;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -17,39 +18,32 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.Map;
 
+@Slf4j
 @Service
-public class OAuthService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
-    private final MemberRepository memberRepository;
-
-    public OAuthService(MemberRepository memberRepository) {
-        this.memberRepository = memberRepository;
-    }
-
+public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2UserService delegate = new DefaultOAuth2UserService();
-        OAuth2User oAuth2User = delegate.loadUser(userRequest); // OAuth 서비스(google, kakao)에서 가져온 유저 정보를 담고있음
+        // 1. DefaultOAuth2UserService 객체를 로그인 성공정보(code, access token)를 바탕으로 생성한다.
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
 
-        String registrationId = userRequest.getClientRegistration()
-                .getRegistrationId(); // OAuth 서비스 이름(ex. google, kakao)
-        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails()
-                .getUserInfoEndpoint().getUserNameAttributeName(); // OAuth 로그인 시 키(pk)가 되는 값
-        Map<String, Object> attributes = oAuth2User.getAttributes(); // OAuth 서비스의 유저 정보들
+        // 2. 생성된 Service 객체로 부터 User를 받는다.
+        OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
-        UserProfile userProfile = OAuthAttributes.extract(registrationId, attributes); // registrationId에 따라 유저 정보를 통해 공통된 UserProfile 객체로 만들어 줌
+        // 3. 받은 User로 부터 user 정보를 받는다.
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        String userNameAttributeName = userRequest.getClientRegistration()
+                .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
+        log.info("registrationId = {}", registrationId);
+        log.info("userNameAttributeName = {}", userNameAttributeName);
 
-        Member member = saveOrUpdate(userProfile); // DB에 저장
+        // 4. SuccessHandler가 사용할 수 있도록 등록해준다.
+        OAuth2Attribute oAuth2Attribute =
+                OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+
+        var memberAttribute = oAuth2Attribute.convertToMap();
 
         return new DefaultOAuth2User(
-                Collections.singleton(new SimpleGrantedAuthority(member.getAuthority().getKey())),
-                attributes,
-                userNameAttributeName);
-    }
-
-    private Member saveOrUpdate(UserProfile userProfile) {
-        Member member = memberRepository.findByOauthId(userProfile.getOauthId())
-                .map(m -> m.update(userProfile.getUsername(), userProfile.getEmail(), userProfile.getProfileImg())) // OAuth 서비스 사이트에서 유저 정보 변경이 있을 수 있기 때문에 우리 DB에도 update
-                .orElse(userProfile.toMember());
-        return memberRepository.save(member);
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
+                memberAttribute, "email");
     }
 }
