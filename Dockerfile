@@ -17,10 +17,10 @@ ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
 
-RUN mkdir /workspace
-WORKDIR /workspace
-COPY ./python /workspace
-RUN mkdir /workspace/result
+RUN mkdir /result
+RUN mkdir /python
+WORKDIR /python
+COPY ./python /python
 
 
 
