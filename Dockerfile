@@ -13,14 +13,13 @@ RUN pip3 install numpy==1.20.0
 RUN pip3 install scipy==1.7.3
 RUN pip3 install Pillow
 
+COPY ./python .
+COPY ./result .
+
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
 
-RUN mkdir /result
-RUN mkdir /python
-WORKDIR /python
-COPY ./python /python
 
 
 
