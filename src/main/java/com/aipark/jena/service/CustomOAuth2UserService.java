@@ -1,6 +1,5 @@
 package com.aipark.jena.service;
 
-import com.aipark.jena.dto.OAuthAttributes;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -34,9 +33,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         // 4. SuccessHandler가 사용할 수 있도록 등록해준다.
         OAuth2Attribute oAuth2Attribute =
                 OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
-
         var memberAttribute = oAuth2Attribute.convertToMap();
-
         return new DefaultOAuth2User(
                 Collections.singleton(new SimpleGrantedAuthority("ROLE_USER")),
                 memberAttribute, "email");

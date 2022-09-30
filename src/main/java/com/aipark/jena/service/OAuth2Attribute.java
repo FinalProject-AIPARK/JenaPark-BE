@@ -1,3 +1,5 @@
+package com.aipark.jena.service;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
