@@ -19,7 +19,7 @@ public class PythonUtil {
     private String region;
 
     public String createAudioInfo() throws IOException {
-        ProcessBuilder pb = new ProcessBuilder("python", "python/audio.py", accessKey, secretKey, region);
+        ProcessBuilder pb = new ProcessBuilder("python3", "python/audio.py", accessKey, secretKey, region);
         Process p = pb.start();
 
         BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
