@@ -5,6 +5,7 @@ import numpy as np
 import uuid
 import os
 
+print("check")
 access_key = sys.argv[1]
 secret_key = sys.argv[2]
 region = sys.argv[3]
