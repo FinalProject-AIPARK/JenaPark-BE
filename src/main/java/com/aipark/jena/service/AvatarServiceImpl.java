@@ -7,8 +7,8 @@ import com.aipark.jena.dto.RequestAvatar;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.dto.ResponseAvatar;
 import com.aipark.jena.dto.ResponseAvatarCategory.ResponseAccessories;
-import com.aipark.jena.dto.ResponseAvatarCategory.ResponseAttitude;
 import com.aipark.jena.dto.ResponseAvatarCategory.ResponseClothes;
+import com.aipark.jena.dto.ResponseAvatarCategory.ResponseHat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ public class AvatarServiceImpl implements AvatarService{
 
     private final AvatarRepository avatarRepository;
     private final AccessoriesRepository accessoriesRepository;
-    private final AttitudeRepository attitudeRepository;
+    private final HatRepository hatRepository;
     private final ClothesRepository clothesRepository;
 
     private final Response response;
@@ -58,7 +58,7 @@ public class AvatarServiceImpl implements AvatarService{
         // list로 변경하기
         List<Accessories>  accessories =  accessoriesRepository.findAllByAvatar(avatar);
         List<Clothes> clothes = clothesRepository.findAllByAvatar(avatar);
-        List<Attitude> attitude = attitudeRepository.findAllByAvatar(avatar);
+        List<Hat> hats = hatRepository.findAllByAvatar(avatar);
 
         //악세사리 entity->dto
         List<ResponseAccessories> responseAccessoriesList= new ArrayList<ResponseAccessories>();
@@ -81,15 +81,15 @@ public class AvatarServiceImpl implements AvatarService{
             );
             responseClothesList.add(responseClothes);
         }
-        //attitude entity -> dto
-        List<ResponseAttitude> responseAttitudeList= new ArrayList<ResponseAttitude>();
+        //hats entity -> dto
+        List<ResponseHat> responseHatList= new ArrayList<ResponseHat>();
 
-        for (int i = 0; i <attitude.size() ; i++) {
-            ResponseAttitude responseAttitude = new ResponseAttitude(
-                    attitude.get(i).getId(),
-                    attitude.get(i).getAttitudeUrl()
+        for (int i = 0; i <hats.size() ; i++) {
+            ResponseHat responseHat = new ResponseHat(
+                    hats.get(i).getId(),
+                    hats.get(i).getHatUrl()
             );
-            responseAttitudeList.add(responseAttitude);
+            responseHatList.add(responseHat);
         }
 
         // responseAvatar 에 값 주입
@@ -98,7 +98,7 @@ public class AvatarServiceImpl implements AvatarService{
                 avatar.getThumbNail(),
                 responseAccessoriesList,
                 responseClothesList,
-                responseAttitudeList);
+                responseHatList);
 
         return response.success(responseAvatar,"해당 아바타에서 선택 가능한 옵션입니다. ",HttpStatus.OK);
     }
@@ -110,19 +110,29 @@ public class AvatarServiceImpl implements AvatarService{
 
         Avatar avatar = avatarRepository.findById(requestCreateAvatar.getAvatarId()).orElseThrow();
 
+        // 해당 아바타의 옳은 url 을 찾기위한 로직
+        Long accessoriesNum = requestCreateAvatar.getAccessoryId();
+        Long clothesNum = requestCreateAvatar.getClothesId();
+        Long hatNum = requestCreateAvatar.getHatId();
+        final Long CHECK_NUM = 3*(avatar.getId()-1);
+        if(avatar.getId() != 1){
+            accessoriesNum -= CHECK_NUM;
+            clothesNum -= CHECK_NUM;
+            hatNum -= CHECK_NUM;
+        }
+
         if(!accessoriesRepository.existsByIdAndAvatar(requestCreateAvatar.getAccessoryId(),avatar)){
             return response.fail("해당 악세서리는 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
         }
 
-        if(!attitudeRepository.existsByIdAndAvatar(requestCreateAvatar.getAttitudeId(),avatar)){
-            return response.fail("해당 태도는 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
+        if(!hatRepository.existsByIdAndAvatar(requestCreateAvatar.getHatId(),avatar)){
+            return response.fail("해당 모자는 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
         }
 
         if(!clothesRepository.existsByIdAndAvatar(requestCreateAvatar.getClothesId(),avatar)){
             return response.fail("해당 옷은 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
         }
-
-        String resultUrl = requestCreateAvatar.getAvatarId()+"-"+requestCreateAvatar.getAccessoryId()+"-"+ requestCreateAvatar.getAttitudeId()+"-"+ requestCreateAvatar.getClothesId();
+        String resultUrl = "https://jenapark.s3.ap-northeast-2.amazonaws.com/avatar/"+avatar.getName()+"/"+avatar.getName()+"-"+accessoriesNum+"-"+clothesNum+"-"+hatNum+".png";
         return response.success(resultUrl,"아바타 생성 완료",HttpStatus.OK);
     }
 
