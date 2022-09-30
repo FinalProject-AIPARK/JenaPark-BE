@@ -19,9 +19,11 @@ public class PythonUtil {
     private String region;
 
     public String createAudioInfo() throws IOException {
+        System.out.println("check");
         ProcessBuilder pb = new ProcessBuilder("python3", "python/audio.py", accessKey, secretKey, region);
+        System.out.println("check2");
         Process p = pb.start();
-
+        System.out.println("check3");
         BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
         String s3connectionStatus = in.readLine();
