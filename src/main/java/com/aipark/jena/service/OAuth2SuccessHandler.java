@@ -1,5 +1,6 @@
 package com.aipark.jena.service;
 
+import com.aipark.jena.dto.UserProfile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,7 +28,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             throws IOException, ServletException {
         // Principal에서 OAuth2Use 추출
         OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
-        Dto userDto = userRequestMapper.toDto(oAuth2User);
+        UserProfile userProfile = userRequestMapper.toDto(oAuth2User);
 
         // 최초 로그인이면 회원가입 처리
 

@@ -2,9 +2,11 @@ package com.aipark.jena.dto;
 
 import com.aipark.jena.domain.Member;
 import com.aipark.jena.enums.Authority;
-import lombok.Builder;
-import lombok.Getter;
+import lombok.*;
 
+import static lombok.AccessLevel.PROTECTED;
+
+@RequiredArgsConstructor
 @Getter
 @Builder
 public class UserProfile {
@@ -12,7 +14,9 @@ public class UserProfile {
     private final String email;
     private final String profileImg;
 
-    public Member toMember() {
-        return new Member(username, email, profileImg, Authority.ROLE_USER);
+    public UserProfile() {
+        this.email = email;
+        this.username = username;
+        this.profileImg = profileImg;
     }
 }
