@@ -1,10 +1,6 @@
 package com.aipark.jena.service;
 
-import com.aipark.jena.domain.Member;
-import com.aipark.jena.domain.MemberRepository;
-import com.aipark.jena.dto.UserProfile;
 import com.aipark.jena.dto.OAuthAttributes;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -16,7 +12,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Map;
 
 @Slf4j
 @Service
