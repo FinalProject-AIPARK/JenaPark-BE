@@ -4,6 +4,7 @@ RUN apt install python3
 RUN apt update
 RUN apt install -y ffmpeg
 
+RUN apt install python3-pip -y
 RUN pip3 install --upgrade pip
 
 RUN pip3 install boto3
