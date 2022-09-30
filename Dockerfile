@@ -1,6 +1,6 @@
 FROM openjdk:11
 
-RUN apt install python3.8
+RUN apt install python3
 RUN python3 --version
 RUN apt update
 RUN apt install -y ffmpeg
