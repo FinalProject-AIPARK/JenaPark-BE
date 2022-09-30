@@ -2,7 +2,7 @@ FROM openjdk:11
 
 RUN apt install python3
 RUN apt update
-RUN apt upgrade
+RUN apt upgrade -y
 RUN apt install -y ffmpeg
 
 RUN pip install --upgrade pip
