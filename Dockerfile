@@ -4,14 +4,12 @@ RUN apt install python3
 RUN apt update
 RUN apt install -y ffmpeg
 
-RUN apt install python3-pip -y
+RUN apt install python3-pil -y
 RUN pip3 install --upgrade pip
 
 RUN pip3 install boto3
 RUN pip3 install numpy==1.20.0
 RUN pip3 install scipy==1.7.3
-
-RUN pip3 install -U setuptools wheel -y
 RUN pip3 install Pillow==7.2.0
 
 ARG JAR_FILE=build/libs/*.jar
