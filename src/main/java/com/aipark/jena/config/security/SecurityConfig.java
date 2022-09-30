@@ -82,4 +82,5 @@ public class SecurityConfig {
                 .successHandler(successHandler)
                 .userInfoEndpoint() // oauth2 로그인 성공 후 (= 구글이 access token 제공) 설정 시작
                 .userService(oAuth2UserService);
+    }
 }
