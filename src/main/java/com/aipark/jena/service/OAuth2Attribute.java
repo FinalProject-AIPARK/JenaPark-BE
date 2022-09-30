@@ -11,7 +11,7 @@ import java.util.Map;
 @ToString
 @Builder(access = AccessLevel.PRIVATE)
 @Getter
-public class OAuth2Attribute { // provider(구글, 카카오)마다 제공해주는 정보 값들이 다르기 때문에, 분기처리 위한 클래서
+public class OAuth2Attribute { // provider(구글, 카카오)마다 제공해주는 정보 값들이 다르기 때문에, 분기처리 위한 클래스
     private Map<String, Object> attributes;
     private String attributeKey;
     private String email;
