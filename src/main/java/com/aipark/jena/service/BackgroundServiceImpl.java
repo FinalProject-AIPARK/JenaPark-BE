@@ -75,22 +75,13 @@ public class BackgroundServiceImpl implements BackgroundService {
     }
 
     @Override
-    public ResponseEntity<Response.Body> backgroundList() {
-        List<Background> backgroundList = backgroundRepository.findAllByIsUpload(false);
-        List<ResponseBackground> responseBackgroundList = new ArrayList<>();
+    public ResponseEntity<Response.Body> backgroundList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow();
 
+        List<Background> backgroundListDefault = backgroundRepository.findAllByIsUpload(false);
+        List<Background> backgroundListMember = backgroundRepository.findAllByMember(member);
 
-        for (int index = 0; index < backgroundList.size(); index++) {
-            Background background = backgroundList.get(index);
-            ResponseBackground responseBackground = new ResponseBackground(
-                    background.getId(),
-                    background.getBgName(),
-                    background.getBgUrl()
-            );
-            responseBackgroundList.add(responseBackground);
-        }
-
-        return response.success(responseBackgroundList,"배경화면 리스트입니다.", HttpStatus.OK);
+        return response.success(responseBackgroundList(backgroundListDefault,backgroundListMember),"배경화면 리스트입니다.", HttpStatus.OK);
     }
 
     public List<List<ResponseBackground>> responseBackgroundList(List<Background> b1, List<Background> b2){
