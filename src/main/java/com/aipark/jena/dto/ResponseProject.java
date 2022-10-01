@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,14 +31,16 @@ public class ResponseProject {
         private String backgroundUrl;
         private Boolean audioUpload;
         private Boolean audioMerge;
+        private String audioFileOriginName;
         private String audioFileUrl;
+        private String avatarUrl;
         private List<AudioInfoDto> audioInfos;
 
         public static InitialProject of(Project project) {
             List<AudioInfoDto> audioInfoDtos = project.getAudioInfos()
-                        .stream()
-                        .map(AudioInfoDto::of)
-                        .collect(Collectors.toList());
+                    .stream()
+                    .map(AudioInfoDto::of)
+                    .collect(Collectors.toList());
 
             return InitialProject.builder()
                     .projectId(project.getId())
@@ -50,8 +54,32 @@ public class ResponseProject {
                     .backgroundUrl(project.getBackgroundUrl())
                     .audioUpload(project.getAudioUpload())
                     .audioMerge(project.getAudioMerge())
+                    .audioFileOriginName(project.getAudioFileOriginName())
                     .audioFileUrl(project.getAudioFileUrl())
+                    .avatarUrl(project.getAvatarUrl())
                     .audioInfos(audioInfoDtos)
+                    .build();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class HistoryProject {
+        private Long projectId;
+        private String title;
+        private String thumbnail;
+        private LocalDate createDate;
+        private LocalDateTime modifiedDate;
+
+        public static HistoryProject of(Project project) {
+            return HistoryProject.builder()
+                    .projectId(project.getId())
+                    .title(project.getTitle())
+                    .thumbnail(project.getAvatarUrl())
+                    .createDate(project.getCreatedDate())
+                    .modifiedDate(project.getModifiedDate())
                     .build();
         }
     }
