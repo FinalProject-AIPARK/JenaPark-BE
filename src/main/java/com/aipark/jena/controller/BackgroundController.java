@@ -19,8 +19,8 @@ public class BackgroundController {
 
     // 배경 리스트
     @GetMapping("/background")
-    public ResponseEntity<Response.Body> backgroundList(){
-        return backgroundService.backgroundList();
+    public ResponseEntity<Response.Body> backgroundList(Long memberId){// 헤더에 jwt토큰으로 멤버아이디 찾고싶음
+        return backgroundService.backgroundList(memberId);
     }
 
     // 배경 선택

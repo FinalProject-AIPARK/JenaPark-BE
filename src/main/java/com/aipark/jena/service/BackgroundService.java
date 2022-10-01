@@ -14,5 +14,5 @@ public interface BackgroundService {
     ResponseEntity<Response.Body> backgroundSelect(Long bgId);
 
     // 배경 리스트 보여주기
-    ResponseEntity<Response.Body> backgroundList();
+    ResponseEntity<Response.Body> backgroundList(Long memberId);
 }

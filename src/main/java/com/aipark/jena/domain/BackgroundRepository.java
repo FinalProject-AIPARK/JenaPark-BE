@@ -6,4 +6,6 @@ import java.util.List;
 public interface BackgroundRepository extends JpaRepository<Background, Long> {
 
     List<Background> findAllByIsUpload(boolean isUpload);
+
+    List<Background> findAllByMember(Member member);
 }
