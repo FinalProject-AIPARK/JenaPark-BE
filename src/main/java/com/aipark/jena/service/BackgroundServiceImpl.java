@@ -92,4 +92,36 @@ public class BackgroundServiceImpl implements BackgroundService {
 
         return response.success(responseBackgroundList,"배경화면 리스트입니다.", HttpStatus.OK);
     }
+
+    public List<List<ResponseBackground>> responseBackgroundList(List<Background> b1, List<Background> b2){
+
+        List<ResponseBackground> responseBackgroundListDefault = new ArrayList<>();
+        List<ResponseBackground> responseBackgroundListMember = new ArrayList<>();
+        List<List<ResponseBackground>> responseBackgroundList = new ArrayList<>();
+
+        for (int index = 0; index < b1.size(); index++) {
+            Background background = b1.get(index);
+            ResponseBackground responseBackground = new ResponseBackground(
+                    background.getId(),
+                    background.getBgName(),
+                    background.getBgUrl()
+            );
+            responseBackgroundListDefault.add(responseBackground);
+        }
+
+        for (int index = 0; index < b2.size(); index++) {
+            Background background = b2.get(index);
+            ResponseBackground responseBackground = new ResponseBackground(
+                    background.getId(),
+                    background.getBgName(),
+                    background.getBgUrl()
+            );
+            responseBackgroundListMember.add(responseBackground);
+        }
+
+        responseBackgroundList.add(responseBackgroundListDefault);
+        responseBackgroundList.add(responseBackgroundListMember);
+
+        return responseBackgroundList;
+    }
 }
