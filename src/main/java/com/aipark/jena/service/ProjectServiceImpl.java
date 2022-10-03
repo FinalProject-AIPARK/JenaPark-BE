@@ -332,4 +332,30 @@ public class ProjectServiceImpl implements ProjectService {
         }
         audioInfoRepository.deleteAll(audioInfos);
     }
+
+    // 합성 된 오디오 전체 듣기 삭제
+    protected void deleteAudio(String audioFile) {
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, audioFile));
+    }
+
+    // 토큰에 해당하는 유저가 있는 지 체크
+    private Member checkToken() {
+        return memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow(
+                () -> new CustomException(HttpStatus.UNAUTHORIZED, "해당 회원을 찾을 수 없습니다.")
+        );
+    }
+
+    // 프로젝트가 존재하는 지 확인
+    private Project checkProject(Long projectId) {
+        return projectRepository.findById(projectId).orElseThrow(
+                () -> new CustomException(HttpStatus.BAD_REQUEST, "해당 프로젝트를 찾을 수 없습니다.")
+        );
+    }
+    
+    // 프로젝트가 해당 유저의 소유물인지 확인
+    private void checkProjectValidation(Long projectId, Member member) {
+        if (!projectRepository.existsByIdAndMember(projectId, member)) {
+            throw new CustomException(HttpStatus.UNAUTHORIZED, "해당 프로젝트에 접근할 수 없습니다.");
+        }
+    }
 }
