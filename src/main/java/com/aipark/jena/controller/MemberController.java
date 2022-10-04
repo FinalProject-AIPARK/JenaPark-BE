@@ -24,7 +24,7 @@ public class MemberController {
     @PostMapping("/signup")
     public ResponseEntity<Body> signUp(@Valid @RequestBody SignUp memberDto, Errors errors) {
         if(errors.hasErrors()){
-
+            return memberService.validateHandling(errors);
         }
         return memberService.signUp(memberDto);
     }
