@@ -89,4 +89,22 @@ public class ResponseProject {
                     .build();
         }
     }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class UpdateTTSProject {
+        private Long audioId;
+        private String allText;
+        private String audioFileUrl;
+
+        public static UpdateTTSProject of(Long audioId, String allText, String audioFileUrl) {
+            return UpdateTTSProject.builder()
+                    .audioId(audioId)
+                    .allText(allText)
+                    .audioFileUrl(audioFileUrl)
+                    .build();
+        }
+    }
 }
