@@ -35,7 +35,7 @@ public class ProjectController {
     }
 
     @PostMapping("/create-tts")
-    public ResponseEntity<Body> createTTS(@RequestBody CreateTTS ttsInputDto) throws IOException {
+    public ResponseEntity<Body> createTTS(@RequestBody CreateTTS ttsInputDto) {
         return projectService.createTTS(ttsInputDto);
     }
 

@@ -15,7 +15,7 @@ public interface ProjectService {
 
     ResponseEntity<Body> changeTitle(ChangeTitle titleInputDto);
 
-    ResponseEntity<Body> createTTS(CreateTTS ttsInputDto) throws IOException;
+    ResponseEntity<Body> createTTS(CreateTTS ttsInputDto);
 
     ResponseEntity<Body> updateTTS(UpdateTTS ttsInputDto);
 
