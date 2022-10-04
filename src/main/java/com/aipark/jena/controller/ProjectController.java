@@ -68,4 +68,9 @@ public class ProjectController {
     public ResponseEntity<Body> historyProject() {
         return projectService.historyProject();
     }
+
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<Body> deleteProject(@PathVariable Long projectId) {
+        return projectService.deleteProject(projectId);
+    }
 }
