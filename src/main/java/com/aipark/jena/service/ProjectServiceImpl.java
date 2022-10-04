@@ -208,7 +208,35 @@ public class ProjectServiceImpl implements ProjectService {
         }
         audioInfoRepository.findById(ttsInputDto.getAudioID());
 
-        return response.success();
+        // 전체 텍스트 최신화
+        StringBuilder allText = new StringBuilder();
+        project.getAudioInfos()
+                .forEach(audioInfo1 -> allText.append(audioInfo1.getSplitText()).append(" "));
+        project.updateText(allText.toString());
+        return response.success(UpdateTTSProject.of(audioInfo.getId(), allText.toString(), audioFileUrl), "텍스트 수정이 완료되었습니다.", HttpStatus.OK);
+    }
+
+    /**
+     * 하나의 음성파일을 삭제
+     *
+     * @param projectId      해당 프로젝트 id
+     * @param audioId 삭제하기 위한 audioId
+     * @return 응답객체
+     */
+    @Transactional
+    public ResponseEntity<Body> deleteAudioInfo(Long projectId, Long audioId) {
+        Member member = checkToken();
+        Project project = checkProject(projectId);
+        checkProjectValidation(projectId, member);
+
+        List<AudioInfo> audioInfos = project.getAudioInfos();
+        for (AudioInfo audioInfo : audioInfos) {
+            if (audioInfo.getId() == audioId) {
+                deleteAudio(audioInfo.getAudioFileS3Path());
+                audioInfoRepository.delete(audioInfo);
+            }
+        }
+        return response.success("음성 파일이 삭제되었습니다.");
     }
 
     @Transactional

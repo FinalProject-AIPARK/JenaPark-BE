@@ -19,6 +19,8 @@ public interface ProjectService {
 
     ResponseEntity<Body> updateTTS(UpdateTTS ttsInputDto);
 
+    ResponseEntity<Body> deleteAudioInfo(Long projectId, Long audioId);
+
     ResponseEntity<Body> uploadAudio(Long projectId, AudioUploadDto audioUploadDto) throws IOException;
 
     ResponseEntity<Body> mergeAudio(Long projectId);

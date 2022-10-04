@@ -44,7 +44,12 @@ public class ProjectController {
         return projectService.updateTTS(ttsInputDto);
     }
 
-    @GetMapping("/{projectId}}/audio")
+    @DeleteMapping("/{projectId}/audio/{audioId}")
+    public ResponseEntity<Body> deleteAudioInfo(@PathVariable Long projectId, @PathVariable Long audioId) {
+        return projectService.deleteAudioInfo(projectId, audioId);
+    }
+
+    @GetMapping("/{projectId}/audio")
     public ResponseEntity<Body> mergeAudio(@PathVariable Long projectId) {
         return projectService.mergeAudio(projectId);
     }

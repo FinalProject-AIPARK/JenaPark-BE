@@ -17,10 +17,4 @@ public class RequestAudio {
     public static class AudioUploadDto {
         private MultipartFile audioFile;
     }
-
-    @Getter
-    @Setter
-    public static class DeleteAudioDto {
-        private String audioId;
-    }
 }
