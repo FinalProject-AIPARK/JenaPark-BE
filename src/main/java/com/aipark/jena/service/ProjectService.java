@@ -28,4 +28,6 @@ public interface ProjectService {
     ResponseEntity<Body> deleteUploadAudio(Long projectId);
 
     ResponseEntity<Body> historyProject();
+
+    ResponseEntity<Body> deleteProject(Long projectId);
 }
