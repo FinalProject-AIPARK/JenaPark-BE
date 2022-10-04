@@ -77,7 +77,7 @@ public class BackgroundServiceImpl implements BackgroundService {
     }
 
     @Override
-    public ResponseEntity<Response.Body> backgroundList(Long memberId) {
+    public ResponseEntity<Response.Body> backgroundList() {
         Optional<Member> memberRes = memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail());
         if(memberRes.isPresent()){
             List<Background> backgroundListDefault = backgroundRepository.findAllByIsUpload(false);
