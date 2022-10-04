@@ -15,9 +15,11 @@ public interface ProjectService {
 
     ResponseEntity<Body> changeTitle(ChangeTitle titleInputDto);
 
-    ResponseEntity<Body> createTTS(CreateTTS ttsInputDto) throws IOException;
+    ResponseEntity<Body> createTTS(CreateTTS ttsInputDto);
 
     ResponseEntity<Body> updateTTS(UpdateTTS ttsInputDto);
+
+    ResponseEntity<Body> deleteAudioInfo(Long projectId, Long audioId);
 
     ResponseEntity<Body> uploadAudio(Long projectId, AudioUploadDto audioUploadDto) throws IOException;
 
@@ -26,4 +28,6 @@ public interface ProjectService {
     ResponseEntity<Body> deleteUploadAudio(Long projectId);
 
     ResponseEntity<Body> historyProject();
+
+    ResponseEntity<Body> deleteProject(Long projectId);
 }

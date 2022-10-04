@@ -35,7 +35,7 @@ public class ProjectController {
     }
 
     @PostMapping("/create-tts")
-    public ResponseEntity<Body> createTTS(@RequestBody CreateTTS ttsInputDto) throws IOException {
+    public ResponseEntity<Body> createTTS(@RequestBody CreateTTS ttsInputDto) {
         return projectService.createTTS(ttsInputDto);
     }
 
@@ -44,7 +44,12 @@ public class ProjectController {
         return projectService.updateTTS(ttsInputDto);
     }
 
-    @GetMapping("/{projectId}}/audio")
+    @DeleteMapping("/{projectId}/audio/{audioId}")
+    public ResponseEntity<Body> deleteAudioInfo(@PathVariable Long projectId, @PathVariable Long audioId) {
+        return projectService.deleteAudioInfo(projectId, audioId);
+    }
+
+    @GetMapping("/{projectId}/audio")
     public ResponseEntity<Body> mergeAudio(@PathVariable Long projectId) {
         return projectService.mergeAudio(projectId);
     }
@@ -62,5 +67,10 @@ public class ProjectController {
     @GetMapping
     public ResponseEntity<Body> historyProject() {
         return projectService.historyProject();
+    }
+
+    @DeleteMapping("/{projectId}")
+    public ResponseEntity<Body> deleteProject(@PathVariable Long projectId) {
+        return projectService.deleteProject(projectId);
     }
 }

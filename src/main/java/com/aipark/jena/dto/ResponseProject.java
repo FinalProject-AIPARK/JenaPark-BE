@@ -34,6 +34,9 @@ public class ResponseProject {
         private String audioFileOriginName;
         private String audioFileUrl;
         private String avatarUrl;
+        private Boolean checkText;
+        private Boolean checkAudio;
+        private Boolean checkAvatar;
         private List<AudioInfoDto> audioInfos;
 
         public static InitialProject of(Project project) {
@@ -57,6 +60,9 @@ public class ResponseProject {
                     .audioFileOriginName(project.getAudioFileOriginName())
                     .audioFileUrl(project.getAudioFileUrl())
                     .avatarUrl(project.getAvatarUrl())
+                    .checkText(project.getCheckText())
+                    .checkAudio(project.getCheckAudio())
+                    .checkAvatar(project.getCheckAvatar())
                     .audioInfos(audioInfoDtos)
                     .build();
         }
@@ -80,6 +86,24 @@ public class ResponseProject {
                     .thumbnail(project.getAvatarUrl())
                     .createDate(project.getCreatedDate())
                     .modifiedDate(project.getModifiedDate())
+                    .build();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class UpdateTTSProject {
+        private Long audioId;
+        private String allText;
+        private String audioFileUrl;
+
+        public static UpdateTTSProject of(Long audioId, String allText, String audioFileUrl) {
+            return UpdateTTSProject.builder()
+                    .audioId(audioId)
+                    .allText(allText)
+                    .audioFileUrl(audioFileUrl)
                     .build();
         }
     }

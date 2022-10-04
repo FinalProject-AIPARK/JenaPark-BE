@@ -70,6 +70,18 @@ public class Project extends BaseTimeEntity {
     private String avatarUrl;   // 아바타 썸네일 이미지
 
     @Builder.Default
+    @Column
+    private Boolean checkText = false;
+
+    @Builder.Default
+    @Column
+    private Boolean checkAudio = false;
+
+    @Builder.Default
+    @Column
+    private Boolean checkAvatar = false;
+
+    @Builder.Default
     @OneToMany(mappedBy = "project")
     private List<AudioInfo> audioInfos = new ArrayList<>();
 
@@ -115,6 +127,7 @@ public class Project extends BaseTimeEntity {
         this.speed = speed;
         this.audioUpload = false;
         this.audioMerge = false;
+        this.checkText = true;
     }
 
     public void updateAudioInfos(List<AudioInfo> audioInfos) {
@@ -131,6 +144,8 @@ public class Project extends BaseTimeEntity {
     public void updateAudioUploadSuccess(String originalFilename, String filePath, String audioFileUrl) {
         updateAudioUpload(true);
         updateAudioMerge(true);
+        checkText = true;
+        checkAudio = true;
         updateAudioOriginName(originalFilename);
         updateAudioFileS3Path(filePath);
         updateAudioFileUrl(audioFileUrl);
