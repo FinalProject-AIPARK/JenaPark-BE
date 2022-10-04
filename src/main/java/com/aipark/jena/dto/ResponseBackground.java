@@ -3,7 +3,7 @@ package com.aipark.jena.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,4 +14,28 @@ public class ResponseBackground {
     private String bgName;
     private String bgUrl;
 
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BackgroundAll{
+        private List<BackgroundDefault> backgroundDefaults;
+        private List<BackgroundUpload> backgroundUploads;
+    }
+
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BackgroundDefault{
+        private Long bgId;
+        private String bgName;
+        private String bgUrl;
+    }
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Getter
+    public static class BackgroundUpload {
+        private Long bgId;
+        private String bgName;
+        private String bgUrl;
+    }
 }
