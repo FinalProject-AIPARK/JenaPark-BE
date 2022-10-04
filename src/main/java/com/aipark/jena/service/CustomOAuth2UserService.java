@@ -17,7 +17,7 @@ import java.util.Collections;
 public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        // 1. DefaultOAuth2UserService 객체를 로그인 성공정보(code, access token)를 바탕으로 생성한다.
+        // 1. 로그인 성공정보(code, access token)를 바탕으로 DefaultOAuth2UserService 객체 생성한다.
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
 
         // 2. 생성된 Service 객체로 부터 User를 받는다.
@@ -27,8 +27,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
-        log.info("registrationId = {}", registrationId);
-        log.info("userNameAttributeName = {}", userNameAttributeName);
 
         // 4. SuccessHandler가 사용할 수 있도록 등록해준다.
         OAuth2Attribute oAuth2Attribute =
