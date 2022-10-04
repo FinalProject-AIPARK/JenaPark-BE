@@ -3,6 +3,7 @@ package com.aipark.jena.controller;
 import com.aipark.jena.dto.RequestBackground;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.service.BackgroundService;
+import com.aipark.jena.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +16,13 @@ import java.io.IOException;
 public class BackgroundController {
 
     private final BackgroundService backgroundService;
+    private final MemberService memberService;
 
 
     // 배경 리스트
     @GetMapping("/background")
-    public ResponseEntity<Response.Body> backgroundList(Long memberId){// 헤더에 jwt토큰으로 멤버아이디 찾고싶음
-        return backgroundService.backgroundList(memberId);
+    public ResponseEntity<Response.Body> backgroundList(){
+        return backgroundService.backgroundList();
     }
 
     // 배경 선택
