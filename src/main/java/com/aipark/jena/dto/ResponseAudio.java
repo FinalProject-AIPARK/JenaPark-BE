@@ -36,7 +36,7 @@ public class ResponseAudio {
     @NoArgsConstructor
     @Builder
     public static class AudioInfoDto {
-        private String audioId;
+        private Long audioId;
         private int lineNumber;
         private String splitText;
         private String audioFileUrl;
