@@ -34,6 +34,9 @@ public class ResponseProject {
         private String audioFileOriginName;
         private String audioFileUrl;
         private String avatarUrl;
+        private Boolean checkText;
+        private Boolean checkAudio;
+        private Boolean checkAvatar;
         private List<AudioInfoDto> audioInfos;
 
         public static InitialProject of(Project project) {
@@ -57,6 +60,9 @@ public class ResponseProject {
                     .audioFileOriginName(project.getAudioFileOriginName())
                     .audioFileUrl(project.getAudioFileUrl())
                     .avatarUrl(project.getAvatarUrl())
+                    .checkText(project.getCheckText())
+                    .checkAudio(project.getCheckAudio())
+                    .checkAvatar(project.getCheckAvatar())
                     .audioInfos(audioInfoDtos)
                     .build();
         }
