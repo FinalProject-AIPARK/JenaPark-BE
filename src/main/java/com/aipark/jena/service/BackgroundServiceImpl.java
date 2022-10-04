@@ -88,15 +88,14 @@ public class BackgroundServiceImpl implements BackgroundService {
 
     }
 
-    public List<List<ResponseBackground>> responseBackgroundList(List<Background> b1, List<Background> b2){
+    public ResponseBackground.BackgroundAll responseBackgroundList(List<Background> b1, List<Background> b2){
 
-        List<ResponseBackground> responseBackgroundListDefault = new ArrayList<>();
-        List<ResponseBackground> responseBackgroundListMember = new ArrayList<>();
-        List<List<ResponseBackground>> responseBackgroundList = new ArrayList<>();
+        List<ResponseBackground.BackgroundDefault> responseBackgroundListDefault = new ArrayList<>();
+        List<ResponseBackground.BackgroundUpload> responseBackgroundListMember = new ArrayList<>();
 
         for (int index = 0; index < b1.size(); index++) {
             Background background = b1.get(index);
-            ResponseBackground responseBackground = new ResponseBackground(
+            ResponseBackground.BackgroundDefault responseBackground = new ResponseBackground.BackgroundDefault(
                     background.getId(),
                     background.getBgName(),
                     background.getBgUrl()
@@ -106,7 +105,7 @@ public class BackgroundServiceImpl implements BackgroundService {
 
         for (int index = 0; index < b2.size(); index++) {
             Background background = b2.get(index);
-            ResponseBackground responseBackground = new ResponseBackground(
+            ResponseBackground.BackgroundUpload responseBackground = new ResponseBackground.BackgroundUpload(
                     background.getId(),
                     background.getBgName(),
                     background.getBgUrl()
@@ -114,9 +113,7 @@ public class BackgroundServiceImpl implements BackgroundService {
             responseBackgroundListMember.add(responseBackground);
         }
 
-        responseBackgroundList.add(responseBackgroundListDefault);
-        responseBackgroundList.add(responseBackgroundListMember);
-
-        return responseBackgroundList;
+        ResponseBackground.BackgroundAll responseBackground = new ResponseBackground.BackgroundAll(responseBackgroundListDefault,responseBackgroundListMember);
+        return responseBackground;
     }
 }
