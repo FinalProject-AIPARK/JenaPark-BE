@@ -33,7 +33,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // Access Token, Refresh Token 생성 및 발급한다.
         // Token token = tokenService.generateToken(userDto.getEmail(), "USER");
-        // Response.TokenRes tokenRes = jwtTokenProvider.generateToken(UserProfile.getEmail(), "USER");
+        // Response.TokenRes tokenRes = jwtTokenProvider.generateToken(Authentication authentication);
 
         // 토큰 포함하여 리다이렉트한다.
         String targetUrl;

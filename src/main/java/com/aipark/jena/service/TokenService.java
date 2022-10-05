@@ -13,6 +13,7 @@ import java.util.Base64;
 import java.util.Date;
 
 public class TokenService {
+    private static final String AUTHORITIES_KEY = "auth";
     @Value("${jwt.secret}")
     private String secretKey;
 
@@ -59,21 +60,21 @@ public class TokenService {
     }
 
 
-    public boolean verifyToken(String token) {
-        try {
-            Jws<Claims> claims = Jwts.parser()
-                    .setSigningKey(secretKey)
-                    .parseClaimsJws(token);
-            return claims.getBody()
-                    .getExpiration()
-                    .after(new Date());
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-
-    public String getUid(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-    }
+//    public boolean verifyToken(String token) {
+//        try {
+//            Jws<Claims> claims = Jwts.parser()
+//                    .setSigningKey(secretKey)
+//                    .parseClaimsJws(token);
+//            return claims.getBody()
+//                    .getExpiration()
+//                    .after(new Date());
+//        } catch (Exception e) {
+//            return false;
+//        }
+//    }
+//
+//
+//    public String getUid(String token) {
+//        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+//    }
 }
