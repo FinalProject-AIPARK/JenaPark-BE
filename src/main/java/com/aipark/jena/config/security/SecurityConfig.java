@@ -46,7 +46,14 @@ public class SecurityConfig {
                 .and()
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
+                // oauth2 설정
+                .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
+                .oauth2Login()
+                .loginPage("/token/expired") // 로그인 페이지 url 직접 설정
+                .successHandler(successHandler)
+                .userInfoEndpoint().userService(oAuth2UserService)
+                .addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -71,13 +78,13 @@ public class SecurityConfig {
         return source;
     }
 
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
-                .oauth2Login()
-                .loginPage("/token/expired") // 로그인 페이지 url 직접 설정
-                .successHandler(successHandler)
-                .userInfoEndpoint().userService(oAuth2UserService)
-                .addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
-    }
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
+//                .oauth2Login()
+//                .loginPage("/token/expired") // 로그인 페이지 url 직접 설정
+//                .successHandler(successHandler)
+//                .userInfoEndpoint().userService(oAuth2UserService)
+//                .addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+//    }
 }
