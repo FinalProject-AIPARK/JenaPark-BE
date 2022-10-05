@@ -1,5 +1,8 @@
 package com.aipark.jena.service;
 
+import com.aipark.jena.config.jwt.JwtTokenProvider;
+import com.aipark.jena.dto.Response;
+import com.aipark.jena.dto.Token;
 import com.aipark.jena.dto.UserProfile;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private final TokenService tokenService;
+    private final JwtTokenProvider jwtTokenProvider;
     private final UserRequestMapper userRequestMapper;
 
     @Override
@@ -32,7 +35,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 최초 로그인이라면 회원가입 처리한다.
 
         // Access Token, Refresh Token 생성 및 발급한다.
-        Token token = tokenService.generateToken(userProfile.getEmail(), "USER");
+        Response.TokenRes tokenRes = jwtTokenProvider.generateToken(Authentication authentication);
 
         // 토큰 포함하여 리다이렉트한다.
         String targetUrl;
