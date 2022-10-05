@@ -56,14 +56,14 @@ public class Member extends BaseTimeEntity{
         }
     }
 
-    public Member(String oauthId, String username, String email, String profileImg, Authority roleUser) {
-        super();
-    }
+//    public Member(String oauthId, String username, String email, String profileImg, Authority roleUser) {
+//        super();
+//    }
 
-    public Member update(String username, String email, String profileImg) {
-        this.username = username;
-        this.email = email;
-        this.profileImg = profileImg;
-        return this;
-    }
+//    public Member update(String username, String email, String profileImg) {
+//        this.username = username;
+//        this.email = email;
+//        this.profileImg = profileImg;
+//        return this;
+//    }
 }

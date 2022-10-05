@@ -1,8 +1,8 @@
 package com.aipark.jena.service;
 
 import com.aipark.jena.config.jwt.JwtTokenProvider;
-import com.aipark.jena.dto.Response;
 import com.aipark.jena.dto.Token;
+import com.aipark.jena.dto.UserProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -21,7 +21,6 @@ import java.io.IOException;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
-    private final UserRequestMapper userRequestMapper;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
