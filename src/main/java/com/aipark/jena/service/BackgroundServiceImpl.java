@@ -1,5 +1,6 @@
 package com.aipark.jena.service;
 
+import com.aipark.jena.config.security.SecurityUtil;
 import com.aipark.jena.domain.*;
 import com.aipark.jena.dto.RequestBackground;
 import com.aipark.jena.dto.Response;
@@ -17,6 +18,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -76,20 +78,42 @@ public class BackgroundServiceImpl implements BackgroundService {
 
     @Override
     public ResponseEntity<Response.Body> backgroundList() {
-        List<Background> backgroundList = backgroundRepository.findAllByIsUpload(false);
-        List<ResponseBackground> responseBackgroundList = new ArrayList<>();
+        Optional<Member> memberRes = memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail());
+        if(memberRes.isPresent()){
+            List<Background> backgroundListDefault = backgroundRepository.findAllByIsUpload(false);
+            List<Background> backgroundListMember = backgroundRepository.findAllByMember(memberRes.get());
+            return response.success(responseBackgroundList(backgroundListDefault,backgroundListMember),"배경화면 리스트입니다.", HttpStatus.OK);
+        }
+        return response.fail("해당 회원은 존재하지 않습니다.",HttpStatus.UNAUTHORIZED);
 
+    }
 
-        for (int index = 0; index < backgroundList.size(); index++) {
-            Background background = backgroundList.get(index);
-            ResponseBackground responseBackground = new ResponseBackground(
+    public ResponseBackground.BackgroundAll responseBackgroundList(List<Background> b1, List<Background> b2){
+
+        List<ResponseBackground.BackgroundDefault> responseBackgroundListDefault = new ArrayList<>();
+        List<ResponseBackground.BackgroundUpload> responseBackgroundListMember = new ArrayList<>();
+
+        for (int index = 0; index < b1.size(); index++) {
+            Background background = b1.get(index);
+            ResponseBackground.BackgroundDefault responseBackground = new ResponseBackground.BackgroundDefault(
                     background.getId(),
                     background.getBgName(),
                     background.getBgUrl()
             );
-            responseBackgroundList.add(responseBackground);
+            responseBackgroundListDefault.add(responseBackground);
         }
 
-        return response.success(responseBackgroundList,"배경화면 리스트입니다.", HttpStatus.OK);
+        for (int index = 0; index < b2.size(); index++) {
+            Background background = b2.get(index);
+            ResponseBackground.BackgroundUpload responseBackground = new ResponseBackground.BackgroundUpload(
+                    background.getId(),
+                    background.getBgName(),
+                    background.getBgUrl()
+            );
+            responseBackgroundListMember.add(responseBackground);
+        }
+
+        ResponseBackground.BackgroundAll responseBackground = new ResponseBackground.BackgroundAll(responseBackgroundListDefault,responseBackgroundListMember);
+        return responseBackground;
     }
 }

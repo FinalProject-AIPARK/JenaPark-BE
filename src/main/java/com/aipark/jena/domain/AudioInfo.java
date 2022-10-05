@@ -18,8 +18,9 @@ import static lombok.AccessLevel.PROTECTED;
 public class AudioInfo {
 
     @Id
+    @GeneratedValue
     @Column(name = "audio_id")
-    private String id;
+    private Long id;
 
     @Column(name = "line_number")
     private int lineNumber;
@@ -40,9 +41,36 @@ public class AudioInfo {
     private Double durationSilence;
 
     @Column
+    private String audioFileS3Path;
+
+    @Column
     private String audioFileUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
+
+    public void updateSplitText(String text) {
+        this.splitText = text;
+    }
+
+    public void updatePitch(Double pitch) {
+        this.pitch = pitch;
+    }
+
+    public void updateSpeed(Double speed) {
+        this.speed = speed;
+    }
+
+    public void updateDurationSilence(Double durationSilence) {
+        this.durationSilence = durationSilence;
+    }
+
+    public void updateAudioFileUrl(String audioFileUrl) {
+        this.audioFileUrl = audioFileUrl;
+    }
+
+    public void updateAudioFileS3Path(String audioFileS3Path) {
+        this.audioFileS3Path = audioFileS3Path;
+    }
 }
