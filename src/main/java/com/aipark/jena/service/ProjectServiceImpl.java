@@ -98,14 +98,10 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Transactional
     public ResponseEntity<Body> changeTitle(ChangeTitle titleInputDto) {
-        if (memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail()).isEmpty()) {
-            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-        }
-        if (!projectRepository.existsById(titleInputDto.getProjectID())) {
-            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-        }
-        projectRepository.findById(titleInputDto.getProjectID())
-                .ifPresent(project -> project.updateTitle(titleInputDto.getTitle()));
+        Member member = checkToken();
+        Project project = checkProject(titleInputDto.getProjectID());
+        checkProjectValidation(project.getId(), member);
+        project.updateTitle(titleInputDto.getTitle());
         return response.success("해당 프로젝트의 제목이 변경되었습니다.");
     }
 
