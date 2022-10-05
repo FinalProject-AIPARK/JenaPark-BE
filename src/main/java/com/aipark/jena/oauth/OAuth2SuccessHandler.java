@@ -1,7 +1,6 @@
 package com.aipark.jena.oauth;
 
 import com.aipark.jena.config.jwt.JwtTokenProvider;
-import com.aipark.jena.dto.UserProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -24,6 +23,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
+        // 구글/카카오의 회원 정보를 DTO 로 변환
         OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
         MemberProfile memberProfile = toMemberProfile(oAuth2User);
 
