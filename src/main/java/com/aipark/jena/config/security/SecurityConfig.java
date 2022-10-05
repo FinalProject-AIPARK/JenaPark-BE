@@ -4,8 +4,6 @@ import com.aipark.jena.config.jwt.JwtAuthenticationFilter;
 import com.aipark.jena.config.jwt.JwtTokenProvider;
 import com.aipark.jena.service.CustomOAuth2UserService;
 import com.aipark.jena.service.OAuth2SuccessHandler;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -48,8 +46,7 @@ public class SecurityConfig {
                 .and()
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
-                // .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
-                .addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -77,9 +74,11 @@ public class SecurityConfig {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
-                .oauth2Login().loginPage("/token/expired") // 로그인 페이지 url 직접 설정
+                .oauth2Login()
+                .loginPage("/token/expired") // 로그인 페이지 url 직접 설정
                 .successHandler(successHandler)
                 .userInfoEndpoint() // oauth2 로그인 성공 후 (= 구글이 access token 제공) 설정 시작
-                .userService(oAuth2UserService);
+                .userService(oAuth2UserService)
+                .addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
     }
 }
