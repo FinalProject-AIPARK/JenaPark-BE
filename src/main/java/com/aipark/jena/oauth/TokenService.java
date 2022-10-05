@@ -12,7 +12,7 @@ import javax.annotation.PostConstruct;
 import java.util.Base64;
 import java.util.Date;
 
-public class TokenService {
+public class TokenService { // JwtTokenProvider
     private static final String AUTHORITIES_KEY = "auth";
     @Value("${jwt.secret}")
     private String secretKey;
