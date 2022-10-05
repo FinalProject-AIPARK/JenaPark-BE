@@ -87,6 +87,20 @@ public class ProjectServiceImpl implements ProjectService {
         //양방향 연결 member <-> project
         member.addProject(project);
         projectRepository.save(project);
+        List<Project> projects = member.getProjects();
+        projects.sort(Comparator.comparing(BaseTimeEntity::getModifiedDate));
+        if (projects.size() > PROJECTS_MAX_SIZE) {
+            Project oldestProject = projects.get(0);
+            // 1. audioInfos 존재한다면, 삭제
+            deleteAudioInfos(oldestProject.getAudioInfos());
+
+            // 2. 전체 미리듣기 음성파일이 존재한다면, 삭제
+            if (oldestProject.getAudioFileS3Path() != null) {
+                deleteAudio(oldestProject.getAudioFileS3Path());
+            }
+            // 3. project Entity 삭제
+            projectRepository.delete(oldestProject);
+        }
         return response.success(InitialProject.of(project), "프로젝트가 성공적으로 생성되었습니다.", HttpStatus.CREATED);
     }
 
