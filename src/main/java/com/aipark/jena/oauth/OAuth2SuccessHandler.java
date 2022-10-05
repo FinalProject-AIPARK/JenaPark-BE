@@ -1,8 +1,6 @@
-package com.aipark.jena.service;
+package com.aipark.jena.oauth;
 
 import com.aipark.jena.config.jwt.JwtTokenProvider;
-import com.aipark.jena.dto.MemberProfile;
-import com.aipark.jena.dto.Token;
 import com.aipark.jena.dto.UserProfile;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

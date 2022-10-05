@@ -1,4 +1,4 @@
-package com.aipark.jena.dto;
+package com.aipark.jena.oauth;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,4 +1,4 @@
-package com.aipark.jena.service;
+package com.aipark.jena.oauth;
 
 import lombok.AccessLevel;
 import lombok.Builder;

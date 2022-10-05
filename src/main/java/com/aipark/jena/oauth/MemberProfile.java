@@ -1,4 +1,4 @@
-package com.aipark.jena.dto;
+package com.aipark.jena.oauth;
 
 import com.aipark.jena.domain.Member;
 import com.aipark.jena.enums.Authority;

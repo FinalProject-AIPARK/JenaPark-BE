@@ -2,8 +2,8 @@ package com.aipark.jena.config.security;
 
 import com.aipark.jena.config.jwt.JwtAuthenticationFilter;
 import com.aipark.jena.config.jwt.JwtTokenProvider;
-import com.aipark.jena.service.CustomOAuth2UserService;
-import com.aipark.jena.service.OAuth2SuccessHandler;
+import com.aipark.jena.oauth.CustomOAuth2UserService;
+import com.aipark.jena.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
