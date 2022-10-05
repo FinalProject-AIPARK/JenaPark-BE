@@ -13,10 +13,4 @@ public class UserProfile {
     private final String username;
     private final String email;
     private final String profileImg;
-
-    public UserProfile() {
-        this.email = email;
-        this.username = username;
-        this.profileImg = profileImg;
-    }
 }
