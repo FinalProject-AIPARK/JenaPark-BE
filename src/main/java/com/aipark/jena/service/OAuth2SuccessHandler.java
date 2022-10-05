@@ -27,7 +27,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
-        UserProfile userProfile = userRequestMapper.toUserProfile(oAuth2User);
+        UserProfile userProfile = toUserProfile(oAuth2User);
 
         // 최초 로그인이라면 회원가입 처리한다.
 
@@ -41,5 +41,14 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 .queryParam("token", "token")
                 .build().toUriString();
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
+    }
+
+    public UserProfile toUserProfile(OAuth2User oAuth2User) {
+        var attributes = oAuth2User.getAttributes();
+        return UserProfile.builder()
+                .email((String) attributes.get("email"))
+                .username((String) attributes.get("name"))
+                .profileImg((String) attributes.get("picture"))
+                .build();
     }
 }
