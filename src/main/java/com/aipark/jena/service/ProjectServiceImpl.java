@@ -55,14 +55,10 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Transactional
     public ResponseEntity<Body> inquiryProject(Long projectId) {
-        if (checkToken() == null) {
-            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-        }
-        Optional<Project> projectRes = projectRepository.findById(projectId);
-        if (projectRes.isEmpty()) {
-            return response.fail("존재하지 않는 프로젝트입니다.", HttpStatus.BAD_REQUEST);
-        }
-        return response.success(InitialProject.of(projectRes.get()), "프로젝트 조회를 성공했습니다.", HttpStatus.OK);
+        Member member = checkToken();
+        Project project = checkProject(projectId);
+        checkProjectValidation(projectId, member);
+        return response.success(InitialProject.of(project), "프로젝트 조회를 성공했습니다.", HttpStatus.OK);
     }
 
     /**
@@ -73,11 +69,7 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Transactional
     public ResponseEntity<Body> createProject() {
-        Optional<Member> res = memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail());
-        if (res.isEmpty()) {
-            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-        }
-        Member member = res.get();
+        Member member = checkToken();
         //프로젝트 생성
         Project project = Project.builder()
                 .member(member)
