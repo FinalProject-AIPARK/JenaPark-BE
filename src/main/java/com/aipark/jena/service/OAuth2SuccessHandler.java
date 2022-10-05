@@ -3,12 +3,9 @@ package com.aipark.jena.service;
 import com.aipark.jena.config.jwt.JwtTokenProvider;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.dto.Token;
-import com.aipark.jena.dto.UserProfile;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.token.TokenService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -35,7 +32,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 최초 로그인이라면 회원가입 처리한다.
 
         // Access Token, Refresh Token 생성 및 발급한다.
-        Response.TokenRes tokenRes = jwtTokenProvider.generateToken(Authentication authentication);
+        // Token token = tokenService.generateToken(userDto.getEmail(), "USER");
+        // Response.TokenRes tokenRes = jwtTokenProvider.generateToken(UserProfile.getEmail(), "USER");
 
         // 토큰 포함하여 리다이렉트한다.
         String targetUrl;
