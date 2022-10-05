@@ -1,6 +1,7 @@
 package com.aipark.jena.service;
 
 import com.aipark.jena.config.jwt.JwtTokenProvider;
+import com.aipark.jena.dto.MemberProfile;
 import com.aipark.jena.dto.Token;
 import com.aipark.jena.dto.UserProfile;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
-        UserProfile userProfile = toUserProfile(oAuth2User);
+        MemberProfile memberProfile = toMemberProfile(oAuth2User);
 
         // 최초 로그인이라면 회원가입 처리한다.
 
@@ -42,9 +43,9 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
-    public UserProfile toUserProfile(OAuth2User oAuth2User) {
+    public MemberProfile toMemberProfile(OAuth2User oAuth2User) {
         var attributes = oAuth2User.getAttributes();
-        return UserProfile.builder()
+        return MemberProfile.builder()
                 .email((String) attributes.get("email"))
                 .username((String) attributes.get("name"))
                 .profileImg((String) attributes.get("picture"))

@@ -9,7 +9,7 @@ import static lombok.AccessLevel.PROTECTED;
 @RequiredArgsConstructor
 @Getter
 @Builder
-public class UserProfile {
+public class MemberProfile {
     private final String username;
     private final String email;
     private final String profileImg;
