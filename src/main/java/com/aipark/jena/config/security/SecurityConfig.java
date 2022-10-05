@@ -77,8 +77,7 @@ public class SecurityConfig {
                 .oauth2Login()
                 .loginPage("/token/expired") // 로그인 페이지 url 직접 설정
                 .successHandler(successHandler)
-                .userInfoEndpoint() // oauth2 로그인 성공 후 (= 구글이 access token 제공) 설정 시작
-                .userService(oAuth2UserService)
+                .userInfoEndpoint().userService(oAuth2UserService)
                 .addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
     }
 }
