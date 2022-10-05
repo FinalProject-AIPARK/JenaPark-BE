@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
                 // oauth2 설정
-                .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
+                //.addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
                 .oauth2Login()
                 .loginPage("/token/expired") // 로그인 페이지 url 직접 설정
                 .successHandler(successHandler)
