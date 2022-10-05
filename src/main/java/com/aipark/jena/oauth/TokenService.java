@@ -24,7 +24,7 @@ public class TokenService { // JwtTokenProvider
 
 
     public Token generateToken(String uid, String role) {
-        long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;;
+        long ACCESS_TOKEN_EXPIRE_TIME = 30 * 60 * 1000L;
         long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;
 
         Claims claims = Jwts.claims().setSubject(uid);
