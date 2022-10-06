@@ -145,27 +145,22 @@ public class ProjectServiceImpl implements ProjectService {
             project.updateAudioFileUrl(null);
         }
         // 1. text 한문장씩 분리
-        List<String> splitTexts = Arrays.stream(ttsInputDto.getText()
-                        .split("\\."))
-                .map(String::trim)  // 맨앞,맨뒤 공백 제거
-                .filter(splitText -> !splitText.isEmpty())  // 빈 문자열 제거
-                .collect(Collectors.toList());
+        List<AudioInfoDto> audios = pythonUtil.createAudios(ttsInputDto.getText());
 
         //오디오 객체 생성
         List<AudioInfo> audioInfos = new ArrayList<>();
         // 2. 문장마다 오디오파일 생성
-        for (int i = 0; i < splitTexts.size(); i++) {
-            String audioFileS3Path = pythonUtil.createAudio(splitTexts.get(i));
+        for (int i = 0; i < audios.size(); i++) {
             audioInfos.add(AudioInfo.builder()
                     .lineNumber(i + 1)
                     .project(project)
-                    .splitText(splitTexts.get(i) + ".")
+                    .splitText(audios.get(i).getSplitText())
                     .durationSilence(ttsInputDto.getDurationSilence())
                     .pitch(ttsInputDto.getPitch())
                     .speed(ttsInputDto.getSpeed())
                     .volume(ttsInputDto.getVolume())
-                    .audioFileS3Path(audioFileS3Path)
-                    .audioFileUrl(defaultPath + audioFileS3Path)
+                    .audioFileS3Path(audios.get(i).getAudioFileUrl())
+                    .audioFileUrl(defaultPath + audios.get(i).getAudioFileUrl())
                     .build());
         }
         project.updateAudioInfos(audioInfos);
@@ -207,7 +202,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         deleteAudio(audioInfo.getAudioFileS3Path());
         // audioFileS3Path 경로 받기
-        String audioFileS3Path = pythonUtil.createAudio(audioInfo.getSplitText());
+        String audioFileS3Path = pythonUtil.editAudio(audioInfo.getSplitText());
         audioInfo.updateAudioFileS3Path(audioFileS3Path);
         // audioFileUrl 생성
         String audioFileUrl = defaultPath + audioFileS3Path;
@@ -216,8 +211,9 @@ public class ProjectServiceImpl implements ProjectService {
 
         // 전체 텍스트 최신화
         StringBuilder allText = new StringBuilder();
-        project.getAudioInfos()
-                .forEach(audioInfo1 -> allText.append(audioInfo1.getSplitText()).append(" "));
+        List<AudioInfo> audioInfos = project.getAudioInfos();
+        audioInfos.sort(Comparator.comparing(AudioInfo::getId));
+        audioInfos.forEach(audioInfo1 -> allText.append(audioInfo1.getSplitText()).append(" "));
         project.updateText(allText.toString());
         return response.success(UpdateTTSProject.of(audioInfo.getId(), allText.toString(), audioFileUrl), "텍스트 수정이 완료되었습니다.", HttpStatus.OK);
     }
@@ -327,7 +323,7 @@ public class ProjectServiceImpl implements ProjectService {
         checkToken();
         Project project = checkProject(projectId);
         // 음성파일 합성 후 오디오 파일 생성
-        String audioFile = pythonUtil.createAudio(project.getText());
+        String audioFile = pythonUtil.mergeAudio(project.getText());
         String audioFileUrl = defaultPath + audioFile;
         if (project.getAudioMerge()) {
             deleteAudio(project.getAudioFileS3Path());
