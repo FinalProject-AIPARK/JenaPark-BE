@@ -37,7 +37,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 토큰 포함하여 리다이렉트한다.
         String targetUrl;
         targetUrl = UriComponentsBuilder.fromUriString("/home")
-                .queryParam("token", "token")
+                .queryParam("token", tokenRes)
                 .build().toUriString();
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
