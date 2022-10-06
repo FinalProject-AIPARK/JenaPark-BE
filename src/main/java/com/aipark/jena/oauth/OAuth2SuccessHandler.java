@@ -39,7 +39,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("accessToken = " + tokenRes.getAccessToken());
         log.info("refreshToken = " + tokenRes.getRefreshToken());
 
-        targetUrl = UriComponentsBuilder.fromUriString("/home")
+        targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/login/oauth2/code/google")
                 .queryParam("accessToken", tokenRes.getAccessToken())
                 .queryParam("refreshToken",tokenRes.getRefreshToken())
                 .build().toUriString();
