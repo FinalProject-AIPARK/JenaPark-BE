@@ -2,6 +2,8 @@ package com.aipark.jena.service;
 
 import com.aipark.jena.domain.Avatar;
 import com.aipark.jena.domain.AvatarRepository;
+import com.aipark.jena.domain.Project;
+import com.aipark.jena.domain.ProjectRepository;
 import com.aipark.jena.domain.avatarCategory.*;
 import com.aipark.jena.dto.RequestAvatar;
 import com.aipark.jena.dto.Response;
@@ -27,6 +29,7 @@ public class AvatarServiceImpl implements AvatarService{
     private final HatRepository hatRepository;
     private final ClothesRepository clothesRepository;
 
+    private final ProjectRepository projectRepository;
     private final Response response;
 
     // 아바타 리스트
@@ -104,11 +107,12 @@ public class AvatarServiceImpl implements AvatarService{
     }
 
     // 아바타 생성
-    @Transactional(readOnly = true)
+    @Transactional
     @Override
     public ResponseEntity<Response.Body> createAvatar(RequestAvatar.RequestCreateAvatar requestCreateAvatar) {
 
         Avatar avatar = avatarRepository.findById(requestCreateAvatar.getAvatarId()).orElseThrow();
+        Project project = projectRepository.findById(requestCreateAvatar.getProjectId()).orElseThrow();
 
         // 해당 아바타의 옳은 url 을 찾기위한 로직
         Long accessoriesNum = requestCreateAvatar.getAccessoryId();
@@ -133,6 +137,10 @@ public class AvatarServiceImpl implements AvatarService{
             return response.fail("해당 옷은 "+avatar.getName()+"이(가) 사용할 수 없습니다.",HttpStatus.BAD_REQUEST);
         }
         String resultUrl = "https://jenapark.s3.ap-northeast-2.amazonaws.com/avatar/"+avatar.getName()+"/"+avatar.getName()+"-"+accessoriesNum+"-"+clothesNum+"-"+hatNum+".png";
+
+        project.updateAvatarUrl(resultUrl);
+        projectRepository.save(project);
+
         return response.success(resultUrl,"아바타 생성 완료",HttpStatus.OK);
     }
 
