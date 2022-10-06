@@ -74,9 +74,18 @@ public class BackgroundServiceImpl implements BackgroundService {
     @Transactional
     public ResponseEntity<Response.Body> backgroundSelect(Long projectId,Long bgId) {
 
+        Member memberRes = memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail()).orElseThrow();
+
         Project project = projectRepository.findById(projectId).orElseThrow();
         Background background = backgroundRepository.findById(bgId).orElseThrow();
         ResponseBackground responseBackground = new ResponseBackground(background.getId(),background.getBgName(),background.getBgUrl());
+
+        // 유효성 검증
+        if(background.isUpload() == true){
+            if(backgroundRepository.findByMember(memberRes).isEmpty()){
+                return response.fail("해당 배경아이디는 존재 하지 않습니다.",HttpStatus.BAD_REQUEST);
+            }
+        }
 
         project.updateBackgroundUrl(responseBackground.getBgUrl());
         projectRepository.save(project);
