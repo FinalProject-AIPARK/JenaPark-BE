@@ -11,7 +11,7 @@ text = sys.argv[4]
 s3 = s3_connection(region, access_key, secret_key)
 
 
-def createAudio(text):
+def mergeAudio(text):
     data = dict()
     data['text'] = text
     path = 'result'
@@ -23,4 +23,4 @@ def createAudio(text):
     return True
 
 
-createAudio(text)
+mergeAudio(text)
