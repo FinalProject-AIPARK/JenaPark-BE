@@ -11,7 +11,7 @@ public interface BackgroundService {
     ResponseEntity<Response.Body> backgroundUpload(Long projectId,RequestBackground.BackgroundUploadDto backgroundUploadDto)throws IOException;
 
     // 배경 선택
-    ResponseEntity<Response.Body> backgroundSelect(Long bgId);
+    ResponseEntity<Response.Body> backgroundSelect(Long projectId,Long bgId);
 
     // 배경 리스트 보여주기
     ResponseEntity<Response.Body> backgroundList();

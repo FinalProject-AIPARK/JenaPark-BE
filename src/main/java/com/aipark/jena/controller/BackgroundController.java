@@ -31,10 +31,10 @@ public class BackgroundController {
     }
 
     // 배경 선택
-    @PostMapping("/background/{backgroundId}")
+    @PostMapping("{projectId}/background/{backgroundId}")
     @ApiOperation("배경 선택")
-    public ResponseEntity<Response.Body> backgroundSelect(@ApiParam(value = "배경 아이디") @PathVariable Long backgroundId){
-        return backgroundService.backgroundSelect(backgroundId);
+    public ResponseEntity<Response.Body> backgroundSelect(@ApiParam(value = "프로젝트아이디") @PathVariable Long projectId,@ApiParam(value = "배경 아이디") @PathVariable Long backgroundId){
+        return backgroundService.backgroundSelect(projectId,backgroundId);
     }
 
     // 배경 업로드

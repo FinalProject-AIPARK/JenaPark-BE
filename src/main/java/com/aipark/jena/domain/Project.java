@@ -152,4 +152,6 @@ public class Project extends BaseTimeEntity {
         updateAudioFileUrl(audioFileUrl);
         updateText(" ");
     }
+
+    public void updateBackgroundUrl(String backgroundUrl) { this.backgroundUrl = backgroundUrl;}
 }
