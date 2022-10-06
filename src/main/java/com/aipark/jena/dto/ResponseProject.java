@@ -1,5 +1,6 @@
 package com.aipark.jena.dto;
 
+import com.aipark.jena.domain.Member;
 import com.aipark.jena.domain.Project;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,10 +8,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.aipark.jena.dto.ResponseAudio.AudioInfoDto;
+import static com.aipark.jena.dto.ResponseVideo.HistoryVideo;
 
 public class ResponseProject {
 
@@ -71,10 +74,33 @@ public class ResponseProject {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
+    public static class HistoryAll {
+        private List<HistoryProject> historyProjects;
+        private List<HistoryVideo> historyVideos;
+
+        public static HistoryAll of(Member member) {
+            return HistoryAll.builder()
+                    .historyProjects(member.getProjects()
+                            .stream()
+                            .map(HistoryProject::of)
+                            .sorted(Comparator.comparing(HistoryProject::getModifiedDate))
+                            .collect(Collectors.toList()))
+                    .historyVideos(member.getVideos()
+                            .stream()
+                            .map(HistoryVideo::of)
+                            .sorted(Comparator.comparing(HistoryVideo::getCreateDate))
+                            .collect(Collectors.toList()))
+                    .build();
+        }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
     public static class HistoryProject {
         private Long projectId;
         private String title;
-        private String thumbnail;
         private LocalDateTime createDate;
         private LocalDateTime modifiedDate;
 
@@ -82,7 +108,6 @@ public class ResponseProject {
             return HistoryProject.builder()
                     .projectId(project.getId())
                     .title(project.getTitle())
-                    .thumbnail(project.getAvatarUrl())
                     .createDate(project.getCreatedDate())
                     .modifiedDate(project.getModifiedDate())
                     .build();

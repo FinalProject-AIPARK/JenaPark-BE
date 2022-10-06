@@ -312,14 +312,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional(readOnly = true)
     public ResponseEntity<Body> historyProject() {
         Member member = checkToken();
-        if (member == null) {
-            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-        }
-        List<HistoryProject> historyProjects = member.getProjects()
-                .stream()
-                .map(HistoryProject::of)
-                .collect(Collectors.toList());
-        return response.success(historyProjects, "프로젝트 히스토리를 조회합니다.", HttpStatus.OK);
+        HistoryAll historyAll = HistoryAll.of(member);
+        return response.success(historyAll, "프로젝트와 영상 히스토리를 조회합니다.", HttpStatus.OK);
     }
 
     /**
