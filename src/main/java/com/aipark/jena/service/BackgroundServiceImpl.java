@@ -9,10 +9,12 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -69,9 +71,15 @@ public class BackgroundServiceImpl implements BackgroundService {
     }
 
     @Override
-    public ResponseEntity<Response.Body> backgroundSelect(Long bgId) {
+    @Transactional
+    public ResponseEntity<Response.Body> backgroundSelect(Long projectId,Long bgId) {
+
+        Project project = projectRepository.findById(projectId).orElseThrow();
         Background background = backgroundRepository.findById(bgId).orElseThrow();
         ResponseBackground responseBackground = new ResponseBackground(background.getId(),background.getBgName(),background.getBgUrl());
+
+        project.updateBackgroundUrl(responseBackground.getBgUrl());
+        projectRepository.save(project);
 
         return response.success(responseBackground.getBgUrl(),responseBackground.getBgName()+" 배경을 선택했습니다.",HttpStatus.OK);
     }

@@ -97,6 +97,7 @@ public class Project extends BaseTimeEntity {
         this.title = title;
     }
 
+    public void updateAvatarUrl(String avatarUrl){this.avatarUrl = avatarUrl;}
     public void updateAudioUpload(Boolean audioUpload) {
         this.audioUpload = audioUpload;
     }
@@ -151,4 +152,6 @@ public class Project extends BaseTimeEntity {
         updateAudioFileUrl(audioFileUrl);
         updateText(" ");
     }
+
+    public void updateBackgroundUrl(String backgroundUrl) { this.backgroundUrl = backgroundUrl;}
 }
