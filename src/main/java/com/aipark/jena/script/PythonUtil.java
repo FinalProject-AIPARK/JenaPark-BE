@@ -17,8 +17,15 @@ public class PythonUtil {
     @Value("${cloud.aws.region.static}")
     private String region;
 
+    // 음성 파일 생성
     public String createAudio(String text) {
         ProcessBuilder pb = new ProcessBuilder("python3", "python/createAudio.py", accessKey, secretKey, region, text);
+        return getFileName(pb);
+    }
+
+    // 영상 파일 생성
+    public String createVideo() {
+        ProcessBuilder pb = new ProcessBuilder("python3", "python/createVideo.py", accessKey, secretKey, region);
         return getFileName(pb);
     }
 
