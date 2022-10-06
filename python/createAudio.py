@@ -1,6 +1,6 @@
 import sys
 from s3 import s3_put_object, s3_connection
-from audio import audio_request
+from media import audio_request
 import os
 
 
