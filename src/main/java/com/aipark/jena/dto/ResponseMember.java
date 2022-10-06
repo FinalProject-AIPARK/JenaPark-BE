@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class ResponseMember {
     @Getter
@@ -17,7 +17,7 @@ public class ResponseMember {
         private String username;
         private String email;
         private String profileImg;
-        private LocalDate createDate;
+        private LocalDateTime createDate;
 
         public static ResponseMember.MemberInfo of(Member member) {
             return MemberInfo.builder()

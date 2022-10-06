@@ -6,12 +6,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.aipark.jena.dto.ResponseAudio.*;
+import static com.aipark.jena.dto.ResponseAudio.AudioInfoDto;
 
 public class ResponseProject {
 
@@ -76,7 +75,7 @@ public class ResponseProject {
         private Long projectId;
         private String title;
         private String thumbnail;
-        private LocalDate createDate;
+        private LocalDateTime createDate;
         private LocalDateTime modifiedDate;
 
         public static HistoryProject of(Project project) {

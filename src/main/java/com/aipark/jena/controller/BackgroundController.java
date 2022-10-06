@@ -31,7 +31,7 @@ public class BackgroundController {
     }
 
     // 배경 선택
-    @GetMapping("/background/{backgroundId}")
+    @PostMapping("/background/{backgroundId}")
     @ApiOperation("배경 선택")
     public ResponseEntity<Response.Body> backgroundSelect(@ApiParam(value = "배경 아이디") @PathVariable Long backgroundId){
         return backgroundService.backgroundSelect(backgroundId);
