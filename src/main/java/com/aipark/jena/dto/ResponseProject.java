@@ -45,6 +45,7 @@ public class ResponseProject {
             List<AudioInfoDto> audioInfoDtos = project.getAudioInfos()
                     .stream()
                     .map(AudioInfoDto::of)
+                    .sorted(Comparator.comparing(AudioInfoDto::getAudioId))
                     .collect(Collectors.toList());
 
             return InitialProject.builder()

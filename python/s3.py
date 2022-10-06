@@ -38,3 +38,24 @@ def s3_put_object(s3, bucket, filepath, access_key):
     print(access_key)
 
     return True
+
+
+# download 하기
+def s3_get_object(s3, bucket, filepath, access_key):
+    """
+    s3 bucket에 지정 파일 업로드
+    :param s3: 연결된 s3 객체(boto3 client)
+    :param bucket: 버킷명
+    :param filepath: 저장할 파일 위치
+    :param access_key: 다운받을 파일명
+    :return: 성공 시 True, 실패 시 False 반환
+    """
+    tmp = access_key.split('/')[-1]
+    try:
+        s3.download_file(bucket, access_key, filepath+tmp)
+    except Exception as e:
+        print(e)
+        return False
+
+    print(access_key)
+    return True
