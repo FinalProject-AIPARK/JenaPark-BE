@@ -20,24 +20,28 @@ import java.io.IOException;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
-
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, ServletException {
         // 구글/카카오의 회원 정보를 DTO 로 변환
         OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
-        // MemberProfile memberProfile = toMemberProfile(oAuth2User);
+        log.info("Principal에서 꺼낸 OAuth2User = {}", oAuth2User);
 
         // 최초 로그인이라면 회원가입 처리한다.
-
-        // Access Token, Refresh Token 생성 및 발급한다.
-        // Token token = tokenService.generateToken(userDto.getEmail(), "USER");
+        String targetUrl;
+        log.info("토큰 발행 시작");
         Response.TokenRes tokenRes = jwtTokenProvider.generateToken(authentication);
 
-        // 토큰 포함하여 리다이렉트한다.
-        String targetUrl;
+        //Token token = tokenService.generateToken(oAuth2User.getName(), "USER");
+        //log.info("{}", token);
+
+        // 토큰 확인
+        log.info("accessToken = " + tokenRes.getAccessToken());
+        log.info("refreshToken = " + tokenRes.getRefreshToken());
+
         targetUrl = UriComponentsBuilder.fromUriString("/home")
-                .queryParam("token", tokenRes)
+                .queryParam("accessToken", tokenRes.getAccessToken())
+                .queryParam("refreshToken",tokenRes.getRefreshToken())
                 .build().toUriString();
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
