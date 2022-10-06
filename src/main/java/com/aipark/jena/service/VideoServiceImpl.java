@@ -4,6 +4,7 @@ import com.aipark.jena.config.security.SecurityUtil;
 import com.aipark.jena.domain.*;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.exception.CustomException;
+import com.aipark.jena.script.PythonUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,12 +19,14 @@ public class VideoServiceImpl implements VideoService{
     private final VideoRepository videoRepository;
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
+    private final PythonUtil pythonUtil;
 
     public ResponseEntity<Body> createVideo(Long projectId) {
         Member member = checkToken();
         Project project = checkProject(projectId);
         checkProjectValidation(projectId, member);
 
+        pythonUtil.createVideo(project.getAudioFileS3Path());
         Video video = Video.builder()
                 .member(member)
                 .title(project.getTitle())
