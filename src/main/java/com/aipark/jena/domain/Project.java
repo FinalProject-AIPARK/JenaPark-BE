@@ -115,6 +115,8 @@ public class Project extends BaseTimeEntity {
 
     public void updateText(String text) {
         this.text = text;
+        checkText = true;
+        checkAudio = true;
     }
 
     public void updateStep1(String allText, String sex, String lang, Double durationSilence, Long volume, Double pitch, Double speed) {
