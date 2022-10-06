@@ -15,4 +15,7 @@ public interface ProjectDefault {
     Boolean AUDIO_MERGE_DEFAULT = false;
 
     String BACKGROUND_DEFAULT = "https://jenapark.s3.ap-northeast-2.amazonaws.com/background/default/BG_GREEN.png";
+
+    int PROJECTS_MAX_SIZE = 5;  // 한 회원 당 갖고있을 수 있는 프로젝트 수
+    int VIDEOS_MAX_SIZE = 5;    // 한 회원 당 갖고있을 수 있는 영상 수
 }

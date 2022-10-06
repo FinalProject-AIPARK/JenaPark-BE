@@ -55,14 +55,10 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Transactional
     public ResponseEntity<Body> inquiryProject(Long projectId) {
-        if (checkToken() == null) {
-            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-        }
-        Optional<Project> projectRes = projectRepository.findById(projectId);
-        if (projectRes.isEmpty()) {
-            return response.fail("존재하지 않는 프로젝트입니다.", HttpStatus.BAD_REQUEST);
-        }
-        return response.success(InitialProject.of(projectRes.get()), "프로젝트 조회를 성공했습니다.", HttpStatus.OK);
+        Member member = checkToken();
+        Project project = checkProject(projectId);
+        checkProjectValidation(projectId, member);
+        return response.success(InitialProject.of(project), "프로젝트 조회를 성공했습니다.", HttpStatus.OK);
     }
 
     /**
@@ -73,11 +69,7 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Transactional
     public ResponseEntity<Body> createProject() {
-        Optional<Member> res = memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail());
-        if (res.isEmpty()) {
-            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-        }
-        Member member = res.get();
+        Member member = checkToken();
         //프로젝트 생성
         Project project = Project.builder()
                 .member(member)
@@ -95,6 +87,20 @@ public class ProjectServiceImpl implements ProjectService {
         //양방향 연결 member <-> project
         member.addProject(project);
         projectRepository.save(project);
+        List<Project> projects = member.getProjects();
+        projects.sort(Comparator.comparing(BaseTimeEntity::getModifiedDate));
+        if (projects.size() > PROJECTS_MAX_SIZE) {
+            Project oldestProject = projects.get(0);
+            // 1. audioInfos 존재한다면, 삭제
+            deleteAudioInfos(oldestProject.getAudioInfos());
+
+            // 2. 전체 미리듣기 음성파일이 존재한다면, 삭제
+            if (oldestProject.getAudioFileS3Path() != null) {
+                deleteAudio(oldestProject.getAudioFileS3Path());
+            }
+            // 3. project Entity 삭제
+            projectRepository.delete(oldestProject);
+        }
         return response.success(InitialProject.of(project), "프로젝트가 성공적으로 생성되었습니다.", HttpStatus.CREATED);
     }
 
@@ -106,14 +112,10 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Transactional
     public ResponseEntity<Body> changeTitle(ChangeTitle titleInputDto) {
-        if (memberRepository.findByEmail(SecurityUtil.getCurrentUserEmail()).isEmpty()) {
-            return response.fail("토큰이 유효하지 않습니다.", HttpStatus.UNAUTHORIZED);
-        }
-        if (!projectRepository.existsById(titleInputDto.getProjectID())) {
-            return response.fail("해당 프로젝트가 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
-        }
-        projectRepository.findById(titleInputDto.getProjectID())
-                .ifPresent(project -> project.updateTitle(titleInputDto.getTitle()));
+        Member member = checkToken();
+        Project project = checkProject(titleInputDto.getProjectID());
+        checkProjectValidation(project.getId(), member);
+        project.updateTitle(titleInputDto.getTitle());
         return response.success("해당 프로젝트의 제목이 변경되었습니다.");
     }
 
