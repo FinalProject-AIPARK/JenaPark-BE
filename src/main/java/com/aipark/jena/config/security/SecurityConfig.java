@@ -2,6 +2,8 @@ package com.aipark.jena.config.security;
 
 import com.aipark.jena.config.jwt.JwtAuthenticationFilter;
 import com.aipark.jena.config.jwt.JwtTokenProvider;
+import com.aipark.jena.oauth.CustomOAuth2UserService;
+import com.aipark.jena.oauth.OAuth2SuccessHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -10,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -23,21 +26,31 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
     private final RedisTemplate redisTemplate;
 
+    private final CustomOAuth2UserService oAuth2UserService;
+    private final OAuth2SuccessHandler successHandler;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
 //                .httpBasic().disable()
-                .csrf().disable()
+                .cors().and().csrf().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/members/signup", "/api/v1/members/login", "/api/v1/**").permitAll()
+                .antMatchers("/api/v1/members/signup", "/api/v1/members/login", "/token/**").permitAll()
+                //.anyRequest().authenticated()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and()
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
+                // oauth2 설정
+                //.addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
+                .oauth2Login()
+                .loginPage("/token/expired") // 로그인 페이지 url 직접 설정
+                .successHandler(successHandler)
+                .userInfoEndpoint().userService(oAuth2UserService);
         return http.build();
     }
 
@@ -61,4 +74,14 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
+
+//    protected void configure(HttpSecurity http) throws Exception {
+//        http
+//                .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
+//                .oauth2Login()
+//                .loginPage("/token/expired") // 로그인 페이지 url 직접 설정
+//                .successHandler(successHandler)
+//                .userInfoEndpoint().userService(oAuth2UserService)
+//                .addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
+//    }
 }
