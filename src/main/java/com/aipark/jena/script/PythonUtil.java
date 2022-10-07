@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,7 @@ public class PythonUtil {
 
     // 영상 파일 생성
     public String createVideo(String audioFileS3Path) {
-        ProcessBuilder pb = new ProcessBuilder("python3", "python/createVideo.py", accessKey, secretKey, region, audioFileS3Path);
+        ProcessBuilder pb = new ProcessBuilder("python", "python/createVideo.py", accessKey, secretKey, region, audioFileS3Path);
         Process process = null;
         String fileName = "";
         try {
@@ -103,7 +104,6 @@ public class PythonUtil {
             int exitVal = process.waitFor();  // 자식 프로세스가 종료될 때까지 기다림
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "euc-kr"));
             if (in.readLine().equals("s3 bucket connected!")) {
-                System.out.println(in.readLine());
                 fileName = in.readLine();
                 System.out.println(fileName);
             } else {
@@ -113,12 +113,13 @@ public class PythonUtil {
                 System.out.println("서브 프로세스가 비정상 종료되었습니다.");
                 throw new CustomException(HttpStatus.BAD_REQUEST, "서브 프로세스가 비정상 종료되었습니다.");
             }
-        } catch (Exception e) {
+        } catch (IOException | InterruptedException e) {
             System.out.println(e);
         } finally {
             assert process != null;
             process.destroy();
         }
+        System.out.println("test");
         return fileName;
     }
 }
