@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -39,12 +38,16 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         writeTokenResponse(response, tokenRes);
     }
 
-    public MemberProfile toMemberProfile(OAuth2User oAuth2User) {
-        var attributes = oAuth2User.getAttributes();
-        return MemberProfile.builder()
-                .email((String) attributes.get("email"))
-                .username((String) attributes.get("name"))
-                .profileImg((String) attributes.get("picture"))
-                .build();
+    private void writeTokenResponse(HttpServletResponse response, Response.TokenRes token)
+            throws IOException {
+        response.setContentType("text/html;charset=UTF-8");
+
+        response.addHeader("Auth", token.getAccessToken());
+        response.addHeader("Refresh", token.getRefreshToken());
+        response.setContentType("application/json;charset=UTF-8");
+
+        var writer = response.getWriter();
+        writer.println(objectMapper.writeValueAsString(token));
+        writer.flush();
     }
 }
