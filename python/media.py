@@ -20,7 +20,7 @@ def audio_request(data, path='result', sr=44100):
     return audio_id
 
 
-def video_request(audioId, avatarId, background, path):
+def video_request(audioId, avatarId, path):
     wave = path + audioId
     sr, wav = wavfile.read(wave)
     length = float(len(wav)/sr)
