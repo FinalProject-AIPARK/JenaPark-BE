@@ -10,6 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
+import java.util.List;
+
+import static com.aipark.jena.config.ProjectDefault.VIDEOS_MAX_SIZE;
 import static com.aipark.jena.dto.Response.Body;
 
 @RequiredArgsConstructor
@@ -25,7 +29,13 @@ public class VideoServiceImpl implements VideoService{
         Member member = checkToken();
         Project project = checkProject(projectId);
         checkProjectValidation(projectId, member);
-
+        List<Video> videos = member.getVideos();
+        videos.sort(Comparator.comparing(BaseTimeEntity::getCreatedDate));
+        
+        // 비디오가 5개가 넘어가면, 생성된지 가장 오래된것 삭제
+        if (videos.size() > VIDEOS_MAX_SIZE) {
+            videoRepository.delete(videos.get(0));
+        }
         pythonUtil.createVideo(project.getAudioFileS3Path());
         Video video = Video.builder()
                 .member(member)
