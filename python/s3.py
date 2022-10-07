@@ -57,5 +57,4 @@ def s3_get_object(s3, bucket, filepath, access_key):
         print(e)
         return False
 
-    print(access_key)
     return True

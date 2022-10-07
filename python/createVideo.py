@@ -19,6 +19,7 @@ def createVideo():
     avatarId = avatarFileS3Path.split('/')[-1]
 
     video_id = video_request(audioId, avatarId, 'result/')
+    print(video_id)
     s3_put_object(s3, "jenapark", f"result/{video_id}.mp4",
                                         f"video/{video_id}.mp4")
     os.remove(f"result/{video_id}.mp4")
