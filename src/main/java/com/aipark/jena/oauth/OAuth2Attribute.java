@@ -1,5 +1,7 @@
 package com.aipark.jena.oauth;
 
+import com.aipark.jena.domain.Member;
+import com.aipark.jena.enums.Authority;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -64,5 +66,14 @@ public class OAuth2Attribute { // provider(구글, 카카오)마다 제공해주
         map.put("picture", picture);
 
         return map;
+    }
+
+    public Member toEntity(){
+        return Member.builder()
+                .username(name)
+                .email(email)
+                .profileImg(picture)
+                .authority(Authority.ROLE_USER) // 기본 권한
+                .build();
     }
 }
