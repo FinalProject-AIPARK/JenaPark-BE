@@ -320,8 +320,9 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Transactional
     public ResponseEntity<Body> mergeAudio(Long projectId) {
-        checkToken();
+        Member member = checkToken();
         Project project = checkProject(projectId);
+        checkProjectValidation(projectId, member);
         // 음성파일 합성 후 오디오 파일 생성
         String audioFile = pythonUtil.mergeAudio(project.getText());
         String audioFileUrl = defaultPath + audioFile;
