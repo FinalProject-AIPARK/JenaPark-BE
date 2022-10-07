@@ -15,13 +15,30 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "VIDEO")
 @Entity
-public class Video {
+public class Video extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "video_id")
     private Long id;
+
     @Column
     private String title;
 
+    @Column
+    private String videoFileUrl;
+
+    @Column
+    private String avatarUrl;
+
+    @Column
+    private String videoFileS3Path;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }
