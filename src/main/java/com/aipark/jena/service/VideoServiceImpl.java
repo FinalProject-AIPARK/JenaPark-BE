@@ -6,6 +6,7 @@ import com.aipark.jena.dto.Response;
 import com.aipark.jena.exception.CustomException;
 import com.aipark.jena.script.PythonUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,25 +26,29 @@ public class VideoServiceImpl implements VideoService{
     private final MemberRepository memberRepository;
     private final PythonUtil pythonUtil;
 
+    @Value("${cloud.aws.s3.default-path}")
+    private String defaultPath;
+
     public ResponseEntity<Body> createVideo(Long projectId) {
         Member member = checkToken();
         Project project = checkProject(projectId);
         checkProjectValidation(projectId, member);
         List<Video> videos = member.getVideos();
         videos.sort(Comparator.comparing(BaseTimeEntity::getCreatedDate));
-        
+
+        String videoFileS3Path = pythonUtil.createVideo(project.getAudioFileS3Path());
+        Video video = Video.builder()
+                .member(member)
+                .title(project.getTitle())
+                .videoFileS3Path(videoFileS3Path)
+                .videoFileUrl(defaultPath + videoFileS3Path)
+                .avatarUrl(project.getAvatarUrl())
+                .build();
+        member.addVideo(video);
         // 비디오가 5개가 넘어가면, 생성된지 가장 오래된것 삭제
         if (videos.size() > VIDEOS_MAX_SIZE) {
             videoRepository.delete(videos.get(0));
         }
-        pythonUtil.createVideo(project.getAudioFileS3Path());
-        Video video = Video.builder()
-                .member(member)
-                .title(project.getTitle())
-                .videoFileUrl("제작 중")
-                .avatarUrl(project.getAvatarUrl())
-                .build();
-        member.addVideo(video);
         videoRepository.save(video);
         return response.success("영상이 성공적으로 생성되었습니다.");
     }
