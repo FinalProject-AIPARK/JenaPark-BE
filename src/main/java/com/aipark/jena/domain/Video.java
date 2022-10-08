@@ -29,6 +29,9 @@ public class Video extends BaseTimeEntity{
     private String videoFileUrl;
 
     @Column
+    private String backgroundUrl;
+
+    @Column
     private String avatarUrl;
 
     @Column
