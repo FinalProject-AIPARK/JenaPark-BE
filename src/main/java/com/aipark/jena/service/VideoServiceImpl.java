@@ -42,6 +42,7 @@ public class VideoServiceImpl implements VideoService{
                 .title(project.getTitle())
                 .videoFileS3Path(videoFileS3Path)
                 .videoFileUrl(defaultPath + videoFileS3Path)
+                .backgroundUrl(project.getBackgroundUrl())
                 .avatarUrl(project.getAvatarUrl())
                 .build();
         member.addVideo(video);
