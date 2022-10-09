@@ -44,4 +44,8 @@ public class Video extends BaseTimeEntity{
     public void setMember(Member member) {
         this.member = member;
     }
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
 }

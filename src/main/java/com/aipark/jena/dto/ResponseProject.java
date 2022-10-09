@@ -84,12 +84,12 @@ public class ResponseProject {
                     .historyProjects(member.getProjects()
                             .stream()
                             .map(HistoryProject::of)
-                            .sorted(Comparator.comparing(HistoryProject::getModifiedDate))
+                            .sorted(Comparator.comparing(HistoryProject::getModifiedDate).reversed())
                             .collect(Collectors.toList()))
                     .historyVideos(member.getVideos()
                             .stream()
                             .map(HistoryVideo::of)
-                            .sorted(Comparator.comparing(HistoryVideo::getCreateDate))
+                            .sorted(Comparator.comparing(HistoryVideo::getCreateDate).reversed())
                             .collect(Collectors.toList()))
                     .build();
         }
