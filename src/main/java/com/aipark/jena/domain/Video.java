@@ -29,6 +29,9 @@ public class Video extends BaseTimeEntity{
     private String videoFileUrl;
 
     @Column
+    private String backgroundUrl;
+
+    @Column
     private String avatarUrl;
 
     @Column
@@ -40,5 +43,9 @@ public class Video extends BaseTimeEntity{
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public void updateTitle(String title) {
+        this.title = title;
     }
 }

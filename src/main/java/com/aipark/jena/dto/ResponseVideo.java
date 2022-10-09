@@ -16,7 +16,8 @@ public class ResponseVideo {
     public static class HistoryVideo {
         private Long videoId;
         private String title;
-        private String thumbnail;
+        private String avatarUrl;
+        private String backgroundUrl;
         private String videoFileUrl;
         private LocalDateTime createDate;
 
@@ -24,7 +25,8 @@ public class ResponseVideo {
             return HistoryVideo.builder()
                     .videoId(video.getId())
                     .title(video.getTitle())
-                    .thumbnail(video.getAvatarUrl())
+                    .avatarUrl(video.getAvatarUrl())
+                    .backgroundUrl(video.getBackgroundUrl())
                     .videoFileUrl(video.getVideoFileUrl())
                     .createDate(video.getCreatedDate())
                     .build();

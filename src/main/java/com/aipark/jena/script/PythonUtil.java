@@ -104,10 +104,17 @@ public class PythonUtil {
             int exitVal = process.waitFor();  // 자식 프로세스가 종료될 때까지 기다림
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "euc-kr"));
             if (in.readLine().equals("s3 bucket connected!")) {
+                in.readLine();
+                in.readLine();
+                in.readLine();
+                in.readLine();
+                in.readLine();
+                in.readLine();
+                in.readLine();
                 fileName = in.readLine();
                 System.out.println(fileName);
             } else {
-                throw new CustomException(HttpStatus.BAD_REQUEST, "파이썬 코드 오류!");
+                throw new CustomException(HttpStatus.BAD_REQUEST, "S3 연결 실패!");
             }
             if (exitVal != 0) {
                 System.out.println("서브 프로세스가 비정상 종료되었습니다.");
@@ -119,7 +126,6 @@ public class PythonUtil {
             assert process != null;
             process.destroy();
         }
-        System.out.println("test");
         return fileName;
     }
 }
