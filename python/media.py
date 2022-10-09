@@ -34,7 +34,7 @@ def video_request(audioId, avatarId, path):
     audio_path = AudioFileClip(wave)
     video_path = ImageClip(avatar_image, duration=audio_path.duration)
     video_path = video_path.set_audio(audio_path)
-    video_path.write_videofile(output, fps=24, codec='mpeg4')
+    video_path.write_videofile(output, fps=24, codec='libx264')
 
     os.remove(wave)
     os.remove(avatar_image)
