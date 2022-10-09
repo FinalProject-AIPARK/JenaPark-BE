@@ -21,7 +21,7 @@ public class VideoController {
     }
 
     @PostMapping("/video/{videoId}")
-    public ResponseEntity<Body> renameVideo(@PathVariable Long videoId, ChangeTitle changeTitle) {
+    public ResponseEntity<Body> renameVideo(@PathVariable Long videoId, @RequestBody ChangeTitle changeTitle) {
         return videoService.renameVideo(videoId, changeTitle);
     }
 
