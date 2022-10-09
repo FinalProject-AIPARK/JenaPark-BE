@@ -233,12 +233,13 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<AudioInfo> audioInfos = project.getAudioInfos();
         for (AudioInfo audioInfo : audioInfos) {
-            if (audioInfo.getId() == audioId) {
+            if (Objects.equals(audioInfo.getId(), audioId)) {
                 deleteAudio(audioInfo.getAudioFileS3Path());
                 audioInfoRepository.delete(audioInfo);
+                return response.success("음성 파일이 삭제되었습니다.");
             }
         }
-        return response.success("음성 파일이 삭제되었습니다.");
+        return response.fail("음성 파일을 삭제하지 못했습니다.", HttpStatus.BAD_REQUEST);
     }
 
     @Transactional
