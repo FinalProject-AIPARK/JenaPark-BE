@@ -19,6 +19,7 @@ public class ResponseVideo {
         private String avatarUrl;
         private String backgroundUrl;
         private String videoFileUrl;
+        private String downloadFileUrl;
         private LocalDateTime createDate;
 
         public static HistoryVideo of(Video video) {
@@ -28,6 +29,7 @@ public class ResponseVideo {
                     .avatarUrl(video.getAvatarUrl())
                     .backgroundUrl(video.getBackgroundUrl())
                     .videoFileUrl(video.getVideoFileUrl())
+                    .downloadFileUrl(video.getDownloadFileUrl())
                     .createDate(video.getCreatedDate())
                     .build();
         }
