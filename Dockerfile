@@ -5,7 +5,7 @@ RUN apt update
 
 RUN apt install python3-pip -y
 
-RUN apt install locales
+RUN apt install locales - y
 RUN apt install -y \
     language-pack-ko && \
     dpkg-reconfigure locales && \
