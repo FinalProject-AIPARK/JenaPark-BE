@@ -37,6 +37,9 @@ public class Video extends BaseTimeEntity{
     @Column
     private String videoFileS3Path;
 
+    @Column
+    private String downloadFileUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
