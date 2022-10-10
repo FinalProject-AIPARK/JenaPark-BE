@@ -109,6 +109,8 @@ public class Project extends BaseTimeEntity {
     }
 
     public void updateAudioMerge(Boolean audioMerge) {
+        this.checkText = true;
+        this.checkAudio = true;
         this.audioMerge = audioMerge;
     }
 
