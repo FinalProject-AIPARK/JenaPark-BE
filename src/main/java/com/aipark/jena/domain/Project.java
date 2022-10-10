@@ -67,6 +67,9 @@ public class Project extends BaseTimeEntity {
     private String audioFileUrl;   // 전체 오디오 파일 url 미리듣기 등
 
     @Column
+    private String downloadAudioUrl; // 다운로드용 url
+
+    @Column
     private String avatarUrl;   // 아바타 썸네일 이미지
 
     @Builder.Default
@@ -97,7 +100,10 @@ public class Project extends BaseTimeEntity {
         this.title = title;
     }
 
-    public void updateAvatarUrl(String avatarUrl){this.avatarUrl = avatarUrl;}
+    public void updateAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
     public void updateAudioUpload(Boolean audioUpload) {
         this.audioUpload = audioUpload;
     }
@@ -144,7 +150,7 @@ public class Project extends BaseTimeEntity {
         this.audioFileOriginName = originalFilename;
     }
 
-    public void updateAudioUploadSuccess(String originalFilename, String filePath, String audioFileUrl) {
+    public void updateAudioUploadSuccess(String originalFilename, String filePath, String audioFileUrl, String downloadUrl) {
         updateAudioUpload(true);
         updateAudioMerge(true);
         checkText = true;
@@ -152,8 +158,11 @@ public class Project extends BaseTimeEntity {
         updateAudioOriginName(originalFilename);
         updateAudioFileS3Path(filePath);
         updateAudioFileUrl(audioFileUrl);
+        this.downloadAudioUrl = downloadUrl;
         updateText(" ");
     }
 
-    public void updateBackgroundUrl(String backgroundUrl) { this.backgroundUrl = backgroundUrl;}
+    public void updateBackgroundUrl(String backgroundUrl) {
+        this.backgroundUrl = backgroundUrl;
+    }
 }
