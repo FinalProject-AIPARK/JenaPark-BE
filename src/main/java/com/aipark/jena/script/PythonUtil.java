@@ -37,6 +37,7 @@ public class PythonUtil {
                 String splitText = "";
                 while ((splitText = in.readLine()) != null) {
                     String audioFileS3path = in.readLine();
+                    System.out.println(audioFileS3path);
                     AudioInfoDto audioInfoDto = AudioInfoDto.builder()
                             .splitText(splitText)
                             .audioFileUrl(audioFileS3path)
