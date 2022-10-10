@@ -4,6 +4,22 @@ RUN apt install python3
 RUN apt update
 
 RUN apt install python3-pip -y
+
+RUN apt install locales
+RUN apt install -y \
+    language-pack-ko && \
+    dpkg-reconfigure locales && \
+    locale-gen ko_KR.UTF-8 && \
+    /usr/sbin/update-locale LANG=ko_KR.UTF-8
+
+# 한글을 출력하기 위해 환경변수 등록
+ENV LANG=ko_KR.UTF-8
+ENV LANGUAGE=ko_KR.UTF-8
+ENV LC_ALL=ko_KR.UTF-8
+
+# 파이썬에서 한글을 사용할 수 있도록 환경변수 등록
+ENV PYTHONIOENCODING=UTF-8
+
 RUN pip3 install --upgrade pip
 
 RUN pip3 install boto3
