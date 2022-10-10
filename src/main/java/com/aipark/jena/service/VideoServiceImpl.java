@@ -31,6 +31,9 @@ public class VideoServiceImpl implements VideoService{
     @Value("${cloud.aws.s3.default-path}")
     private String defaultPath;
 
+    @Value("${cloud.aws.s3.download-path}")
+    private String downloadPath;
+
     /**
      * 비디오 생성
      * @param projectId 프로젝트 Pk
@@ -50,6 +53,7 @@ public class VideoServiceImpl implements VideoService{
                 .title(project.getTitle())
                 .videoFileS3Path(videoFileS3Path)
                 .videoFileUrl(defaultPath + videoFileS3Path)
+                .downloadFileUrl(downloadPath + videoFileS3Path)
                 .backgroundUrl(project.getBackgroundUrl())
                 .avatarUrl(project.getAvatarUrl())
                 .build();

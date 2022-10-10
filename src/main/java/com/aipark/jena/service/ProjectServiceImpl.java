@@ -47,6 +47,9 @@ public class ProjectServiceImpl implements ProjectService {
     @Value("${cloud.aws.s3.default-path}")
     private String defaultPath;
 
+    @Value("${cloud.aws.s3.download-path}")
+    private String downloadPath;
+
     /**
      * 프로젝트 정보 조회
      *
@@ -143,6 +146,7 @@ public class ProjectServiceImpl implements ProjectService {
             project.updateAudioUpload(false);
             project.updateAudioMerge(false);
             project.updateAudioFileUrl(null);
+            project.updateDownloadUrl(null);
         }
         // 1. text 한문장씩 분리
         List<AudioInfoDto> audios = pythonUtil.createAudios(ttsInputDto.getText());
@@ -273,7 +277,8 @@ public class ProjectServiceImpl implements ProjectService {
         // 음성이 업로드 되면 audioInfos 를 비워야 한다.
         deleteAudioInfos(project.getAudioInfos());
         String audioFileUrl = defaultPath + fileName;
-        project.updateAudioUploadSuccess(audioUploadDto.getAudioFile().getOriginalFilename(), fileName, audioFileUrl);
+        String downloadUrl = downloadPath + fileName;
+        project.updateAudioUploadSuccess(audioUploadDto.getAudioFile().getOriginalFilename(), fileName, audioFileUrl, downloadUrl);
         return response.success(audioFileUrl, "음성 업로드를 성공했습니다.", HttpStatus.CREATED);
     }
 
