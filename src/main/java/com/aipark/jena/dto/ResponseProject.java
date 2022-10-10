@@ -35,6 +35,7 @@ public class ResponseProject {
         private Boolean audioMerge;
         private String audioFileOriginName;
         private String audioFileUrl;
+        private String downloadAudioUrl;
         private String avatarUrl;
         private Boolean checkText;
         private Boolean checkAudio;
@@ -62,6 +63,7 @@ public class ResponseProject {
                     .audioMerge(project.getAudioMerge())
                     .audioFileOriginName(project.getAudioFileOriginName())
                     .audioFileUrl(project.getAudioFileUrl())
+                    .downloadAudioUrl(project.getDownloadAudioUrl())
                     .avatarUrl(project.getAvatarUrl())
                     .checkText(project.getCheckText())
                     .checkAudio(project.getCheckAudio())
