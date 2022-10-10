@@ -98,7 +98,7 @@ public class PythonUtil {
 
     // 영상 파일 생성
     public String createVideo(String audioFileS3Path) {
-        ProcessBuilder pb = new ProcessBuilder("python", "python/createVideo.py", accessKey, secretKey, region, audioFileS3Path);
+        ProcessBuilder pb = new ProcessBuilder("python3", "python/createVideo.py", accessKey, secretKey, region, audioFileS3Path);
         Process process = null;
         String fileName = "";
         try {
