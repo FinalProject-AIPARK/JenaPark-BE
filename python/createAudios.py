@@ -8,6 +8,8 @@ access_key = sys.argv[1]
 secret_key = sys.argv[2]
 region = sys.argv[3]
 allText = sys.argv[4]
+
+os.system('chcp 65001')
 s3 = s3_connection(region, access_key, secret_key)
 
 
