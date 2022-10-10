@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class PythonUtil {
         try {
             process = pb.start();
             int exitVal = process.waitFor();  // 자식 프로세스가 종료될 때까지 기다림
-            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "euc-kr"));
+            BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8));
             if (in.readLine().equals("s3 bucket connected!")) {
                 String splitText = "";
                 while ((splitText = in.readLine()) != null) {
