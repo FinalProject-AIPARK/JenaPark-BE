@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -35,7 +36,23 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("accessToken = " + tokenRes.getAccessToken());
         log.info("refreshToken = " + tokenRes.getRefreshToken());
 
-        writeTokenResponse(response, tokenRes);
+        Cookie accessCookie =new Cookie("accessToken",tokenRes.getAccessToken());
+        Cookie refreshCookie =new Cookie("refreshToken",tokenRes.getAccessToken());
+
+//        writeTokenResponse(response, tokenRes);
+//        response.setContentType("text/html;charset=UTF-8");
+
+        response.addCookie(accessCookie);
+        response.addCookie(refreshCookie);
+        log.info("name: "+accessCookie.getName());
+        log.info("value: "+accessCookie.getValue());
+
+//        response.addHeader("Auth", tokenRes.getAccessToken());
+//        response.addHeader("Refresh", tokenRes.getRefreshToken());
+
+        response.setContentType("application/json;charset=UTF-8");
+
+        getRedirectStrategy().sendRedirect(request,response,"/");
     }
 
     private void writeTokenResponse(HttpServletResponse response, Response.TokenRes token)
