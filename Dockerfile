@@ -11,6 +11,7 @@ RUN pip3 install numpy==1.20.0
 RUN pip3 install scipy==1.7.3
 RUN pip3 install Pillow
 RUN pip3 install gTTS
+RUN pip3 install moviepy
 
 RUN mkdir python
 COPY ./python /python
