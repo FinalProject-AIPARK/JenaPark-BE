@@ -332,10 +332,12 @@ public class ProjectServiceImpl implements ProjectService {
         // 음성파일 합성 후 오디오 파일 생성
         String audioFile = pythonUtil.mergeAudio(project.getText());
         String audioFileUrl = defaultPath + audioFile;
+        String downloadAudioUrl = downloadPath + audioFile;
         if (project.getAudioMerge()) {
             deleteAudio(project.getAudioFileS3Path());
         }
         project.updateAudioMerge(true);
+        project.updateDownloadUrl(downloadAudioUrl);
         project.updateAudioFileS3Path(audioFile);
         project.updateAudioFileUrl(audioFileUrl);
         return response.success(audioFileUrl, "음성 합성을 성공했습니다.", HttpStatus.CREATED);
