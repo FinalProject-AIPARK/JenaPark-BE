@@ -169,4 +169,8 @@ public class Project extends BaseTimeEntity {
     public void updateDownloadUrl(String downloadAudioUrl) {
         this.downloadAudioUrl = downloadAudioUrl;
     }
+
+    public void updateCheckAvatar(boolean isCheckAvatar) {
+        this.checkAvatar = isCheckAvatar;
+    }
 }
