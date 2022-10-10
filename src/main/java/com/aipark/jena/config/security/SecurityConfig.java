@@ -12,7 +12,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -48,7 +47,7 @@ public class SecurityConfig {
                 // oauth2 설정
                 //.addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
                 .oauth2Login()
-                .loginPage("/token/expired") // 로그인 페이지 url 직접 설정
+                //.loginPage("/token/expired") // 로그인 페이지 url 직접 설정
                 .successHandler(successHandler)
                 .userInfoEndpoint().userService(oAuth2UserService);
         return http.build();
