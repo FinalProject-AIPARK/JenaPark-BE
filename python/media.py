@@ -14,10 +14,8 @@ def audio_request(data, path='result', sr=44100):
     output = path + '/' + audio_id + '.wav'
     text = data['text']
     # 오디오 생성
-    length = np.random.randint(1, len(text) // 2 + 2)
-    audio = np.random.rand(sr*length)
-    write(output, sr, audio.astype(np.int16))
-
+    tts = gTTS(text=text, lang='ko')
+    tts.save(output)
     return audio_id
 
 
