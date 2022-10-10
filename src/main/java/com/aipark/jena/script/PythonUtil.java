@@ -104,12 +104,8 @@ public class PythonUtil {
             int exitVal = process.waitFor();  // 자식 프로세스가 종료될 때까지 기다림
             BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream(), "euc-kr"));
             if (in.readLine().equals("s3 bucket connected!")) {
-                in.readLine();
-                in.readLine();
-                in.readLine();
-                in.readLine();
-                in.readLine();
-                in.readLine();
+                in.readLine();in.readLine();in.readLine();
+                in.readLine();in.readLine();in.readLine();
                 in.readLine();
                 fileName = in.readLine();
                 System.out.println(fileName);

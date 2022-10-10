@@ -139,6 +139,7 @@ public class AvatarServiceImpl implements AvatarService{
         String resultUrl = "https://jenapark.s3.ap-northeast-2.amazonaws.com/avatar/"+avatar.getName()+"/"+avatar.getName()+"-"+accessoriesNum+"-"+clothesNum+"-"+hatNum+".png";
 
         project.updateAvatarUrl(resultUrl);
+        project.updateCheckAvatar(true);
         projectRepository.save(project);
 
         return response.success(resultUrl,"아바타 생성 완료",HttpStatus.OK);

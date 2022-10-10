@@ -5,6 +5,8 @@ import com.aipark.jena.domain.*;
 import com.aipark.jena.dto.Response;
 import com.aipark.jena.exception.CustomException;
 import com.aipark.jena.script.PythonUtil;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -26,10 +28,17 @@ public class VideoServiceImpl implements VideoService{
     private final VideoRepository videoRepository;
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
+    private final AmazonS3 amazonS3;
     private final PythonUtil pythonUtil;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     @Value("${cloud.aws.s3.default-path}")
     private String defaultPath;
+
+    @Value("${cloud.aws.s3.download-path}")
+    private String downloadPath;
 
     /**
      * 비디오 생성
@@ -50,12 +59,14 @@ public class VideoServiceImpl implements VideoService{
                 .title(project.getTitle())
                 .videoFileS3Path(videoFileS3Path)
                 .videoFileUrl(defaultPath + videoFileS3Path)
+                .downloadFileUrl(downloadPath + videoFileS3Path)
                 .backgroundUrl(project.getBackgroundUrl())
                 .avatarUrl(project.getAvatarUrl())
                 .build();
         member.addVideo(video);
         // 비디오가 5개가 넘어가면, 생성된지 가장 오래된것 삭제
         if (videos.size() > VIDEOS_MAX_SIZE) {
+            amazonS3.deleteObject(new DeleteObjectRequest(bucket, videos.get(0).getVideoFileS3Path()));
             videoRepository.delete(videos.get(0));
         }
         videoRepository.save(video);
@@ -88,7 +99,7 @@ public class VideoServiceImpl implements VideoService{
         Member member = checkToken();
         Video video = checkVideo(videoId);
         checkVideoValidation(videoId, member);
-
+        amazonS3.deleteObject(new DeleteObjectRequest(bucket, video.getVideoFileS3Path()));
         videoRepository.delete(video);
         return response.success("비디오가 삭제되었습니다.");
     }
