@@ -2,6 +2,8 @@ import sys
 from s3 import s3_put_object, s3_connection
 from media import audio_request
 import os
+import sys
+import io
 
 
 access_key = sys.argv[1]
@@ -10,6 +12,9 @@ region = sys.argv[3]
 allText = sys.argv[4]
 
 os.system('chcp 65001')
+
+sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding = 'utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.detach(), encoding = 'utf-8')
 s3 = s3_connection(region, access_key, secret_key)
 
 
