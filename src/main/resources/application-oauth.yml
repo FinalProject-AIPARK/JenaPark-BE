@@ -1,0 +1,27 @@
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 262166000255-3c3bgkpccevcsqnk8c1sfbo4k4dp0ecq.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: https://api.fafago.link/login/oauth2/code/google
+            scope: profile,email # 응답 받을 사용자 정보
+          kakao:
+            client-id: 0dfadb50250e3008a6a80ba641682bfc # REST API 키
+            client-secret: cUghsUUX9q31n92dGjas15UxiWXzinZ2
+            # 카카오, 네이버는 spring boot에 등록되어 있지 않으므로 추가 정보 입력
+            redirect-uri: https://api.fafago.link/login/oauth2/code/kakao
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            client-name: Kakao
+            scope:
+              - profile
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize # 1. 브라우저의 sns 로그인 요청 리다이렉트
+            token-uri: https://kauth.kakao.com/oauth/token # 2. 응답받은 code로 access token 요청
+            user-info-uri: https://kapi.kakao.com/v2/user/me # 3. 응답받은 access token 으로 사용자 정보 요청 # 4. 응답받은 사용자 정보로 access/refresh token 생성
+            user-name-attribute: id
