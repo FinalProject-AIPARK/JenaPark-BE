@@ -36,23 +36,24 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("accessToken = " + tokenRes.getAccessToken());
         log.info("refreshToken = " + tokenRes.getRefreshToken());
 
-//        Cookie accessCookie =new Cookie("accessToken",tokenRes.getAccessToken());
-//        Cookie refreshCookie =new Cookie("refreshToken",tokenRes.getAccessToken());
+        Cookie accessCookie =new Cookie("accessToken",tokenRes.getAccessToken());
+        Cookie refreshCookie =new Cookie("refreshToken",tokenRes.getAccessToken());
+
+
+
+        response.addCookie(accessCookie);
+        response.addCookie(refreshCookie);
+        log.info("name: "+accessCookie.getName());
+        log.info("value: "+accessCookie.getValue());
 
 //        writeTokenResponse(response, tokenRes);
 //        response.setContentType("text/html;charset=UTF-8");
-
-//        response.addCookie(accessCookie);
-//        response.addCookie(refreshCookie);
-//        log.info("name: "+accessCookie.getName());
-//        log.info("value: "+accessCookie.getValue());
-
-        response.addHeader("Auth", tokenRes.getAccessToken());
-        response.addHeader("Refresh", tokenRes.getRefreshToken());
+//        response.addHeader("Auth", tokenRes.getAccessToken());
+//        response.addHeader("Refresh", tokenRes.getRefreshToken());
 
 //        response.setContentType("application/json;charset=UTF-8");
-
-        getRedirectStrategy().sendRedirect(request,response,"/");
+        response.sendRedirect("https://api.papago.link/");
+//        getRedirectStrategy().sendRedirect(request,response,"/");
     }
 
     private void writeTokenResponse(HttpServletResponse response, Response.TokenRes token)
