@@ -37,7 +37,6 @@ public class ResponseAudio {
     @Builder
     public static class AudioInfoDto {
         private Long audioId;
-        private int lineNumber;
         private String splitText;
         private String audioFileUrl;
         private Double durationSilence;
@@ -49,7 +48,6 @@ public class ResponseAudio {
         public static ResponseAudio.AudioInfoDto of(AudioInfo audioInfo) {
             return AudioInfoDto.builder()
                     .audioId(audioInfo.getId())
-                    .lineNumber(audioInfo.getLineNumber())
                     .splitText(audioInfo.getSplitText())
                     .audioFileUrl(audioInfo.getAudioFileUrl())
                     .durationSilence(audioInfo.getDurationSilence())
