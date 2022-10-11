@@ -19,6 +19,7 @@ public class OAuth2Attribute {
     private String email;
     private String name;
     private String picture;
+    private String oauthId;
 
     static OAuth2Attribute of(String provider, String attributeKey,
                               Map<String, Object> attributes) {
@@ -38,6 +39,7 @@ public class OAuth2Attribute {
                 .name((String) attributes.get("name"))
                 .email((String) attributes.get("email"))
                 .picture((String)attributes.get("picture"))
+                .oauthId("g")
                 .attributes(attributes)
                 .attributeKey(attributeKey)
                 .build();
@@ -52,6 +54,7 @@ public class OAuth2Attribute {
                 .name((String) kakaoProfile.get("nickname"))
                 .email((String) kakaoAccount.get("email"))
                 .picture((String)kakaoProfile.get("profile_image_url"))
+                .oauthId("k")
                 .attributes(kakaoAccount)
                 .attributeKey(attributeKey)
                 .build();
@@ -64,6 +67,7 @@ public class OAuth2Attribute {
         map.put("name", name);
         map.put("email", email);
         map.put("picture", picture);
+        map.put("oauthId", oauthId);
 
         return map;
     }
@@ -74,6 +78,7 @@ public class OAuth2Attribute {
                 .email(email)
                 .profileImg(picture)
                 .authority(Authority.ROLE_USER) // 기본 권한
+                .oauthId(oauthId)
                 .build();
     }
 }
