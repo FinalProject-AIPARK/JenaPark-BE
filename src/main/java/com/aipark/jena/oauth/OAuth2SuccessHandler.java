@@ -24,48 +24,24 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final ObjectMapper objectMapper;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, ServletException {
-        // 구글/카카오의 회원 정보를 DTO 로 변환
+            throws IOException {
         OAuth2User oAuth2User = (OAuth2User)authentication.getPrincipal();
         log.info("Principal에서 꺼낸 OAuth2User = {}", oAuth2User);
 
-        // 최초 로그인이라면 회원가입 처리한다.
         log.info("토큰 발행 시작");
         Response.TokenRes tokenRes = jwtTokenProvider.generateToken(authentication);
-        // 토큰 확인
         log.info("accessToken = " + tokenRes.getAccessToken());
         log.info("refreshToken = " + tokenRes.getRefreshToken());
 
         Cookie accessCookie =new Cookie("accessToken",tokenRes.getAccessToken());
         Cookie refreshCookie =new Cookie("refreshToken",tokenRes.getAccessToken());
 
-
-
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
         log.info("name: "+accessCookie.getName());
         log.info("value: "+accessCookie.getValue());
 
-//        writeTokenResponse(response, tokenRes);
-//        response.setContentType("text/html;charset=UTF-8");
-//        response.addHeader("Auth", tokenRes.getAccessToken());
-//        response.addHeader("Refresh", tokenRes.getRefreshToken());
-
-//        response.setContentType("application/json;charset=UTF-8");
         response.sendRedirect("https://jennapark.netlify.app/");
-//        getRedirectStrategy().sendRedirect(request,response,"/");
-    }
-
-    private void writeTokenResponse(HttpServletResponse response, Response.TokenRes token)
-            throws IOException {
-        response.setContentType("text/html;charset=UTF-8");
-
-        response.addHeader("Auth", token.getAccessToken());
-        response.addHeader("Refresh", token.getRefreshToken());
-        response.setContentType("application/json;charset=UTF-8");
-
-        var writer = response.getWriter();
-        writer.println(objectMapper.writeValueAsString(token));
-        writer.flush();
+        // getRedirectStrategy().sendRedirect(request,response,"/");
     }
 }
