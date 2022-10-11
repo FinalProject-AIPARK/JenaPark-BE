@@ -67,6 +67,7 @@ public class OAuth2Attribute {
         map.put("name", name);
         map.put("email", email);
         map.put("picture", picture);
+        map.put("oauthId", oauthId);
 
         return map;
     }
