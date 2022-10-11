@@ -52,6 +52,12 @@ public class Project extends BaseTimeEntity {
     private String backgroundUrl;
 
     @Column
+    private String audioModel;
+
+    @Column
+    private String audioModelUrl;
+
+    @Column
     private Boolean audioUpload;    // 오디오 업로드 여부
 
     @Column
@@ -128,7 +134,7 @@ public class Project extends BaseTimeEntity {
         checkAudio = true;
     }
 
-    public void updateStep1(String allText, String sex, String lang, Double durationSilence, Long volume, Double pitch, Double speed) {
+    public void updateStep1(String allText, String sex, String lang, Double durationSilence, Long volume, Double pitch, Double speed, String audioModel, String audioModelUrl) {
         this.text = allText;
         this.sex = sex;
         this.lang = lang;
@@ -136,6 +142,8 @@ public class Project extends BaseTimeEntity {
         this.volume = volume;
         this.pitch = pitch;
         this.speed = speed;
+        this.audioModel = audioModel;
+        this.audioModelUrl = audioModelUrl;
         this.audioUpload = false;
         this.audioMerge = false;
         this.checkText = true;

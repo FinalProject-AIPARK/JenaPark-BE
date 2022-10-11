@@ -31,6 +31,8 @@ public class ResponseProject {
         private Long volume;
         private Double durationSilence;
         private String backgroundUrl;
+        private String audioModel;
+        private String audioModelUrl;
         private Boolean audioUpload;
         private Boolean audioMerge;
         private String audioFileOriginName;
@@ -52,6 +54,8 @@ public class ResponseProject {
             return InitialProject.builder()
                     .projectId(project.getId())
                     .title(project.getTitle())
+                    .audioModel(project.getAudioModel())
+                    .audioModelUrl(project.getAudioModelUrl())
                     .sex(project.getSex())
                     .lang(project.getLang())
                     .speed(project.getSpeed())
