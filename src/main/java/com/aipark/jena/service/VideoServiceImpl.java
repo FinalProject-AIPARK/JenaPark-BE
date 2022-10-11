@@ -53,7 +53,12 @@ public class VideoServiceImpl implements VideoService{
         List<Video> videos = member.getVideos();
         videos.sort(Comparator.comparing(BaseTimeEntity::getCreatedDate));
 
-        String videoFileS3Path = pythonUtil.createVideo(project.getAudioFileS3Path());
+        // 영상을 생성하기 위해선 해당 프로젝트에 음성파일과 아바타가 선택이 되어야한다.
+        if (!project.getAudioMerge() || !project.getCheckAudio() || !project.getCheckText() || !project.getCheckAvatar()) {
+            return response.fail("영상을 생성할 조건을 충족시키지 못했습니다.", HttpStatus.BAD_REQUEST);
+        }
+        String avatarFileS3Path = project.getAvatarUrl().split("com/")[1];
+        String videoFileS3Path = pythonUtil.createVideo(project.getAudioFileS3Path(), avatarFileS3Path);
         Video video = Video.builder()
                 .member(member)
                 .title(project.getTitle())
