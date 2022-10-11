@@ -22,9 +22,6 @@ public class AudioInfo {
     @Column(name = "audio_id")
     private Long id;
 
-    @Column(name = "line_number")
-    private int lineNumber;
-
     @Column(name = "split_text")
     private String splitText;
 
