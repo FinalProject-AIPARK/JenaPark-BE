@@ -44,6 +44,7 @@ public class ResponseAudio {
         private Double pitch;
         private Double speed;
         private Long volume;
+        private String avatarName;
 
         public static ResponseAudio.AudioInfoDto of(AudioInfo audioInfo) {
             return AudioInfoDto.builder()
