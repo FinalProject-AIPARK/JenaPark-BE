@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -36,12 +37,19 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Cookie accessCookie =new Cookie("accessToken",tokenRes.getAccessToken());
         Cookie refreshCookie =new Cookie("refreshToken",tokenRes.getAccessToken());
 
+//        accessCookie.setDomain("jennapark.netlify.app");
+//        accessCookie.setHttpOnly(false);
+        accessCookie.setPath("/");
+        refreshCookie.setPath("/");
+
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
         log.info("name: "+accessCookie.getName());
         log.info("value: "+accessCookie.getValue());
 
+        response.addHeader("accessToken",tokenRes.getAccessToken());
+        response.addHeader("refreshToken",tokenRes.getRefreshToken());
         response.sendRedirect("https://jennapark.netlify.app/");
-        // getRedirectStrategy().sendRedirect(request,response,"/");
+
     }
 }
