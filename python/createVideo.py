@@ -8,7 +8,7 @@ access_key = sys.argv[1]
 secret_key = sys.argv[2]
 region = sys.argv[3]
 audioFileS3Path = sys.argv[4]
-avatarFileS3Path = 'avatar/pho/pho-1-1-1.png'
+avatarFileS3Path = sys.argv[5]
 s3 = s3_connection(region, access_key, secret_key)
 
 def createVideo():
