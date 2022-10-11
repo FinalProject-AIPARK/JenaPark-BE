@@ -24,22 +24,20 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        // 1. 로그인 성공정보(code, access token)를 바탕으로 DefaultOAuth2UserService 객체 생성한다.
+        // loadUser
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
-
-        // 2. 생성된 Service 객체로 부터 User를 받는다.
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
-        // 3. 받은 User로 부터 user 정보를 받는다.
+        // registrationId : 구글인지 카카오인지 구별, userNameAttributeName : PK (구글 기본 제공, 네이버/카카오는 지원X)
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
 
-        // 4. SuccessHandler가 사용할 수 있도록 등록해준다.
+        // OAuth2Attribute : OAuth2User 의 DTO
         OAuth2Attribute oAuth2Attribute =
                 OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
 
-        Member member = saveOrUpdate(oAuth2Attribute);
+        saveOrUpdate(oAuth2Attribute);
 
         var memberAttribute = oAuth2Attribute.convertToMap();
         return new DefaultOAuth2User(
