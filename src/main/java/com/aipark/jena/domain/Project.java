@@ -147,6 +147,7 @@ public class Project extends BaseTimeEntity {
         this.audioUpload = false;
         this.audioMerge = false;
         this.checkText = true;
+        this.checkAudio = false;
     }
 
     public void updateAudioInfos(List<AudioInfo> audioInfos) {
