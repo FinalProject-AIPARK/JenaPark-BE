@@ -149,26 +149,29 @@ public class ProjectServiceImpl implements ProjectService {
             project.updateAudioMerge(false);
             project.updateAudioFileUrl(null);
             project.updateDownloadUrl(null);
+            project.updateCheckTextAndAudio();
         }
+        //오디오 객체 생성
+        List<AudioInfo> audioInfos = new ArrayList<>();
+
+
         // 1. text 한문장씩 분리
         List<AudioInfoDto> audios = pythonUtil.createAudios(ttsInputDto.getText());
 
-        //오디오 객체 생성
-        List<AudioInfo> audioInfos = new ArrayList<>();
         // 2. 문장마다 오디오파일 생성
-        for (int i = 0; i < audios.size(); i++) {
+        for (AudioInfoDto audio : audios) {
             audioInfos.add(AudioInfo.builder()
-                    .lineNumber(i + 1)
                     .project(project)
-                    .splitText(audios.get(i).getSplitText())
+                    .splitText(audio.getSplitText())
                     .durationSilence(ttsInputDto.getDurationSilence())
                     .pitch(ttsInputDto.getPitch())
                     .speed(ttsInputDto.getSpeed())
                     .volume(ttsInputDto.getVolume())
-                    .audioFileS3Path(audios.get(i).getAudioFileUrl())
-                    .audioFileUrl(defaultPath + audios.get(i).getAudioFileUrl())
+                    .audioFileS3Path(audio.getAudioFileUrl())
+                    .audioFileUrl(defaultPath + audio.getAudioFileUrl())
                     .build());
         }
+
         project.updateAudioInfos(audioInfos);
         audioInfoRepository.saveAll(audioInfos);
         List<AudioInfoDto> audioInfoDtos = audioInfos.stream()

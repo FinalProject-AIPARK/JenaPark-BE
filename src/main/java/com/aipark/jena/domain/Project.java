@@ -183,4 +183,9 @@ public class Project extends BaseTimeEntity {
     public void updateCheckAvatar(boolean isCheckAvatar) {
         this.checkAvatar = isCheckAvatar;
     }
+
+    public void updateCheckTextAndAudio() {
+        this.checkText = false;
+        this.checkAudio = false;
+    }
 }
