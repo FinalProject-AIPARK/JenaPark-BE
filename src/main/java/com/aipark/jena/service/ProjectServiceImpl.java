@@ -38,6 +38,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final MemberRepository memberRepository;
     private final AudioInfoRepository audioInfoRepository;
+    private final AudioSampleRepository audioSampleRepository;
     private final AmazonS3 amazonS3;
     private final PythonUtil pythonUtil;
 
@@ -135,6 +136,7 @@ public class ProjectServiceImpl implements ProjectService {
         Member member = checkToken();
         Project project = checkProject(ttsInputDto.getProjectID());
         checkProjectValidation(project.getId(), member);
+        AudioSample audioSample = checkAudioSample(ttsInputDto.getAvatarName());
         // 0. 기존에 있던 프로젝트의 오디오파일들을 삭제
         deleteAudioInfos(project.getAudioInfos());
 
@@ -180,7 +182,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         // 4 .프로젝트 업데이트
-        updateProject(project, ttsInputDto, allText.toString());
+        updateProject(project, ttsInputDto, allText.toString(), audioSample);
         return response.success(new AudioStage1(audioInfoDtos, allText.toString()), "음성 합성을 성공적으로 마쳤습니다.", HttpStatus.OK);
     }
 
@@ -247,9 +249,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Transactional
-    protected void updateProject(Project project, CreateTTS ttsInputDto, String allText) {
+    protected void updateProject(Project project, CreateTTS ttsInputDto, String allText, AudioSample audioSample) {
         project.updateStep1(allText, ttsInputDto.getSex(), ttsInputDto.getLang(), ttsInputDto.getDurationSilence(),
-                ttsInputDto.getVolume(), ttsInputDto.getPitch(), ttsInputDto.getSpeed());
+                ttsInputDto.getVolume(), ttsInputDto.getPitch(), ttsInputDto.getSpeed(), audioSample.getName(), audioSample.getAudioFileUrl());
     }
 
     /**
@@ -400,6 +402,13 @@ public class ProjectServiceImpl implements ProjectService {
     private AudioInfo checkAudioInfo(Long audioInfoId) {
         return audioInfoRepository.findById(audioInfoId).orElseThrow(
                 () -> new CustomException(HttpStatus.BAD_REQUEST, "해당 오디오 파일이 존재하지 않습니다.")
+        );
+    }
+
+    // 음성 모델이 존재하는 지 확인
+    private AudioSample checkAudioSample(String audioName) {
+        return audioSampleRepository.findByName(audioName).orElseThrow(
+                () -> new CustomException(HttpStatus.BAD_REQUEST, "해당 음성 모데을 찾을 수 없습니다.")
         );
     }
 
