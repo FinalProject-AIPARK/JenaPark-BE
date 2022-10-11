@@ -23,6 +23,7 @@ public class ResponseProject {
     @Builder
     public static class InitialProject {
         private Long projectId;
+        private String text;
         private String title;
         private String sex;
         private String lang;
@@ -54,6 +55,7 @@ public class ResponseProject {
             return InitialProject.builder()
                     .projectId(project.getId())
                     .title(project.getTitle())
+                    .text(project.getText())
                     .audioModel(project.getAudioModel())
                     .audioModelUrl(project.getAudioModelUrl())
                     .sex(project.getSex())
