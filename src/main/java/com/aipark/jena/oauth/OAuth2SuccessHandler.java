@@ -52,7 +52,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //        response.addHeader("Refresh", tokenRes.getRefreshToken());
 
 //        response.setContentType("application/json;charset=UTF-8");
-        response.sendRedirect("https://api.papago.link/");
+        response.sendRedirect("https://jennapark.netlify.app/");
 //        getRedirectStrategy().sendRedirect(request,response,"/");
     }
 
