@@ -63,6 +63,8 @@ public class ResponseProject {
                     .volume(project.getVolume())
                     .durationSilence(project.getDurationSilence())
                     .backgroundUrl(project.getBackgroundUrl())
+                    .audioModel(project.getAudioModel())
+                    .audioModelUrl(project.getAudioModelUrl())
                     .audioUpload(project.getAudioUpload())
                     .audioMerge(project.getAudioMerge())
                     .audioFileOriginName(project.getAudioFileOriginName())
