@@ -54,6 +54,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
         } else if (member.getOauthId() == "k") {
             member.setOauthId("g");
         }
+        // 소셜이 3개 이상이면 findByOauthId?
 
         return memberRepository.save(member);
     }
