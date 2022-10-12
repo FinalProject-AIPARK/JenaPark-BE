@@ -412,7 +412,7 @@ public class ProjectServiceImpl implements ProjectService {
     // 음성 모델이 존재하는 지 확인
     private AudioSample checkAudioSample(String audioName) {
         return audioSampleRepository.findByName(audioName).orElseThrow(
-                () -> new CustomException(HttpStatus.BAD_REQUEST, "해당 음성 모데을 찾을 수 없습니다.")
+                () -> new CustomException(HttpStatus.BAD_REQUEST, "해당 음성 모델을 찾을 수 없습니다.")
         );
     }
 
