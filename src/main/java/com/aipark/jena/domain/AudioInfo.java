@@ -34,6 +34,9 @@ public class AudioInfo {
     @Column(name = "volume")
     private Long volume;
 
+    @Column
+    private String audioModelName;
+
     @Column(name = "duration_silence")
     private Double durationSilence;
 

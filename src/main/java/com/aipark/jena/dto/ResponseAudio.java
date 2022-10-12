@@ -43,7 +43,7 @@ public class ResponseAudio {
         private Double pitch;
         private Double speed;
         private Long volume;
-        private String avatarName;
+        private String audioModelName;
 
         public static ResponseAudio.AudioInfoDto of(AudioInfo audioInfo) {
             return AudioInfoDto.builder()
@@ -51,6 +51,7 @@ public class ResponseAudio {
                     .splitText(audioInfo.getSplitText())
                     .audioFileUrl(audioInfo.getAudioFileUrl())
                     .durationSilence(audioInfo.getDurationSilence())
+                    .audioModelName(audioInfo.getAudioModelName())
                     .pitch(audioInfo.getPitch())
                     .speed(audioInfo.getSpeed())
                     .volume(audioInfo.getVolume())

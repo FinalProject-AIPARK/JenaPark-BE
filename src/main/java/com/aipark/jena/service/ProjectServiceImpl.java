@@ -167,6 +167,7 @@ public class ProjectServiceImpl implements ProjectService {
                     .pitch(ttsInputDto.getPitch())
                     .speed(ttsInputDto.getSpeed())
                     .volume(ttsInputDto.getVolume())
+                    .audioModelName(ttsInputDto.getAvatarName())
                     .audioFileS3Path(audio.getAudioFileUrl())
                     .audioFileUrl(defaultPath + audio.getAudioFileUrl())
                     .build());
