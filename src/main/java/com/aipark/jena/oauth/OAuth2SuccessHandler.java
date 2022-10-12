@@ -9,9 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,22 +33,37 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("accessToken = " + tokenRes.getAccessToken());
         log.info("refreshToken = " + tokenRes.getRefreshToken());
 
-        Cookie accessCookie =new Cookie("accessToken",tokenRes.getAccessToken());
-        Cookie refreshCookie =new Cookie("refreshToken",tokenRes.getAccessToken());
+//        Cookie accessCookie =new Cookie("accessToken",tokenRes.getAccessToken());
+//        Cookie refreshCookie =new Cookie("refreshToken",tokenRes.getAccessToken());
+//
+//        accessCookie.setPath("/");
+//        refreshCookie.setPath("/");
+//
+//        accessCookie.setSecure(false);
+//        refreshCookie.setSecure(false);
+//
+//        response.addCookie(accessCookie);
+//        response.addCookie(refreshCookie);
 
-//        accessCookie.setDomain("jennapark.netlify.app");
-//        accessCookie.setHttpOnly(false);
-        accessCookie.setPath("/");
-        refreshCookie.setPath("/");
+        String targetUri;
+        targetUri = UriComponentsBuilder.fromUriString("https://jennapark.netlify.app/")
+                .queryParam("accessToken" , tokenRes.getAccessToken())
+                .queryParam("refreshToken",tokenRes.getRefreshToken())
+                .build().toUriString();
 
-        response.addCookie(accessCookie);
-        response.addCookie(refreshCookie);
-        log.info("name: "+accessCookie.getName());
-        log.info("value: "+accessCookie.getValue());
-
-        response.addHeader("accessToken",tokenRes.getAccessToken());
-        response.addHeader("refreshToken",tokenRes.getRefreshToken());
-        response.sendRedirect("https://jennapark.netlify.app/");
-
+        getRedirectStrategy().sendRedirect(request,response,targetUri);
     }
+//    private void writeTokenResponse(HttpServletResponse response, Response.TokenRes token)
+//            throws IOException {
+//        response.setContentType("text/html;charset=UTF-8");
+//
+//        response.addHeader("Acess", token.getAccessToken());
+//        response.addHeader("Refresh", token.getRefreshToken());
+//        response.setContentType("application/json;charset=UTF-8");
+//
+//        var writer = response.getWriter();
+//        writer.println(objectMapper.writeValueAsString(token));
+//        writer.flush();
+//        response.sendRedirect("https://jennapark.netlify.app/");
+//    }
 }
