@@ -1,10 +1,7 @@
 package com.aipark.jena.domain;
 
 import com.aipark.jena.enums.Authority;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +10,7 @@ import java.util.List;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = PROTECTED)
@@ -27,7 +25,7 @@ public class Member extends BaseTimeEntity {
     @Column(name = "oauth_id")
     private String oauthId;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)

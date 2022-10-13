@@ -35,9 +35,7 @@ public class SecurityConfig {
                 .cors().and().csrf().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .maximumSessions(1)
-                .maxSessionsPreventsLogin(false);
-        http
+                .and()
                 .authorizeRequests()
                 .antMatchers("/api/v1/members/signup", "/api/v1/members/login", "/token/**").permitAll()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
@@ -72,14 +70,4 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
-
-//    protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
-//                .oauth2Login()
-//                .loginPage("/token/expired") // 로그인 페이지 url 직접 설정
-//                .successHandler(successHandler)
-//                .userInfoEndpoint().userService(oAuth2UserService)
-//                .addFilterBefore(new JwtAuthenticationFilter(tokenService), UsernamePasswordAuthenticationFilter.class);
-//    }
 }
