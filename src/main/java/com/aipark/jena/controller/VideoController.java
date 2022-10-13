@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.concurrent.ExecutionException;
+
 import static com.aipark.jena.dto.RequestVideo.ChangeTitle;
 import static com.aipark.jena.dto.Response.Body;
 
@@ -16,7 +18,7 @@ public class VideoController {
     private final VideoService videoService;
 
     @GetMapping("/{projectId}/video")
-    public ResponseEntity<Body> createVideo(@PathVariable Long projectId) {
+    public ResponseEntity<Body> createVideo(@PathVariable Long projectId) throws ExecutionException, InterruptedException {
         return videoService.createVideo(projectId);
     }
 

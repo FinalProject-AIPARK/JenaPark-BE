@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 import static com.aipark.jena.dto.RequestAudio.AudioUploadDto;
 import static com.aipark.jena.dto.RequestProject.*;
@@ -35,12 +36,12 @@ public class ProjectController {
     }
 
     @PostMapping("/create-tts")
-    public ResponseEntity<Body> createTTS(@RequestBody CreateTTS ttsInputDto) {
+    public ResponseEntity<Body> createTTS(@RequestBody CreateTTS ttsInputDto) throws ExecutionException, InterruptedException {
         return projectService.createTTS(ttsInputDto);
     }
 
     @PostMapping("/update-tts")
-    public ResponseEntity<Body> updateTTS(@RequestBody UpdateTTS ttsInputDto) {
+    public ResponseEntity<Body> updateTTS(@RequestBody UpdateTTS ttsInputDto) throws ExecutionException, InterruptedException {
         return projectService.updateTTS(ttsInputDto);
     }
 
@@ -50,7 +51,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{projectId}/audio")
-    public ResponseEntity<Body> mergeAudio(@PathVariable Long projectId) {
+    public ResponseEntity<Body> mergeAudio(@PathVariable Long projectId) throws ExecutionException, InterruptedException {
         return projectService.mergeAudio(projectId);
     }
 
