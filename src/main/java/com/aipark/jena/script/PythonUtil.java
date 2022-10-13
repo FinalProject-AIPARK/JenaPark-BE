@@ -1,7 +1,6 @@
 package com.aipark.jena.script;
 
 import com.aipark.jena.exception.CustomException;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
@@ -18,7 +17,6 @@ import java.util.concurrent.ExecutionException;
 
 import static com.aipark.jena.dto.ResponseAudio.AudioInfoDto;
 
-@Slf4j
 @Component
 public class PythonUtil {
     @Value("${cloud.aws.credentials.access-key}")
@@ -33,7 +31,6 @@ public class PythonUtil {
     // 음성 파일들 생성
     @Async
     public CompletableFuture<List<AudioInfoDto>> createAudios(String text) {
-        log.info("createAudio");
         ProcessBuilder pb = new ProcessBuilder("python3", "python/createAudios.py", accessKey, secretKey, region, text);
         List<AudioInfoDto> audioInfoDtos = new ArrayList<>();
         Process process = null;
