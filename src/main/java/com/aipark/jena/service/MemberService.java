@@ -67,6 +67,26 @@ public class MemberService {
         // 인증 정보를 기반으로 JWT 토큰 생성
         TokenRes tokenRes = jwtTokenProvider.generateToken(authentication);
 
+        String oldToken= redisTemplate.opsForValue().get("AT:" + authentication.getName());
+        // Redis 에서 해당 Member email 로 저장된 Access Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
+        if (oldToken != null) {
+            // Access Token 삭제
+            redisTemplate.delete("AT:" + authentication.getName());
+
+            // AccessToken 만료
+            Long expiration = jwtTokenProvider.getExpiration(oldToken);
+            redisTemplate.opsForValue()
+                    .set(oldToken, "anotherAccess", expiration, TimeUnit.MILLISECONDS);
+        }
+
+        // AccessToken Redis 저장 (expirationTime 으로 자동 삭제 처리)
+        redisTemplate.opsForValue()
+                .set("AT:" + authentication.getName(),
+                        tokenRes.getAccessToken(),
+                        tokenRes.getAccessTokenExpirationTime(),
+                        TimeUnit.MILLISECONDS);
+
+
         // RefreshToken Redis 저장 (expirationTime 으로 자동 삭제 처리)
         redisTemplate.opsForValue()
                 .set("RT:" + authentication.getName(),
@@ -117,6 +137,12 @@ public class MemberService {
         // Access Token 에서 Member email 을 가져옵니다.
         Authentication authentication = jwtTokenProvider.getAuthentication(logoutDto.getAccessToken());
 
+
+        // Redis 에서 해당 Member email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
+        if (redisTemplate.opsForValue().get("AT:" + authentication.getName()) != null) {
+            // Refresh Token 삭제
+            redisTemplate.delete("AT:" + authentication.getName());
+        }
         // Redis 에서 해당 Member email 로 저장된 Refresh Token 이 있는지 여부를 확인 후 있을 경우 삭제합니다.
         if (redisTemplate.opsForValue().get("RT:" + authentication.getName()) != null) {
             // Refresh Token 삭제
