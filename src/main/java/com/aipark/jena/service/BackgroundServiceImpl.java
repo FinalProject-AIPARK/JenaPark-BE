@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class BackgroundServiceImpl implements BackgroundService {
 
     private final BackgroundRepository backgroundRepository;
@@ -37,11 +39,12 @@ public class BackgroundServiceImpl implements BackgroundService {
 
     //배경 업로드
     @Override
+
     public ResponseEntity<Response.Body> backgroundUpload(Long projectId,RequestBackground.BackgroundUploadDto backgroundUploadDto)throws IOException {
 
         Project project = projectRepository.findById(projectId).orElse(null);
         assert project != null;
-
+        log.info(backgroundUploadDto.toString());
         InputStream inputStream = backgroundUploadDto.getBackgroundFile().getInputStream();
         ObjectMetadata objectMetadata = new ObjectMetadata();
         String fileName = "background/" + UUID.randomUUID().toString().toLowerCase() + ".png";
