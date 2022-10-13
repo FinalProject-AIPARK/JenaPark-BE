@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = resolveToken(request); // Request Header 에서 토큰 추출
 
-        if (token != null && jwtTokenProvider.validateToken(token, response)) { // 토큰 유효성 검사
+        if (token != null && jwtTokenProvider.validateToken(token)) { // 토큰 유효성 검사
             // Redis 에 해당 accessToken logout 여부 확인
             String isLogout = redisTemplate.opsForValue().get(token);
             if(!ObjectUtils.isEmpty(isLogout)){
