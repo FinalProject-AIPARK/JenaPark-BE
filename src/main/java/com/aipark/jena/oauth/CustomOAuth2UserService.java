@@ -48,13 +48,6 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private Member saveOrUpdate(OAuth2Attribute attribute){
         Member member = memberRepository.findByEmailAndOauthId(attribute.getEmail(), attribute.getOauthId())
                 .orElse(attribute.toEntity());
-
-//        if (member.getOauthId() == "g") {
-//            member.setOauthId("k");
-//        } else if (member.getOauthId() == "k") {
-//            member.setOauthId("g");
-//        }
-
         return memberRepository.save(member);
     }
 }
