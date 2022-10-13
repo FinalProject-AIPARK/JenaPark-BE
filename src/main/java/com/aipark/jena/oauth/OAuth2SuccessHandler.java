@@ -9,10 +9,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -22,7 +20,7 @@ import java.io.IOException;
 @Component
 public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
-    private final ObjectMapper objectMapper;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException {
@@ -34,22 +32,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("accessToken = " + tokenRes.getAccessToken());
         log.info("refreshToken = " + tokenRes.getRefreshToken());
 
-        Cookie accessCookie =new Cookie("accessToken",tokenRes.getAccessToken());
-        Cookie refreshCookie =new Cookie("refreshToken",tokenRes.getAccessToken());
+        String targetUri;
+        targetUri = UriComponentsBuilder.fromUriString("https://jennapark.netlify.app/")
+                .queryParam("accessToken" , tokenRes.getAccessToken())
+                .queryParam("refreshToken",tokenRes.getRefreshToken())
+                .build().toUriString();
 
-//        accessCookie.setDomain("jennapark.netlify.app");
-//        accessCookie.setHttpOnly(false);
-        accessCookie.setPath("/");
-        refreshCookie.setPath("/");
-
-        response.addCookie(accessCookie);
-        response.addCookie(refreshCookie);
-        log.info("name: "+accessCookie.getName());
-        log.info("value: "+accessCookie.getValue());
-
-        response.addHeader("accessToken",tokenRes.getAccessToken());
-        response.addHeader("refreshToken",tokenRes.getRefreshToken());
-        response.sendRedirect("https://jennapark.netlify.app/");
-
+        getRedirectStrategy().sendRedirect(request,response,targetUri);
     }
 }

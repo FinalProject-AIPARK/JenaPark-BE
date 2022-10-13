@@ -4,6 +4,8 @@ import com.aipark.jena.dto.RequestAudio;
 import com.aipark.jena.dto.Response;
 import org.springframework.http.ResponseEntity;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface AudioSampleService {
-    ResponseEntity<Response.Body> audioSampleList(RequestAudio.AudioSampleDto audioSampleDto);
+    CompletableFuture<ResponseEntity<Response.Body>> audioSampleList(RequestAudio.AudioSampleDto audioSampleDto);
 }

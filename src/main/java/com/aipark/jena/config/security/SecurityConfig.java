@@ -35,19 +35,18 @@ public class SecurityConfig {
                 .cors().and().csrf().disable()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
+                .maximumSessions(1)
+                .maxSessionsPreventsLogin(false);
+        http
                 .authorizeRequests()
                 .antMatchers("/api/v1/members/signup", "/api/v1/members/login", "/token/**").permitAll()
-                //.anyRequest().authenticated()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .and()
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
                 // oauth2 설정
-                //.addFilterBefore(new JwtExceptionFilter(), OAuth2LoginAuthenticationFilter.class)
                 .oauth2Login()
-                //.loginPage("/token/expired") // 로그인 페이지 url 직접 설정
                 .successHandler(successHandler)
                 .userInfoEndpoint().userService(oAuth2UserService);
         return http.build();

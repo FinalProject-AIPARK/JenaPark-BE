@@ -9,7 +9,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -82,7 +81,7 @@ public class BackgroundServiceImpl implements BackgroundService {
 
         // 유효성 검증
         if(background.isUpload() == true){
-            if(backgroundRepository.findByMember(memberRes).isEmpty()){
+            if(backgroundRepository.findAllByMember(memberRes).isEmpty()){
                 return response.fail("해당 배경아이디는 존재 하지 않습니다.",HttpStatus.BAD_REQUEST);
             }
         }
