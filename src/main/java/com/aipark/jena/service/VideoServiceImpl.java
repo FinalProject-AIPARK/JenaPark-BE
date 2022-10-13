@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static com.aipark.jena.config.ProjectDefault.VIDEOS_MAX_SIZE;
 import static com.aipark.jena.dto.RequestVideo.ChangeTitle;
@@ -46,7 +47,7 @@ public class VideoServiceImpl implements VideoService{
      * @return 응답객체
      */
     @Transactional
-    public ResponseEntity<Body> createVideo(Long projectId) {
+    public ResponseEntity<Body> createVideo(Long projectId) throws ExecutionException, InterruptedException {
         Member member = checkToken();
         Project project = checkProject(projectId);
         checkProjectValidation(projectId, member);
@@ -58,7 +59,7 @@ public class VideoServiceImpl implements VideoService{
             return response.fail("영상을 생성할 조건을 충족시키지 못했습니다.", HttpStatus.BAD_REQUEST);
         }
         String avatarFileS3Path = project.getAvatarUrl().split("com/")[1];
-        String videoFileS3Path = pythonUtil.createVideo(project.getAudioFileS3Path(), avatarFileS3Path);
+        String videoFileS3Path = pythonUtil.createVideo(project.getAudioFileS3Path(), avatarFileS3Path).get();
         Video video = Video.builder()
                 .member(member)
                 .title(project.getTitle())

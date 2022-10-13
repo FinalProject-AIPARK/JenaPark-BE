@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import static com.aipark.jena.config.ProjectDefault.*;
@@ -132,7 +133,7 @@ public class ProjectServiceImpl implements ProjectService {
      * @return 응답 객체
      */
     @Transactional
-    public ResponseEntity<Body> createTTS(CreateTTS ttsInputDto) {
+    public ResponseEntity<Body> createTTS(CreateTTS ttsInputDto) throws ExecutionException, InterruptedException {
         Member member = checkToken();
         Project project = checkProject(ttsInputDto.getProjectID());
         checkProjectValidation(project.getId(), member);
@@ -154,9 +155,10 @@ public class ProjectServiceImpl implements ProjectService {
         //오디오 객체 생성
         List<AudioInfo> audioInfos = new ArrayList<>();
 
-
+        log.info("start");
         // 1. text 한문장씩 분리
-        List<AudioInfoDto> audios = pythonUtil.createAudios(ttsInputDto.getText());
+        List<AudioInfoDto> audios = pythonUtil.createAudios(ttsInputDto.getText()).get();
+        log.info("end");
 
         // 2. 문장마다 오디오파일 생성
         for (AudioInfoDto audio : audios) {
@@ -197,7 +199,7 @@ public class ProjectServiceImpl implements ProjectService {
      * @return 응답객체
      */
     @Transactional
-    public ResponseEntity<Body> updateTTS(UpdateTTS ttsInputDto) {
+    public ResponseEntity<Body> updateTTS(UpdateTTS ttsInputDto) throws ExecutionException, InterruptedException {
         Member member = checkToken();
         Project project = checkProject(ttsInputDto.getProjectID());
         checkProjectValidation(ttsInputDto.getProjectID(), member);
@@ -331,7 +333,7 @@ public class ProjectServiceImpl implements ProjectService {
      * @return 응답 객체
      */
     @Transactional
-    public ResponseEntity<Body> mergeAudio(Long projectId) {
+    public ResponseEntity<Body> mergeAudio(Long projectId) throws ExecutionException, InterruptedException {
         Member member = checkToken();
         Project project = checkProject(projectId);
         checkProjectValidation(projectId, member);
@@ -412,7 +414,7 @@ public class ProjectServiceImpl implements ProjectService {
     // 음성 모델이 존재하는 지 확인
     private AudioSample checkAudioSample(String audioName) {
         return audioSampleRepository.findByName(audioName).orElseThrow(
-                () -> new CustomException(HttpStatus.BAD_REQUEST, "해당 음성 모데을 찾을 수 없습니다.")
+                () -> new CustomException(HttpStatus.BAD_REQUEST, "해당 음성 모델을 찾을 수 없습니다.")
         );
     }
 
