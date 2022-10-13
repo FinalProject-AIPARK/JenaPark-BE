@@ -30,7 +30,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             // Redis 에 해당 accessToken logout 여부 확인
             String isLogout = redisTemplate.opsForValue().get(token);
             if(!ObjectUtils.isEmpty(isLogout)){
-                response.sendError(401, "다른 곳에서 로그인 하였습니다.");
+                response.sendError(403, "다른 곳에서 로그인 하였습니다.");
                 return;
             }
             if (ObjectUtils.isEmpty(isLogout)) {
