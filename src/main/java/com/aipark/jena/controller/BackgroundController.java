@@ -22,7 +22,6 @@ public class BackgroundController {
 
     private final BackgroundService backgroundService;
 
-    // 배경 리스트
     @GetMapping("/background")
     @ApiResponse(responseCode = "200", description = "배경리스트 조회 성공", content = @Content(schema = @Schema(implementation = ResponseBackground.BackgroundAll.class)))
     @ApiOperation("배경 리스트")
@@ -30,14 +29,12 @@ public class BackgroundController {
         return backgroundService.backgroundList();
     }
 
-    // 배경 선택
     @PostMapping("{projectId}/background/{backgroundId}")
     @ApiOperation("배경 선택")
     public ResponseEntity<Response.Body> backgroundSelect(@ApiParam(value = "프로젝트아이디") @PathVariable Long projectId,@ApiParam(value = "배경 아이디") @PathVariable Long backgroundId){
         return backgroundService.backgroundSelect(projectId,backgroundId);
     }
 
-    // 배경 업로드
     @PostMapping("{projectId}/background/upload")
     @ApiOperation("베경 업로드")
     public ResponseEntity<Response.Body> uploadBackground(@ApiParam(value = "프로젝트아이디") @PathVariable Long projectId, @ModelAttribute RequestBackground.BackgroundUploadDto backgroundUploadDto) throws IOException {
