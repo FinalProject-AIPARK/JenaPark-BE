@@ -20,8 +20,7 @@ s3 = s3_connection(region, access_key, secret_key)
 
 
 def createAudios(allText):
-    texts = [text.strip()+'.' for text in list(filter(lambda x: x !=
-                                                      '', allText.split('.')))]
+    texts = [text.strip()+'.' for text in list(filter(None, allText.split('.')))]
 
     for text in texts:
         print(text)
