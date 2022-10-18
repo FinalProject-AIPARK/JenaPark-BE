@@ -20,4 +20,12 @@ public class RequestAudio {
     public static class AudioUploadDto {
         private MultipartFile audioFile;
     }
+
+    @Getter
+    @Setter
+    public static class AudioSampleSearchDto{
+        private String lang;
+        private String sex;
+        private String keyword;
+    }
 }
