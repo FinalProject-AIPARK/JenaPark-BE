@@ -15,6 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static com.aipark.jena.dto.RequestAudio.AudioSampleDto;
+import static com.aipark.jena.dto.RequestAudio.AudioSampleSearchDto;
 import static com.aipark.jena.dto.Response.Body;
 
 @RequiredArgsConstructor
@@ -32,5 +33,15 @@ public class AudioSampleServiceImpl implements AudioSampleService{
                 .collect(Collectors.toList());
 
         return CompletableFuture.completedFuture(response.success(audioSampleDtos, "오디오 샘플리스트를 성공적으로 반환했습니다.", HttpStatus.OK));
+    }
+
+    @Async
+    @Transactional(readOnly = true)
+    public CompletableFuture<ResponseEntity<Body>> audioSampleSearch(AudioSampleSearchDto audioSampleSearchDto) {
+        List<ResponseAudio.AudioSampleDto> audioSampleDtos = audioSampleRepository.findAllBySexAndLangAndNameContaining(audioSampleSearchDto.getSex(), audioSampleSearchDto.getLang(), audioSampleSearchDto.getKeyword())
+                .stream()
+                .map(ResponseAudio.AudioSampleDto::of)
+                .collect(Collectors.toList());
+        return CompletableFuture.completedFuture(response.success(audioSampleDtos, "오디오 샘플리스트를 검색이 성공했습니다.", HttpStatus.OK));
     }
 }
