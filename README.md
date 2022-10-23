@@ -4,7 +4,12 @@
 ### Description
 
 ```
- 인공지능과 영상기술의 융합을 통해 영상 안에서 시간과 공간, 능력을 제공하기 위해 모였습니다.
+AI파크는 인공지능&음성 생성 기술을 활용한 다국어 디지털 휴먼 제작 솔루션을 제공합니다.
+이번 기업연계 프로젝트는 AI파크의 서비스 페이지 개선을 목표로 하는 프로젝트입니다.
+(기업에서 IA, 와이어프레임, API를 제공받았습니다.)
+
+텍스트를 입력하고 성별과 여러가지 언어의 음성을 선택하고 속도와 톤 조절을 한 후에
+아바타를 선택하고 의상과 배경을 조합하여 가상 영상을 생성합니다.
 ```
 
 <br>
@@ -17,24 +22,25 @@
 
 > 프로젝트 팀원 👪
 
+- **BackEnd**
+  - 김윤겸([@yoongyum](https://github.com/yoongyum)), 이창희([@WindowH22](https://github.com/WindowH22)), 강소영([@soyoungkangme](https://github.com/soyoungkangme))
+- **FrontEnd**
+  - 김민구, 김수현, 김채욱, 신재일
 - **UIUX**
   - 김유찬, 김동관, 이승현
-- **FE**
-  - 김민구, 김수현, 김채욱, 신재일
-- **BE**
-  - 김윤겸([@yoongyum](https://github.com/yoongyum)), 이창희([@WindowH22](https://github.com/WindowH22)), 강소영([@soyoungkangme](https://github.com/soyoungkangme))
 
-> URL
-- Client : https://jennapark.netlify.app/
-- API Server : https://api.fafago.link/
+> ### 배포 URL https://jennapark.netlify.app/
+> ### API Server : https://api.fafago.link/
+
+<br>
 
 ## Env
 
-> ### FE - [Repo](https://github.com/FinalProject-AIPARK/JenaPark-FE)
+> ### FrontEnd - [Repo](https://github.com/FinalProject-AIPARK/JenaPark-FE)
 `React`, `Redux`, `Vite`, `TypeScript` <br><br>
 
 
-> ### BE
+> ### BackEnd
 `Java11`, `Spring Data JPA`, `Spring Security`, `JWT`, `Redis`, `MySQL`, `Swagger`, `OAuth2` <br>
 
 `Python3`, `gTTS`, `boto3`, `moviepy`, `scipy`, `numpy`
@@ -42,14 +48,6 @@
 #### OpenAPI
 `Google Login`, `Kakao Login`
 
-#### Server
-`EC2`, `S3 Bucket`, `AWS Certification Manager`, `CloudFront`, `ELB(Application Load Balancer)`, `RDS`, `Route53`
-
-#### CI/CD
-`Jenkins`, `Docker`
-
-> ### ETC
-`git`, `Discord`, `Slack`, `Post Man`, `Docker DeskTop`
 
 ## Devops
 
