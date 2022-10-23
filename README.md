@@ -93,3 +93,4 @@ Discord를 주로 사용하여 UIUX/FE/BE 팀원들과 실시간으로 소통을
 ## API 명세서
 
 ## Result
+https://www.youtube.com/watch?v=4XruulOYhS0
