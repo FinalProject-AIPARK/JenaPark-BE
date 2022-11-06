@@ -31,7 +31,8 @@ AI파크는 인공지능&음성 생성 기술을 활용한 다국어 디지털 �
 - **UIUX**
   - 김유찬, 김동관, 이승현
 
-> ### 배포 URL https://jennapark.netlify.app/
+
+> ### 배포 URL https://jennapark.netlify.app/ 📌현재 배포는 중지된 상태입니다.
 > ### API Server : https://api.fafago.link/
 
 <br>
@@ -98,7 +99,6 @@ Discord를 주로 사용하여 UIUX/FE/BE 팀원들과 실시간으로 소통을
 - Cors 
 <br>
 
-## API 명세서
 
 ## Result
 [https://www.youtube.com/watch?v=4XruulOYhS0](https://youtu.be/4XruulOYhS0)
